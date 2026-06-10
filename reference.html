@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricochet Reference — Postfix Stack Words &amp; CLI Docs</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Official technical reference documentation for Ricochet: bytecode VM stack words, postfix syntax rules, class-based OOP, web MVC structures, and CLI toolchain.">
+    <meta name="keywords" content="Ricochet reference, postfix syntax, VM words, concatenative programming, stack machine, CLI reference, OOP postfix">
+    <meta name="author" content="Ricochet Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ricochet Reference — Postfix Stack Words &amp; CLI Docs">
+    <meta property="og:description" content="Technical reference for the Ricochet concatenative language, stack machine behavior, OOP examples, and Active Record database APIs.">
+    <meta property="og:image" content="assets/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Ricochet Reference — Postfix Stack Words &amp; CLI Docs">
+    <meta property="twitter:description" content="Technical reference for the Ricochet concatenative language, stack machine behavior, OOP examples, and Active Record database APIs.">
+    <meta property="twitter:image" content="assets/logo.png">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="reference-page">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="brand" id="nav-brand">
+                <img src="assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="index.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="index.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="reference.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="index.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='index.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Pure postfix, bytecode-backed, runtime-shapeable</span>
+                    <h1 class="ref-hero-title">Ricochet Reference</h1>
+                    <p class="ref-hero-tagline">
+                        A working reference for the current Ricochet toolchain: stack words, declaration
+                        operators, symbols, OOP, MVC, Active Record, templates, tests, and debugger behavior.
+                    </p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>rco new my_app</code></div>
+                        <div class="cmd-item"><code>rco run --debug --step app.rco</code></div>
+                        <div class="cmd-item"><code>rco serve --debug --watch</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">name get "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">className get methodName get [ ... ] !method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quickstart Smoke Script -->
+        <section class="ref-section quickstart" aria-labelledby="quickstart-title">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">First test target</span>
+                    <h2 class="section-title" id="quickstart-title">Copy/Paste Smoke Script</h2>
+                    <p class="section-desc">Verify your local virtual machine installation works correctly with this bootstrap class and execution sequence.</p>
+                </div>
+                <div class="code-block-wrapper">
+                    <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy smoke script" title="Copy">copy</button><code>User Model subclass
+  email field
+  "displayName" [ self .email get ] !method
+end
+
+User new
+"ada@example.com" swap .email set
+.displayName
+println</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <!-- Syntax and Symbols -->
+        <section id="syntax" class="ref-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Grammar surface</span>
+                    <h2>Syntax And Symbols</h2>
+                    <p class="section-desc">Key lexer tokens, comment formatting, blocks, OOP declarations, HTML views, and routes.</p>
+                </div>
+                <div class="syntax-cards-grid">
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Comments</h3>
+                        </header>
+                        <pre><code>(( Any documentation comment or note. ))</code></pre>
+                        <p>Comments are delimited with double parentheses and are completely ignored by the compiler.</p>
+                    </article>
+                    
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Class Declarations</h3>
+                        </header>
+                        <pre><code>User Model subclass
+  users table
+  email field
+end</code></pre>
+                        <p>Declaration shape remains postfix: the declaration name is specified first, the declaration operator last.</p>
+                    </article>
+                    
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Argument Lists</h3>
+                        </header>
+                        <pre><code>( ctx -> Response ) "index" [
+  ctx get "home/index" swap view
+] !method</code></pre>
+                        <p>Parentheses create optional input/output metadata bindings for functions and class methods.</p>
+                    </article>
+                    
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Blocks</h3>
+                        </header>
+                        <pre><code>[ self .email get ]</code></pre>
+                        <p>Square brackets define first-class bytecode block values. Use the <code>call</code> word to run them.</p>
+                    </article>
+                    
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Conditionals</h3>
+                        </header>
+                        <pre><code>result dup ok? if
+  value
+else
+  error .message get
+end</code></pre>
+                        <p>Postfix conditional execution flow: the test condition is evaluated on the stack prior to hitting <code>if</code>.</p>
+                    </article>
+                    
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Members</h3>
+                        </header>
+                        <pre><code>user .email get
+"ada@example.com" user .email set</code></pre>
+                        <p>Dot words push member selectors to load/store variables, or dispatch methods when called directly.</p>
+                    </article>
+                    
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Templates</h3>
+                        </header>
+                        <pre><code>&lt;strong&gt;{ user get .name get }&lt;/strong&gt;
+&lt;small&gt;{ 20 22 + }&lt;/small&gt;</code></pre>
+                        <p>HTML views support <code>{ ... }</code> blocks. Each runs Ricochet and must output exactly one scalar value.</p>
+                    </article>
+                    
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Routes</h3>
+                        </header>
+                        <pre><code>GET "/" HomeController "index" route
+POST "/users" UserController "create" route</code></pre>
+                        <p>Route definitions are parsed line-by-line using quoted URL patterns and action method mappings.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Implemented VM Words -->
+        <section id="words" class="ref-section words-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Implemented VM surface</span>
+                    <h2>Words And Operators</h2>
+                    <p class="section-desc">Search, filter, and inspect postfix operators built into the core bytecode engine.</p>
+                </div>
+                
+                <div class="word-tools-wrapper">
+                    <div class="word-tools">
+                        <div class="search-box-container">
+                            <label for="word-search" class="search-label-text">Search Words</label>
+                            <input id="word-search" type="search" placeholder="try: method, result, stack, json, dup..." autocomplete="off">
+                        </div>
+                        <div class="filter-row-container">
+                            <span class="filter-label">Filter Category:</span>
+                            <div class="filter-row" aria-label="Word filters">
+                                <button type="button" class="filter-button active" data-filter="all">All</button>
+                                <button type="button" class="filter-button" data-filter="stack">Stack</button>
+                                <button type="button" class="filter-button" data-filter="math">Math</button>
+                                <button type="button" class="filter-button" data-filter="data">Data</button>
+                                <button type="button" class="filter-button" data-filter="oop">OOP</button>
+                                <button type="button" class="filter-button" data-filter="control">Control</button>
+                                <button type="button" class="filter-button" data-filter="web">Web</button>
+                                <button type="button" class="filter-button" data-filter="result">Results</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dyn Grid -->
+                <div id="word-grid" class="word-grid" aria-live="polite">
+                    <!-- Loaded dynamically via reference.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- OOP Examples -->
+        <section id="oop" class="ref-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Open classes, runtime names</span>
+                    <h2>OOP Examples</h2>
+                    <p class="section-desc">How OOP works under the hood in a concatenative environment.</p>
+                </div>
+
+                <div class="code-examples-grid">
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Class-First Model File</h3>
+                            <span class="file-tag">app/Models/User.rco</span>
+                        </div>
+                        <p class="card-description">Standard convention: write one class declaration per file, matching the class's name.</p>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy class-first model example" title="Copy">copy</button><code>(( app/Models/User.rco ))
+User Model subclass
+  users table
+  id field
+  email field
+  name field
+
+  "displayName" [
+    self .name get
+    dup nil? if
+      drop self .email get
+    else
+      return
+    end
+  ] !method
+end</code></pre>
+                    </article>
+
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Runtime Class And Method Names</h3>
+                            <span class="file-tag">metaprogramming.rco</span>
+                        </div>
+                        <p class="card-description">Dynamic metaprogramming: evaluate strings and variables to compile classes and methods on the fly.</p>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy runtime class example" title="Copy">copy</button><code>"Widget" className var
+"label" methodName var
+
+className get "Object" subclass
+className get "name" field
+className get methodName get [ self .name get ] !method
+
+className get new
+"dynamic" swap .name set
+.label</code></pre>
+                    </article>
+
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Dynamic Dispatch</h3>
+                            <span class="file-tag">dispatch.rco</span>
+                        </div>
+                        <p class="card-description">Call methods statically via dot words, or execute dynamically using <code>send</code> with stack-provided strings.</p>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy dynamic dispatch example" title="Copy">copy</button><code>User new
+"ada@example.com" swap .email set
+dup .displayName println
+"displayName" send println</code></pre>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- MVC Architecture -->
+        <section id="mvc" class="ref-section mvc-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Default framework shape</span>
+                    <h2>MVC Application Example</h2>
+                    <p class="section-desc">The default structure of a server-side web application running under Ricochet serve.</p>
+                </div>
+
+                <div class="stack-rail" id="mvc-stack-rail" role="list" aria-label="MVC Request Pipeline Steps">
+                    <div class="rail-item" role="listitem">
+                        <span class="rail-num">1</span>
+                        <div class="rail-label">
+                            <strong>Route</strong>
+                            <small>config/routes.rco</small>
+                        </div>
+                    </div>
+                    <div class="rail-item" role="listitem">
+                        <span class="rail-num">2</span>
+                        <div class="rail-label">
+                            <strong>Controller</strong>
+                            <small>app/Controllers</small>
+                        </div>
+                    </div>
+                    <div class="rail-item" role="listitem">
+                        <span class="rail-num">3</span>
+                        <div class="rail-label">
+                            <strong>View</strong>
+                            <small>app/Views</small>
+                        </div>
+                    </div>
+                    <div class="rail-item" role="listitem">
+                        <span class="rail-num">4</span>
+                        <div class="rail-label">
+                            <strong>Model</strong>
+                            <small>app/Models</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-examples-grid">
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Manifest Configuration</h3>
+                            <span class="file-tag">ricochet.toml</span>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy manifest example" title="Copy">copy</button><code>[package]
+name = "ricochet_app"
+
+[web]
+mode = "mvc"
+routes = "config/routes.rco"
+
+[web.views]
+escape = "html"
+
+[database.default]
+adapter = "postgres"
+url = "${DATABASE_URL}"</code></pre>
+                    </article>
+
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Route Declarations</h3>
+                            <span class="file-tag">config/routes.rco</span>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy routes example" title="Copy">copy</button><code>GET "/" HomeController "index" route
+GET "/users" UserController "index" route
+GET "/users/show" UserController "show" route
+POST "/users" UserController "create" route</code></pre>
+                    </article>
+
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Controller Logic</h3>
+                            <span class="file-tag">app/Controllers/HomeController.rco</span>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy controller example" title="Copy">copy</button><code>(( app/Controllers/HomeController.rco ))
+HomeController Controller subclass
+  ( ctx -> Response ) "index" [
+    "Hello Ricochet" title var
+    ctx get
+    "home/index" swap view
+  ] !method
+end</code></pre>
+                    </article>
+
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>View Template</h3>
+                            <span class="file-tag">app/Views/home/index.html</span>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy view example" title="Copy">copy</button><code>&lt;main&gt;
+  &lt;h1&gt;{ title get }&lt;/h1&gt;
+  &lt;p&gt;{ 20 22 + }&lt;/p&gt;
+&lt;/main&gt;</code></pre>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Active Record Examples -->
+        <section id="active-record" class="ref-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">PostgreSQL first</span>
+                    <h2>Active Record Examples</h2>
+                    <p class="section-desc">Interact with Postgres schemas using simple, stack-based ORM words.</p>
+                </div>
+                <div class="code-examples-grid">
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Model Mapping</h3>
+                            <span class="file-tag">app/Models/User.rco</span>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy Active Record model example" title="Copy">copy</button><code>(( app/Models/User.rco ))
+User Model subclass
+  users table
+  id field
+  email field
+  name field
+end</code></pre>
+                    </article>
+
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>ORM Database Operations</h3>
+                            <span class="file-tag">db_ops.rco</span>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy Active Record calls example" title="Copy">copy</button><code>User .all
+42 User .find
+"email" "ada@example.com" User .where
+map "email" "ada@example.com" !put "name" "Ada" !put User .insert
+42 map "email" "grace@example.com" !put "name" "Grace" !put User .update</code></pre>
+                    </article>
+
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Controller With Stack Result Handling</h3>
+                            <span class="file-tag">app/Controllers/UserController.rco</span>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy Active Record controller example" title="Copy">copy</button><code>(( app/Controllers/UserController.rco ))
+UserController Controller subclass
+  ( ctx -> Response ) "index" [
+    User .all
+    dup ok? if
+      value users var
+      ctx get "users/index" swap view
+    else
+      error .message get text
+    end
+  ] !method
+end</code></pre>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Debugging and Tests -->
+        <section id="debugging" class="ref-section debugging-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Watch the stack move</span>
+                    <h2>Debugging And Tests</h2>
+                    <p class="section-desc">Interactive execution traces, break-on-fault logs, and unit testing support.</p>
+                </div>
+                <div class="code-examples-grid">
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Realtime CLI Trace</h3>
+                            <span class="file-tag">Terminal</span>
+                        </div>
+                        <p class="card-description">Interactively check VM state, set breakpoints, and step through bytecode execution.</p>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy debug commands" title="Copy">copy</button><code>rco run --debug app.rco
+rco run --debug --step app.rco
+rco run --breakpoint 12 app.rco
+rco repl --debug</code></pre>
+                    </article>
+
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Trace Fault Output</h3>
+                            <span class="file-tag">Stdout</span>
+                        </div>
+                        <p class="card-description">When faults occur, the VM halts and retains the stack state for analysis.</p>
+                        <pre class="terminal-stdout-box"><code>TRACE app.rco:3 [&lt;main&gt;] CallWord("+")
+  before: [Number(20), Number(22)]
+  after:  [Number(42)]
+FAULT [&lt;main&gt;] unknown word typo
+  stack:  [Number(42)]</code></pre>
+                    </article>
+
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>TestCase Declarations</h3>
+                            <span class="file-tag">tests/UserTest.rco</span>
+                        </div>
+                        <p class="card-description">Declare and run automated unit tests with the standard testing operators.</p>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy test example" title="Copy">copy</button><code>(( tests/UserTest.rco ))
+UserTest TestCase subclass
+  "testDisplayName" [
+    "Ada"
+    "Ada" assert-equals
+  ] !method
+end</code></pre>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- CLI Reference -->
+        <section id="cli" class="ref-section cli-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Toolchain commands</span>
+                    <h2>CLI Reference</h2>
+                    <p class="section-desc">Comprehensive list of commands available in the Ricochet command-line interface.</p>
+                </div>
+                <div class="cli-list-wrapper">
+                    <div class="cli-list-grid" id="ref-cli-grid">
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco new &lt;path&gt;</code></div>
+                            <div class="cli-desc-col">Create a new MVC Ricochet application structure.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco check [path]</code></div>
+                            <div class="cli-desc-col">Perform compile-time checks on script files or web applications.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco repl [--debug]</code></div>
+                            <div class="cli-desc-col">Launch an interactive terminal REPL and print the stack trace after each evaluation.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco run [--debug] [--step] [--breakpoint LINE] &lt;path&gt;</code></div>
+                            <div class="cli-desc-col">Compile and execute a Ricochet source script file.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco build [path]</code></div>
+                            <div class="cli-desc-col">Compile and bundle source code into a bytecode file (defaults to `build/app.rcob`).</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco serve [--debug] [--watch]</code></div>
+                            <div class="cli-desc-col">Spin up a local web server for the current MVC project.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco test [--debug] [path]</code></div>
+                            <div class="cli-desc-col">Locate and execute test cases defined inside standard `tests` folders.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Current Limits -->
+        <section id="limits" class="ref-section limits-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Current truth, not future promises</span>
+                    <h2>Known Current Limits</h2>
+                    <p class="section-desc">The bounds of the v1.0.0 draft specification. Be aware of these rules in your application code.</p>
+                </div>
+                <div class="limits-card">
+                    <ul class="limit-list" id="ref-limits-list">
+                        <li>Integer values are stored as 64-bit signed integers (<code>i64</code>); the lexer currently parses non-negative decimal literals.</li>
+                        <li>Addition exists; subtraction, multiplication, division, loops, async, packages, and AI package words are not implemented yet.</li>
+                        <li>Result types cannot be used directly as conditions. You must check with <code>ok?</code>, then extract with <code>value</code> or <code>error</code>.</li>
+                        <li>Top-level method declarations are rejected; methods must reside in a class declaration or be installed via <code>!method</code>.</li>
+                        <li>Active Record targets existing PostgreSQL schemas in v1. Schema migrations are a later branch.</li>
+                        <li>Template expressions must leave exactly one scalar renderable value on the stack: nil, bool, number, or string.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="index.html#features" class="footer-link">Features</a></li>
+                <li><a href="index.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="reference.html" class="footer-link">Docs</a></li>
+                <li><a href="index.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="reference.js"></script>
+</body>
+</html>
