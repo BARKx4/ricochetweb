@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricochet Language — The Stack is Back</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Ricochet is a modern, pure-postfix, stack-based OOP programming language. Designed for speed, stack-aware debugging, and dynamic runtime metaprogramming.">
+    <meta name="keywords" content="Ricochet, programming language, Forth, postfix, concatenative, stack-based, bytecode VM, OOP, web MVC, PostgreSQL">
+    <meta name="author" content="Ricochet Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ricochet Language — The Stack is Back">
+    <meta property="og:description" content="A next-generation concatenative programming language designed for modern systems. Speed of Forth with dynamic class-based OOP and stack safety.">
+    <meta property="og:image" content="assets/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Ricochet Language — The Stack is Back">
+    <meta property="twitter:description" content="A next-generation concatenative programming language designed for modern systems. Speed of Forth with dynamic class-based OOP and stack safety.">
+    <meta property="twitter:image" content="assets/logo.png">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="glass.css">
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <div class="header-banner" id="site-header-banner">
+        <img src="assets/hero_logo.jpg" alt="Ricochet Hero" class="header-hero-img">
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="#" class="brand" id="nav-brand">
+                <img src="assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="reference_glass.html" class="nav-link" id="link-docs">Docs</a></li>
+                    <li><a href="#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="document.getElementById('playground').scrollIntoView({behavior: 'smooth'})">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Intro Section -->
+        <section class="hero-intro" id="hero-section">
+            <div class="container">
+                <p class="hero-tagline" id="hero-description">
+                    A pure-postfix, stack-based programming language with dynamic class-based OOP, 
+                    source-mapped bytecode metadata, and capability-first side effects. Built for the modern stack.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" id="hero-primary-btn" onclick="document.getElementById('playground').scrollIntoView({behavior: 'smooth'})">Try Playground</button>
+                    <button class="btn btn-secondary" id="hero-secondary-btn" onclick="window.location.href='reference_glass.html'">Read Design Spec</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section" id="stats">
+            <div class="container">
+                <div class="stats-grid" id="stats-grid-container">
+                    <div class="stat-item" id="stat-postfix">
+                        <div class="stat-val">100%</div>
+                        <div class="stat-label">Postfix — No Infix Parser</div>
+                    </div>
+                    <div class="stat-item" id="stat-stacks">
+                        <div class="stat-val">2</div>
+                        <div class="stat-label">VM Stacks — Compile & Runtime</div>
+                    </div>
+                    <div class="stat-item" id="stat-vm">
+                        <div class="stat-val">Rust</div>
+                        <div class="stat-label">Bytecode VM</div>
+                    </div>
+                    <div class="stat-item" id="stat-mvc">
+                        <div class="stat-val">v1</div>
+                        <div class="stat-label">Web MVC Built-in</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Interactive Playground Section -->
+        <section class="playground-section" id="playground">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Interactive Environment</span>
+                    <h2 class="section-title" id="playground-heading">Run Snippets Live</h2>
+                    <p class="section-desc">Write postfix Ricochet code in your browser. Watch the data stack shift, push, and pop in real-time as your code compiles and executes.</p>
+                </div>
+
+                <div class="playground-wrapper" id="playground-interface">
+                    <!-- Left: Code Editor Pane -->
+                    <div class="editor-frame" id="editor-pane">
+                        <div class="frame-header">
+                            <div class="window-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <div class="frame-title">main.rco</div>
+                            <div class="example-selector-wrapper">
+                                <span class="selector-label">Load Template:</span>
+                                <select class="select-dropdown" id="example-select">
+                                    <option value="subclass">User Model subclass</option>
+                                    <option value="variables">Variables setup</option>
+                                    <option value="fibonacci">Fibonacci Numbers</option>
+                                    <option value="factorial">Factorial</option>
+                                    <option value="result">Result expected failures</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="editor-container">
+                            <textarea class="editor-textarea" id="editor" spellcheck="false" placeholder="Write Ricochet code here..."></textarea>
+                        </div>
+
+                        <!-- Code instruction trace -->
+                        <div class="trace-panel" id="trace-panel">
+                            <div class="trace-label">Instruction Trace (IP)</div>
+                            <div class="token-trace-container" id="token-trace">
+                                <span class="trace-empty">Code trace will appear here</span>
+                            </div>
+                        </div>
+
+                        <div class="controls-bar">
+                            <div class="action-buttons">
+                                <button class="btn-ctrl primary-ctrl" id="run-btn" title="Run the full code synchronously">▶ RUN CODE</button>
+                                <button class="btn-ctrl" id="step-btn" title="Execute the next instruction">↓ STEP CODE</button>
+                                <button class="btn-ctrl" id="reset-btn" title="Reset the virtual machine state">↺ RESET</button>
+                            </div>
+                            <div class="status-indicator">
+                                <span>VM Status:</span>
+                                <span class="status-tag ready" id="vm-status">Ready</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Stack Visualizer & Output Console -->
+                    <div class="playground-sidebar" id="sidebar-pane">
+                        <!-- Stack Visualizer -->
+                        <div class="sidebar-panel" id="stack-panel">
+                            <div class="sidebar-panel-header">
+                                <span>DATA STACK (TOS at Top)</span>
+                                <span class="stack-count" id="stack-count-display"></span>
+                            </div>
+                            <div class="stack-visualizer" id="stack-container">
+                                <div class="empty-stack-msg">Stack is empty</div>
+                            </div>
+                        </div>
+
+                        <!-- Vocabulary Dictionary / Classes -->
+                        <div class="sidebar-panel" id="dictionary-panel">
+                            <div class="sidebar-panel-header">
+                                <span>VM ENVIRONMENT</span>
+                            </div>
+                            <div class="words-panel">
+                                <div class="words-list" id="defined-words">
+                                    <span class="no-words">No custom definitions yet.</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Output Console -->
+                        <div class="sidebar-panel" id="console-panel">
+                            <div class="sidebar-panel-header">
+                                <span>CONSOLE OUTPUT</span>
+                            </div>
+                            <div class="console-panel">
+                                <pre class="console-output" id="console-output"></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features/Pitch Section -->
+        <section id="features">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Language Pillars</span>
+                    <h2 class="section-title" id="features-heading">Why Ricochet?</h2>
+                    <p class="section-desc">Preserving postfix stack thinking while building modern, PostgreSQL-backed MVC web apps and robust CLI tooling.</p>
+                </div>
+
+                <div class="features-grid" id="pillars-grid">
+                    <!-- Card 1 -->
+                    <div class="feature-card" id="card-postfix">
+                        <div class="feature-icon-wrapper">
+                            <span class="feature-icon">⚡</span>
+                        </div>
+                        <h3 class="feature-title">Pure Postfix Execution</h3>
+                        <p class="feature-desc">No infix parser. No operator precedence. Every operator is a word, every word is a stack operation. Data flows left to right, always.</p>
+                    </div>
+
+                    <!-- Card 2 -->
+                    <div class="feature-card" id="card-oop">
+                        <div class="feature-icon-wrapper">
+                            <span class="feature-icon">🏗️</span>
+                        </div>
+                        <h3 class="feature-title">Class-Based OOP</h3>
+                        <p class="feature-desc">Open classes, dynamic creation, and runtime metaprogramming — without turning the language into Java with Forth punctuation. Postfix declarations: name first, keyword second.</p>
+                    </div>
+
+                    <!-- Card 3 -->
+                    <div class="feature-card" id="card-debugger">
+                        <div class="feature-icon-wrapper">
+                            <span class="feature-icon">🔍</span>
+                        </div>
+                        <h3 class="feature-title">Stack-Aware Debugger</h3>
+                        <p class="feature-desc">Breakpoints, break-on-fault, task inspection, and full stack traces with source maps. Debug running requests, spawned tasks, and async work from the terminal.</p>
+                    </div>
+
+                    <!-- Card 4 -->
+                    <div class="feature-card" id="card-capability">
+                        <div class="feature-icon-wrapper">
+                            <span class="feature-icon">🛡️</span>
+                        </div>
+                        <h3 class="feature-title">Capability-Oriented</h3>
+                        <p class="feature-desc">No magical global IO. Apps, tests, plugins, and hosted scripts receive explicit powers through context injection. Request, db, logger, view — all capability objects.</p>
+                    </div>
+
+                    <!-- Card 5 -->
+                    <div class="feature-card" id="card-mvc">
+                        <div class="feature-icon-wrapper">
+                            <span class="feature-icon">🌐</span>
+                        </div>
+                        <h3 class="feature-title">Web MVC Built In</h3>
+                        <p class="feature-desc">Routes, controllers, PostgreSQL Active Record, and HTML templates with full Ricochet interpolation. <code>rco serve --watch</code> with hot reload and stable request snapshots.</p>
+                    </div>
+
+                    <!-- Card 6 -->
+                    <div class="feature-card" id="card-tooling">
+                        <div class="feature-icon-wrapper">
+                            <span class="feature-icon">📦</span>
+                        </div>
+                        <h3 class="feature-title">Batteries Included</h3>
+                        <p class="feature-desc">Single CLI for everything you need. Project scaffolding, dependency management via <code>ricochet.toml</code>, test suites, and compile-time documentation generation.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Docs and Scaffolding Details -->
+        <section id="docs">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Developer Guide</span>
+                    <h2 class="section-title" id="docs-heading">Write Postfix OOP Code</h2>
+                    <p class="section-desc">Object-oriented programming in postfix is clean and readable. Let's see the structure.</p>
+                </div>
+
+                <div class="walkthrough-grid" id="docs-walkthrough">
+                    <div class="walkthrough-content" id="walkthrough-text">
+                        <h3>Subclassing & Variable Access</h3>
+                        <p>In Ricochet, class declarations use the postfix structure <code>Name Parent subclass</code>. We end definitions and blocks using the universal word <code>end</code>.</p>
+                        <p>Comments are enclosed in double parentheses <code>(( ... ))</code>. Comments immediately preceding declarations compile as their docstring documentation.</p>
+                        <p>Variables are declared with postfix <code>var</code> (e.g., <code>amount var</code>), written with <code>set</code>, and read with <code>get</code>. Field mutation uses dot keywords: <code>user .email get</code> retrieves the field, and <code>"a@example.com" user .email set</code> sets it.</p>
+                        <p>Method calls use the explicit dot form <code>object .methodName</code>. In methods, the receiver is bound to <code>self</code>.</p>
+                    </div>
+
+                    <div class="static-code-card" id="walkthrough-code">
+                        <div class="frame-header">
+                            <div class="window-dots">
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                                <span class="dot"></span>
+                            </div>
+                            <div class="frame-title">user.rco</div>
+                        </div>
+                        <div class="static-code-body">
+                            <pre><code style="color: #c77dff;"><span style="color: #71717a;">(( Represents a user account ))</span>
+User Model subclass
+  users table
+  id field
+  email field
+  name field
+
+  displayName method
+    self .name get empty? if
+      self .email get
+    else
+      self .name get
+    end
+  end
+end
+
+User new user set
+"Alice" user get .name set
+user get .displayName .
+
+<span style="color: #71717a;">(( Output terminal: Alice ))</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Install Section -->
+        <section id="install">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Quickstart</span>
+                    <h2 class="section-title" id="install-heading">Install Tooling</h2>
+                    <p class="section-desc">Get the Ricochet CLI compiler and package manager up and running instantly.</p>
+                </div>
+
+                <div class="walkthrough-grid" id="install-guide">
+                    <div class="terminal-card" id="terminal-pane">
+                        <div class="terminal-header">
+                            <div class="window-dots">
+                                <span class="dot red"></span>
+                                <span class="dot yellow"></span>
+                                <span class="dot green"></span>
+                            </div>
+                            <button class="copy-btn" id="copy-install-btn">COPY CODE</button>
+                        </div>
+                        <div class="terminal-body">
+                            <div class="terminal-line">
+                                <span class="prompt">$</span>
+                                <span class="command" id="install-cmd-text">curl -fsSL https://ricochet-lang.org/install.sh | sh</span>
+                            </div>
+                            <div class="terminal-line output-line">
+                                <span class="prompt">></span>
+                                <span>Installing ricochet (rco) v1.0.0-draft...</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="prompt">$</span>
+                                <span class="command">rco new web blog</span>
+                            </div>
+                            <div class="terminal-line output-line">
+                                <span class="prompt">></span>
+                                <span>Created blog project: ricochet.toml, config/routes.rco</span>
+                            </div>
+                            <div class="terminal-line">
+                                <span class="prompt">$</span>
+                                <span class="command">rco run app.rco</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="walkthrough-content" id="terminal-text">
+                        <h3>Built-in Tooling</h3>
+                        <p>The <code>ricochet</code> CLI (short alias <code>rco</code>) includes everything you need:</p>
+                        <ul style="list-style-type: none; padding-left: 0; margin-bottom: 24px;">
+                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco new</code>: Creates a minimal web/cli project scaffolding</li>
+                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco serve --watch</code>: Live HTTP server with snapshot hot-reloading</li>
+                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco repl</code>: Ephemeral live metaprogramming workspace</li>
+                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco test --debug</code>: Runs test classes under VM debugger</li>
+                        </ul>
+                        <button class="btn btn-secondary" onclick="window.open('https://github.com', '_blank')">View GitHub Repository</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="#features" class="footer-link">Features</a></li>
+                <li><a href="#playground" class="footer-link">Playground</a></li>
+                <li><a href="reference_glass.html" class="footer-link">Docs</a></li>
+                <li><a href="#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Playground VM script -->
+    <script src="playground.js"></script>
+
+    <!-- Copy to clipboard logic -->
+    <script>
+        document.getElementById('copy-install-btn').addEventListener('click', () => {
+            const cmdText = document.getElementById('install-cmd-text').textContent;
+            navigator.clipboard.writeText(cmdText).then(() => {
+                const btn = document.getElementById('copy-install-btn');
+                btn.textContent = 'COPIED!';
+                setTimeout(() => {
+                    btn.textContent = 'COPY CODE';
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        });
+    </script>
+</body>
+</html>
