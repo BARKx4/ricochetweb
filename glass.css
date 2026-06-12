@@ -1514,10 +1514,14 @@ section {
 .tag.tag-math { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
 .tag.tag-stack { color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.2); }
 .tag.tag-data { color: #10b981; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.2); }
+.tag.tag-collection { color: #14b8a6; background: rgba(20, 184, 166, 0.1); border-color: rgba(20, 184, 166, 0.2); }
+.tag.tag-string { color: #0ea5e9; background: rgba(14, 165, 233, 0.1); border-color: rgba(14, 165, 233, 0.2); }
 .tag.tag-oop { color: #ec4899; background: rgba(236, 72, 153, 0.1); border-color: rgba(236, 72, 153, 0.2); }
 .tag.tag-control { color: #a855f7; background: rgba(168, 85, 247, 0.1); border-color: rgba(168, 85, 247, 0.2); }
 .tag.tag-web { color: #06b6d4; background: rgba(6, 182, 212, 0.1); border-color: rgba(6, 182, 212, 0.2); }
 .tag.tag-result { color: #f43f5e; background: rgba(244, 63, 94, 0.1); border-color: rgba(244, 63, 94, 0.2); }
+.tag.tag-system { color: #f97316; background: rgba(249, 115, 22, 0.1); border-color: rgba(249, 115, 22, 0.2); }
+.tag.tag-inspect { color: #d946ef; background: rgba(217, 70, 239, 0.1); border-color: rgba(217, 70, 239, 0.2); }
 
 .stack-effect {
     font-family: var(--font-mono);
