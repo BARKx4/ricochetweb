@@ -129,8 +129,8 @@
                         <path d="M472 227 L528 238" class="connector"></path>
                         <path d="M472 227 L528 326" class="connector"></path>
                         
-                        <text x="78" y="404" class="caption">name get "home/index" swap view</text>
-                        <text x="78" y="438" class="caption">className get methodName get [ ... ] !method</text>
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">$className $methodName [ ... ] !method</text>
                     </svg>
                 </div>
             </div>
@@ -147,7 +147,7 @@
                 <div class="code-block-wrapper">
                     <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy smoke script" title="Copy">copy</button><code>User Model subclass
   email field
-  "displayName" [ self .email get ] !method
+  "displayName" [ $self .email ] !method
 end
 
 User new
@@ -199,7 +199,7 @@ tags Set</code></pre>
                             <h3>Argument Lists</h3>
                         </header>
                         <pre><code>( ctx -> Response ) "index" [
-  ctx get "home/index" swap view
+  $ctx "home/index" swap view
 ] !method</code></pre>
                         <p>Parentheses create optional input/output metadata for functions and methods.</p>
                     </article>
@@ -207,7 +207,7 @@ tags Set</code></pre>
                         <header class="syntax-card-header">
                             <h3>Blocks</h3>
                         </header>
-                        <pre><code>[ self .email get ]</code></pre>
+                        <pre><code>[ $self .email ]</code></pre>
                         <p>Square brackets create first-class bytecode blocks. Use `call` to execute a block value.</p>
                     </article>
                     <article class="syntax-card">
@@ -217,7 +217,7 @@ tags Set</code></pre>
                         <pre><code>result dup ok? if
   value
 else
-  error .message get
+  error .message
 end</code></pre>
                         <p>`if else end` is postfix: the condition is already on the stack before `if`.</p>
                     </article>
@@ -225,8 +225,8 @@ end</code></pre>
                         <header class="syntax-card-header">
                             <h3>Loops</h3>
                         </header>
-                        <pre><code>count get 10 &lt; while
-  count get 1 + count set
+                        <pre><code>$count 10 &lt; while
+  $count 1 + $count set
 end</code></pre>
                         <p>The condition expression before `while` is re-executed before every iteration. `break` exits and `continue` rechecks the condition.</p>
                     </article>
@@ -234,8 +234,8 @@ end</code></pre>
                         <header class="syntax-card-header">
                             <h3>Members</h3>
                         </header>
-                        <pre><code>user .email get
-"ada@example.com" user .email set</code></pre>
+                        <pre><code>$user .email
+"ada@example.com" $user .email set</code></pre>
                         <p>Dot words push member selectors for `get` and `set`, and call methods when used directly.</p>
                     </article>
                     <article class="syntax-card">
@@ -253,7 +253,7 @@ packageHello</code></pre>
                         <header class="syntax-card-header">
                             <h3>Templates</h3>
                         </header>
-                        <pre><code>&lt;strong&gt;{ user get .name get }&lt;/strong&gt;
+                        <pre><code>&lt;strong&gt;{ $user .name }&lt;/strong&gt;
 &lt;small&gt;{ 20 22 + }&lt;/small&gt;</code></pre>
                         <p>Each `{ ... }` expression runs Ricochet and must leave exactly one renderable value.</p>
                     </article>
@@ -335,9 +335,9 @@ User Model subclass
   name field
 
   "displayName" [
-    self .name get
+    $self .name
     dup nil? if
-      drop self .email get
+      drop $self .email
     else
       return
     end
@@ -352,11 +352,11 @@ end</code></pre>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>"Widget" className var
 "label" methodName var
 
-className get "Object" subclass
-className get "name" field
-className get methodName get [ self .name get ] !method
+$className "Object" subclass
+$className "name" field
+$className $methodName [ $self .name ] !method
 
-className get new
+$className new
 "dynamic" swap .name set
 .label</code></pre>
                     </article>
@@ -453,7 +453,7 @@ DELETE "/users/:id" UserController "destroy" route</code></pre>
 HomeController Controller subclass
   "index" [
     "Hello Ricochet" title var
-    ctx get
+    $ctx
     "home/index" swap view
   ] !method
 end</code></pre>
@@ -469,10 +469,10 @@ User Model subclass
   name field
 
   "displayName" [
-    self .name get nil? if
-      self .email get
+    $self .name nil? if
+      $self .email
     else
-      self .name get
+      $self .name
     end
   ] !method
 end</code></pre>
@@ -489,10 +489,10 @@ UserController Controller subclass
     User new
     "ada@example.com" swap .email set
     "Ada Lovelace" swap .name set
-    users get .push! drop
-    users get .count userCount var
+    $users .push! drop
+    $users .count userCount var
     "Users" title var
-    ctx get
+    $ctx
     "users/index" swap view
   ] !method
 end</code></pre>
@@ -559,13 +559,13 @@ User .count
 User .first
 1 User .exists?
 attributes map
-"email" "ada@example.com" attributes get .put! drop
-"name" "Ada" attributes get .put! drop
-attributes get User .insert
+"email" "ada@example.com" $attributes .put! drop
+"name" "Ada" $attributes .put! drop
+$attributes User .insert
 
 updates map
-"email" "grace@example.com" updates get .put! drop
-42 updates get User .update</code></pre>
+"email" "grace@example.com" $updates .put! drop
+42 $updates User .update</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
                         <div class="card-header">
@@ -578,9 +578,9 @@ UserController Controller subclass
     User .all
     dup ok? if
       value users var
-      ctx get "users/index" swap view
+      $ctx "users/index" swap view
     else
-      error .message get text
+      error .message text
     end
   ] !method
 end</code></pre>
@@ -607,9 +607,9 @@ end</code></pre>
 6 multiplicand var
 7 multiplier var
 
-multiplier get 0 &gt; while
+$multiplier 0 &gt; while
   product get multiplicand get + product set
-  multiplier get 1 - multiplier set
+  $multiplier 1 - $multiplier set
 end
 
 product get println</code></pre>
@@ -621,11 +621,11 @@ product get println</code></pre>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>0 count var
 
-count get 10 &lt; while
-  count get 1 + count set
-  count get 3 = if continue end
-  count get 6 = if break end
-  count get println
+$count 10 &lt; while
+  $count 1 + $count set
+  $count 3 = if continue end
+  $count 6 = if break end
+  $count println
 end</code></pre>
                     </article>
                     <article class="code-example-card">
@@ -642,7 +642,7 @@ nil counter var
 counter get Counter new .previous set counter set
 counter get Counter new .previous set counter set
 counter get nil? false = while
-  counter get .previous get counter set
+  counter get .previous counter set
 end</code></pre>
                     </article>
                 </div>
@@ -715,7 +715,7 @@ end</code></pre>
                             <h3>CLI Script Words</h3>
                         </div>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>args .count println
-"DATABASE_URL" env dup ok? if value println else error .message get eprint end
+"DATABASE_URL" env dup ok? if value println else error .message eprint end
 cwd value println
 now println
 100 random println</code></pre>

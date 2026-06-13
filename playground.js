@@ -121,13 +121,15 @@ class RicochetVM {
         };
 
         // Output and formatting
-        this.dictionary['.'] = () => {
-            if (this.dataStack.length < 1) throw new Error("Stack underflow (.)");
+        this.dictionary['print'] = () => {
+            if (this.dataStack.length < 1) throw new Error("Stack underflow (print)");
             const val = this.pop();
-            this.print((val === null || val === undefined ? "nil" : val) + " ");
+            this.print(val === null || val === undefined ? "nil" : val);
         };
-        this.dictionary['cr'] = () => {
-            this.print("\n");
+        this.dictionary['println'] = () => {
+            if (this.dataStack.length < 1) throw new Error("Stack underflow (println)");
+            const val = this.pop();
+            this.print((val === null || val === undefined ? "nil" : val) + "\n");
         };
         this.dictionary['emit'] = () => {
             if (this.dataStack.length < 1) throw new Error("Stack underflow (emit)");
@@ -343,8 +345,8 @@ class RicochetVM {
                 for (let j = i - 1; j >= 0; j--) {
                     const prev = tokens[j].toLowerCase();
                     if (prev === 'end' || prev === ';' || prev === 'else' || 
-                        prev === 'set' || prev === 'var' || prev === '.' || 
-                        prev === 'cr' || prev === 'subclass' || prev === 'field' || 
+                        prev === 'set' || prev === 'var' || prev === 'print' || 
+                        prev === 'println' || prev === 'subclass' || prev === 'field' || 
                         prev === 'method' || prev === 'table') {
                         condStart = j + 1;
                         break;
@@ -506,6 +508,24 @@ class RicochetVM {
             }
 
             // C. Normal Execution
+            // 0. Variable references starting with $
+            if (token.startsWith('$') && token.length > 1) {
+                const varName = token.substring(1);
+                const nextToken = this.ip + 1 < this.currentTokens.length ? this.currentTokens[this.ip + 1].toLowerCase() : '';
+                if (nextToken === 'set' || nextToken === 'var') {
+                    // Push the clean name symbol for assignment/declaration
+                    this.push(varName);
+                } else {
+                    // Automatically get the variable's value
+                    if (!(varName in this.variables)) {
+                        throw new Error(`Undefined variable: "${varName}"`);
+                    }
+                    this.push(this.variables[varName]);
+                }
+                this.ip++;
+                return;
+            }
+
             // 1. Literal strings
             if (token.startsWith('"') && token.endsWith('"')) {
                 this.push(token.substring(1, token.length - 1));
@@ -571,63 +591,68 @@ class RicochetVM {
                 return;
             }
 
-            // 5. Special dot method call syntax (.displayName)
+            // 5. Special dot method call syntax or auto field lookup (.displayName)
             if (token.startsWith('.') && token.length > 1) {
                 const nextToken = this.ip + 1 < this.currentTokens.length ? this.currentTokens[this.ip + 1].toLowerCase() : '';
                 if (nextToken === 'get' || nextToken === 'set') {
-                    // Pushes field symbol
+                    // Pushes field symbol (backwards compatibility)
                     this.push(token);
                     this.ip++;
                 } else {
-                    // Method dispatch on receiver
-                    const methodName = token.substring(1);
-                    if (this.dataStack.length < 1) throw new Error(`Stack underflow (method call ${token})`);
+                    // Method dispatch or auto-get field lookup
+                    const memberName = token.substring(1);
+                    if (this.dataStack.length < 1) throw new Error(`Stack underflow (member lookup ${token})`);
                     
                     const receiver = this.dataStack[this.dataStack.length - 1]; // peek receiver
                     
                     // Handle special error message property lookup
-                    if (receiver instanceof RicochetResult && methodName === 'message') {
+                    if (receiver instanceof RicochetResult && memberName === 'message') {
                         this.pop(); // pop receiver
                         this.push(receiver.errorMessage || 'nil');
                         this.ip++;
                         return;
                     }
 
-                    if (!(receiver instanceof RicochetObject)) {
-                        throw new Error(`Method call ${token} requires receiver object on stack, got: ${typeof receiver}`);
-                    }
-
-                    // Resolve method
-                    let method = null;
-                    let k = receiver.klass;
-                    while (k) {
-                        if (k.methods[methodName]) {
-                            method = k.methods[methodName];
-                            break;
+                    if (receiver instanceof RicochetObject) {
+                        // Resolve method
+                        let method = null;
+                        let k = receiver.klass;
+                        while (k) {
+                            if (k.methods[memberName]) {
+                                method = k.methods[memberName];
+                                break;
+                            }
+                            k = k.parentName ? this.classes[k.parentName] : null;
                         }
-                        k = k.parentName ? this.classes[k.parentName] : null;
+
+                        if (method) {
+                            // Save stack frame and execute method
+                            const savedVars = {...this.variables};
+                            this.callStack.push({
+                                tokens: this.currentTokens,
+                                jumps: this.jumps,
+                                ip: this.ip + 1,
+                                variables: savedVars
+                            });
+
+                            // Set up local scope
+                            this.variables = {
+                                'self': receiver
+                            };
+                            
+                            // Bind method execution
+                            this.currentTokens = method.body;
+                            this.jumps = method.jumps;
+                            this.ip = 0;
+                        } else {
+                            // Automatic field get!
+                            this.pop(); // pop receiver
+                            this.push(this.getField(receiver, memberName));
+                            this.ip++;
+                        }
+                    } else {
+                        throw new Error(`Member lookup ${token} requires object or result receiver, got: ${typeof receiver}`);
                     }
-
-                    if (!method) throw new Error(`Method "${methodName}" not found in class hierarchy of ${receiver.klass.name}`);
-
-                    // Save stack frame
-                    const savedVars = {...this.variables};
-                    this.callStack.push({
-                        tokens: this.currentTokens,
-                        jumps: this.jumps,
-                        ip: this.ip + 1,
-                        variables: savedVars
-                    });
-
-                    // Set up local scope
-                    this.variables = {
-                        'self': receiver
-                    };
-                    
-                    // Bind method execution
-                    this.currentTokens = method.body;
-                    this.jumps = method.jumps;
-                    this.ip = 0;
                 }
                 return;
             }
@@ -670,33 +695,34 @@ User Model subclass
   name field
 
   displayName method
-    self .name get empty? if
-      self .email get
+    $self .name empty? if
+      $self .email
     else
-      self .name get
+      $self .name
     end
   end
 end
 
 (( Instantiate new User ))
-User new user set
-"Alice" user get .name set
-"alice@example.com" user get .email set
+user var
+User new $user set
+"Alice" $user .name set
+"alice@example.com" $user .email set
 
 (( Call displayName method ))
-"User Account Display Name:" . cr
-user get .displayName . cr
+"User Account Display Name:" println
+$user .displayName println
 `,
 
     variables: `(( Variables setup and mutation ))
 amount var
-100 amount set
+100 $amount set
 
 (( Add 50 and update ))
-amount get 50 + amount set
+$amount 50 + $amount set
 
-"Variable value: " .
-amount get . cr
+"Variable value: " print
+$amount println
 `,
 
     fibonacci: `(( Fibonacci loop using while ... end ))
@@ -705,46 +731,50 @@ a var
 b var
 temp var
 
-10 limit set
-0 a set
-1 b set
+10 $limit set
+0 $a set
+1 $b set
 
-"Fibonacci Sequence:" . cr
-limit get 0 > while
-  a get .
+"Fibonacci Sequence:" println
+$limit 0 > while
+  $a print " " print
   
-  a get b get + temp set
-  b get a set
-  temp get b set
+  $a $b + $temp set
+  $b $a set
+  $temp $b set
   
-  limit get 1 - limit set
+  $limit 1 - $limit set
 end
-cr
+"" println
 `,
 
     factorial: `(( Compute Factorial using while ))
 n var
 result var
 
-6 n set
-1 result set
+6 $n set
+1 $result set
 
-n get 1 > while
-  result get n get * result set
-  n get 1 - n set
+$n 1 > while
+  $result $n * $result set
+  $n 1 - $n set
 end
 
-"Factorial of 6 is:" .
-result get . cr
+"Factorial of 6 is: " print
+$result println
 `,
 
-    result: `(( expected login failure Result testing ))
+    result: `(( Define User class first ))
+User Model subclass
+end
+
+(( expected login failure Result testing ))
 User open-class
   login method
     email var
-    email set
+    $email set
     
-    email get "admin@ricochet.org" equals if
+    $email "admin@ricochet.org" equals if
       "Welcome Admin!" 1 nil new-result
     else
       nil 0 "Invalid credentials" new-result
@@ -752,13 +782,15 @@ User open-class
   end
 end
 
-User new user set
-"admin@ricochet.org" user get .login result set
+user var
+result var
+User new $user set
+"admin@ricochet.org" $user .login $result set
 
-result get ok? if
-  "Success: " . result get value . cr
+$result ok? if
+  "Success: " print $result value println
 else
-  "Failed: " . result get error .message . cr
+  "Failed: " print $result .message println
 end
 `
 };

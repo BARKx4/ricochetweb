@@ -1461,7 +1461,6 @@ const filterButtons = Array.from(document.querySelectorAll(".filter-button"));
 let activeFilter = "all";
 
 function renderWords() {
-  if (!grid || !search) return;
   const query = search.value.trim().toLowerCase();
   const visible = WORDS.filter((entry) => {
     const matchesFilter = activeFilter === "all" || entry.group === activeFilter;
@@ -1480,20 +1479,17 @@ function renderWords() {
     <article class="word-card">
       <header>
         <h3><code>${escapeHtml(entry.word)}</code></h3>
-        <span class="tag tag-${entry.group}">${groupLabels[entry.group]}</span>
+        <span class="tag">${groupLabels[entry.group]}</span>
       </header>
       <div class="stack-effect">${escapeHtml(entry.stack)}</div>
       <p>${inlineCode(entry.body)}</p>
-      <pre class="word-example-code"><button class="copy-button" type="button" aria-label="Copy word example" title="Copy">copy</button><code>${escapeHtml(entry.example)}</code></pre>
+      <pre><code>${escapeHtml(entry.example)}</code></pre>
     </article>
   `).join("");
 
   if (visible.length === 0) {
     grid.innerHTML = `<p class="empty-state">No words match this filter yet.</p>`;
   }
-
-  // Bind clipboard copy buttons inside rendered cards
-  bindCardCopyButtons();
 }
 
 function escapeHtml(value) {
@@ -1501,7 +1497,7 @@ function escapeHtml(value) {
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;");
+    .replaceAll("\"", "&quot;");
 }
 
 function inlineCode(value) {
@@ -1516,64 +1512,28 @@ filterButtons.forEach((button) => {
   });
 });
 
-if (search) {
-  search.addEventListener("input", renderWords);
-}
+search.addEventListener("input", renderWords);
 
-function bindCardCopyButtons() {
-  document.querySelectorAll(".word-card .copy-button").forEach((button) => {
-    // Prevent duplicate event handlers if called multiple times
-    if (button.dataset.listenerBound) return;
-    button.dataset.listenerBound = "true";
-
-    button.addEventListener("click", async () => {
-      const code = button.parentElement.querySelector("code");
-      if (!code) {
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(code.textContent);
-        const old = button.textContent;
-        button.textContent = "COPIED!";
-        window.setTimeout(() => {
-          button.textContent = old;
-        }, 900);
-      } catch {
-        button.textContent = "FAILED";
-        window.setTimeout(() => {
-          button.textContent = "copy";
-        }, 900);
-      }
-    });
+document.querySelectorAll(".copy-button").forEach((button) => {
+  button.addEventListener("click", async () => {
+    const code = button.parentElement.querySelector("code");
+    if (!code) {
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(code.textContent);
+      const old = button.textContent;
+      button.textContent = "done";
+      window.setTimeout(() => {
+        button.textContent = old;
+      }, 900);
+    } catch {
+      button.textContent = "nope";
+      window.setTimeout(() => {
+        button.textContent = "copy";
+      }, 900);
+    }
   });
-}
-
-// Global copy button handler for elements not dynamically loaded in the grid (e.g. quickstart smoke script, oop/mvc static blocks)
-function bindGlobalCopyButtons() {
-  document.querySelectorAll(".code-block .copy-button").forEach((button) => {
-    button.addEventListener("click", async () => {
-      const code = button.parentElement.querySelector("code");
-      if (!code) {
-        return;
-      }
-      try {
-        await navigator.clipboard.writeText(code.textContent);
-        const old = button.textContent;
-        button.textContent = "COPIED!";
-        window.setTimeout(() => {
-          button.textContent = old;
-        }, 900);
-      } catch {
-        button.textContent = "FAILED";
-        window.setTimeout(() => {
-          button.textContent = "copy";
-        }, 900);
-      }
-    });
-  });
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderWords();
-  bindGlobalCopyButtons();
 });
+
+renderWords();
