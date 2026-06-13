@@ -142,11 +142,11 @@
                 <div class="code-block-wrapper">
                     <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy smoke script" title="Copy">copy</button><code>User Model subclass
   email field
-  "displayName" [ $self .email ] !method
+  "displayName" [ $$self .email ] !method
 end
 
 User new
-"ada@example.com" swap .email set
+"ada@example.com" swap .$email set
 .displayName
 println</code></pre>
                 </div>
@@ -202,7 +202,7 @@ tags Set</code></pre>
                         <header class="syntax-card-header">
                             <h3>Blocks</h3>
                         </header>
-                        <pre><code>[ $self .email ]</code></pre>
+                        <pre><code>[ $$self .email ]</code></pre>
                         <p>Square brackets create first-class bytecode blocks. Use `call` to execute a block value.</p>
                     </article>
                     <article class="syntax-card">
@@ -230,7 +230,7 @@ end</code></pre>
                             <h3>Members</h3>
                         </header>
                         <pre><code>$user .email
-"ada@example.com" $user .email set</code></pre>
+"ada@example.com" $user .$email set</code></pre>
                         <p>Dot words push member selectors for `get` and `set`, and call methods when used directly.</p>
                     </article>
                     <article class="syntax-card">
@@ -330,9 +330,9 @@ User Model subclass
   name field
 
   "displayName" [
-    $self .name
+    $$self .name
     dup nil? if
-      drop $self .email
+      drop $$self .email
     else
       return
     end
@@ -349,10 +349,10 @@ end</code></pre>
 
 $className "Object" subclass
 $className "name" field
-$className $methodName [ $self .name ] !method
+$className $methodName [ $$self .name ] !method
 
 $className new
-"dynamic" swap .name set
+"dynamic" swap .$name set
 .label</code></pre>
                     </article>
                     <article class="code-example-card">
@@ -361,7 +361,7 @@ $className new
                         </div>
                         <p class="card-description">Use `.methodName` for direct method calls or `send` when the method name is itself a value.</p>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>User new
-"ada@example.com" swap .email set
+"ada@example.com" swap .$email set
 dup .displayName println
 "displayName" send println</code></pre>
                     </article>
@@ -464,10 +464,10 @@ User Model subclass
   name field
 
   "displayName" [
-    $self .name nil? if
-      $self .email
+    $$self .name nil? if
+      $$self .email
     else
-      $self .name
+      $$self .name
     end
   ] !method
 end</code></pre>
@@ -482,8 +482,8 @@ UserController Controller subclass
   "index" [
     users array
     User new
-    "ada@example.com" swap .email set
-    "Ada Lovelace" swap .name set
+    "ada@example.com" swap .$email set
+    "Ada Lovelace" swap .$name set
     $users .push! drop
     $users .count userCount var
     "Users" title var
@@ -511,7 +511,7 @@ end</code></pre>
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>&lt;main&gt;
-  &lt;h1&gt;{ title get }&lt;/h1&gt;
+  &lt;h1&gt;{ $title }&lt;/h1&gt;
   &lt;p&gt;{ 20 22 + }&lt;/p&gt;
 &lt;/main&gt;</code></pre>
                     </article>
@@ -603,11 +603,11 @@ end</code></pre>
 7 multiplier var
 
 $multiplier 0 &gt; while
-  product get multiplicand get + product set
+  $product $multiplicand + $product set
   $multiplier 1 - $multiplier set
 end
 
-product get println</code></pre>
+$product println</code></pre>
                     </article>
                     <article class="code-example-card">
                         <div class="card-header">
@@ -634,10 +634,10 @@ end
 
 nil counter var
 
-counter get Counter new .previous set counter set
-counter get Counter new .previous set counter set
-counter get nil? false = while
-  counter get .previous counter set
+$counter Counter new .$previous set $counter set
+$counter Counter new .$previous set $counter set
+$counter nil? false = while
+  $counter .previous $counter set
 end</code></pre>
                     </article>
                 </div>
@@ -728,7 +728,7 @@ rco add github:BARKx4/ricochet_auth@v0.1.0 --no-fetch</code></pre>
                         </div>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>"README.md" fs .read-text value .count println
 "https://example.com" http .get value response var
-"status" response get .at println</code></pre>
+"status" $response .at println</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
                         <div class="card-header">

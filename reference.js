@@ -197,7 +197,7 @@ const WORDS = [
     "group": "stack",
     "stack": "a ->",
     "body": "Removes the top stack value.",
-    "example": "$self .name dup nil? if drop $self .email end"
+    "example": "$$self .name dup nil? if drop $$self .email end"
   },
   {
     "word": "over",
@@ -285,7 +285,7 @@ const WORDS = [
     "group": "data",
     "stack": "name:string -> value | receiver member -> value",
     "body": "Reads a variable by name string, or reads a member selector from an instance/map.",
-    "example": "$name\nuser .email"
+    "example": "$name\$nuser .email"
   },
   {
     "word": "set",
@@ -293,7 +293,7 @@ const WORDS = [
     "group": "data",
     "stack": "value name:string -> | value receiver member -> updatedReceiver",
     "body": "Updates an existing variable or returns an updated instance/map with a member value changed.",
-    "example": "\"Ada\" $name set\n\"ada@example.com\" $user .email set"
+    "example": "\"Ada\" $name set\n\"ada@example.com\" $user .$email set"
   },
   {
     "word": "empty?",
@@ -309,7 +309,7 @@ const WORDS = [
     "group": "data",
     "stack": "value -> bool",
     "body": "Returns true only for nil.",
-    "example": "$self .name nil?"
+    "example": "$$self .name nil?"
   },
   {
     "word": "subclass",
@@ -349,7 +349,7 @@ const WORDS = [
     "group": "oop",
     "stack": "-> receiver",
     "body": "Pushes the current method receiver.",
-    "example": "$self .email"
+    "example": "$$self .email"
   },
   {
     "word": "!method",
@@ -357,7 +357,7 @@ const WORDS = [
     "group": "oop",
     "stack": "class:string|class methodName:string block ->",
     "body": "Installs a bytecode method on a class. In class bodies, it is the preferred block method declaration operator.",
-    "example": "\"displayName\" [ $self .email ] !method"
+    "example": "\"displayName\" [ $$self .email ] !method"
   },
   {
     "word": "send",
@@ -371,9 +371,9 @@ const WORDS = [
     "word": ".name",
     "aliases": ["dot word"],
     "group": "oop",
-    "stack": "receiver -> result | receiver member get/set",
+    "stack": "receiver -> result | receiver $member/set",
     "body": "Dot words compile to method/member selectors. Use `.email` for fields and `.displayName` for methods.",
-    "example": "$user .email\nuser .displayName"
+    "example": "$user .email\$nuser .displayName"
   },
   {
     "word": "function",
@@ -389,7 +389,7 @@ const WORDS = [
     "group": "control",
     "stack": "class-body declaration",
     "body": "Declares a named method inside a class body. Top-level methods are not supported.",
-    "example": "displayName method\n  $self .email\nend"
+    "example": "displayName method\n  $$self .email\nend"
   },
   {
     "word": "return",
@@ -397,7 +397,7 @@ const WORDS = [
     "group": "control",
     "stack": "value -> returns value",
     "body": "Returns early from the current bytecode function or method.",
-    "example": "$self .name return"
+    "example": "$$self .name return"
   },
   {
     "word": "if",
@@ -469,7 +469,7 @@ const WORDS = [
     "group": "web",
     "stack": "body:any -> action",
     "body": "Builds a JSON controller response from nil, bool, number, string, array, or map values.",
-    "example": "payload map\n\"ok\" true $payload .put! drop\npayload get json"
+    "example": "payload map\n\"ok\" true $payload .put! drop\$npayload json"
   },
   {
     "word": "redirect",
@@ -589,7 +589,7 @@ const WORDS = [
     "group": "web",
     "stack": "attributes:map ModelClass -> result(record)",
     "body": "Inserts a row using mapped non-id fields and returns the inserted record.",
-    "example": "attributes map\n\"email\" \"ada@example.com\" $attributes .put! drop\nattributes get User .insert"
+    "example": "attributes map\n\"email\" \"ada@example.com\" $attributes .put! drop\$nattributes User .insert"
   },
   {
     "word": ".update",
@@ -748,7 +748,7 @@ const WORDS = [
     "aliases": ["Set new"],
     "group": "collection",
     "stack": "name?:string -> | -> Class(Set)",
-    "body": "With a name on top, declares a mutable set variable. With no name, pushes the Set class for `Set new`.",
+    "body": "With a name on top, declares a $mutable set variable. With no name, pushes the Set class for `Set new`.",
     "example": "tags Set\n\"rco\" $tags .push! drop"
   },
   {
@@ -764,7 +764,7 @@ const WORDS = [
     "aliases": ["!push"],
     "group": "collection",
     "stack": "value collection -> sameCollection",
-    "body": "Mutates an array, list, or set in place and returns the same collection for chaining.",
+    "body": "Mutates an array, list, $or set in place and returns the same collection for chaining.",
     "example": "\"Ada\" $users .push! \"Grace\" swap .push! drop"
   },
   {
@@ -901,7 +901,7 @@ const WORDS = [
     "group": "collection",
     "stack": "block collection -> array",
     "body": "Maps each item through a block and returns an array.",
-    "example": "[ 2 * ] numbers get .transform"
+    "example": "[ 2 * ] $numbers .transform"
   },
   {
     "word": ".select",
@@ -909,7 +909,7 @@ const WORDS = [
     "group": "collection",
     "stack": "block collection -> collection",
     "body": "Keeps items whose block result is truthy.",
-    "example": "[ 4 > ] numbers get .select"
+    "example": "[ 4 > ] $numbers .select"
   },
   {
     "word": ".reduce",
@@ -917,7 +917,7 @@ const WORDS = [
     "group": "collection",
     "stack": "initial:any block array|list|set -> value",
     "body": "Reduces a sequence by calling the block with accumulator then item.",
-    "example": "0 [ + ] numbers get .reduce"
+    "example": "0 [ + ] $numbers .reduce"
   },
   {
     "word": ".find",
@@ -925,7 +925,7 @@ const WORDS = [
     "group": "collection",
     "stack": "block collection -> value|nil",
     "body": "Returns the first item whose block result is truthy.",
-    "example": "[ 8 = ] numbers get .find"
+    "example": "[ 8 = ] $numbers .find"
   },
   {
     "word": ".any?",
@@ -933,7 +933,7 @@ const WORDS = [
     "group": "collection",
     "stack": "block collection -> bool",
     "body": "Returns true if any item matches.",
-    "example": "[ 10 = ] numbers get .any?"
+    "example": "[ 10 = ] $numbers .any?"
   },
   {
     "word": ".all?",
@@ -941,7 +941,7 @@ const WORDS = [
     "group": "collection",
     "stack": "block collection -> bool",
     "body": "Returns true if every item matches.",
-    "example": "[ 0 > ] numbers get .all?"
+    "example": "[ 0 > ] $numbers .all?"
   },
   {
     "word": ".join",
@@ -1141,7 +1141,7 @@ const WORDS = [
     "group": "string",
     "stack": "haystack:string regex -> bool",
     "body": "Returns true when the regex matches the string.",
-    "example": "\"hello-world\" slugPattern get .matches?"
+    "example": "\"hello-world\" $slugPattern .matches?"
   },
   {
     "word": ".find",
@@ -1149,7 +1149,7 @@ const WORDS = [
     "group": "string",
     "stack": "haystack:string regex -> map|nil",
     "body": "Returns a match map with `text`, `start`, and `end`, or nil.",
-    "example": "\"abc123\" digits get .find"
+    "example": "\"abc123\" $digits .find"
   },
   {
     "word": ".captures",
@@ -1157,7 +1157,7 @@ const WORDS = [
     "group": "string",
     "stack": "haystack:string regex -> map|nil",
     "body": "Returns numbered and named capture groups as a map, or nil.",
-    "example": "\"item-42\" pairPattern get .captures"
+    "example": "\"item-42\" $pairPattern .captures"
   },
   {
     "word": ".replace",
@@ -1165,7 +1165,7 @@ const WORDS = [
     "group": "string",
     "stack": "haystack:string replacement:string regex -> string",
     "body": "Replaces all regex matches.",
-    "example": "\"abc123\" \"#\" digits get .replace"
+    "example": "\"abc123\" \"#\" $digits .replace"
   },
   {
     "word": "ok",
@@ -1197,7 +1197,7 @@ const WORDS = [
     "group": "result",
     "stack": "fallback:any result -> value",
     "body": "Returns the ok value or a fallback.",
-    "example": "\"guest\" maybeName get .unwrap-or"
+    "example": "\"guest\" $maybeName .unwrap-or"
   },
   {
     "word": ".map-result",
@@ -1213,7 +1213,7 @@ const WORDS = [
     "group": "result",
     "stack": "block result -> result",
     "body": "Runs a block that must itself return a result when the receiver is ok.",
-    "example": "[ ok ] value get .and-then"
+    "example": "[ ok ] $value .and-then"
   },
   {
     "word": "print",
@@ -1521,7 +1521,7 @@ if (search) {
 }
 
 function bindCardCopyButtons() {
-  document.querySelectorAll(".word-card .copy-button").forEach((button) => {
+  document.querySelectorAll(".$word-card .copy-button").forEach((button) => {
     // Prevent duplicate event handlers if called multiple times
     if (button.dataset.listenerBound) return;
     button.dataset.listenerBound = "true";
@@ -1550,7 +1550,7 @@ function bindCardCopyButtons() {
 
 // Global copy button handler for elements not dynamically loaded in the grid (e.g. quickstart smoke script, oop/mvc static blocks)
 function bindGlobalCopyButtons() {
-  document.querySelectorAll(".code-block .copy-button").forEach((button) => {
+  document.querySelectorAll(".$code-block .copy-button").forEach((button) => {
     button.addEventListener("click", async () => {
       const code = button.parentElement.querySelector("code");
       if (!code) {

@@ -266,8 +266,8 @@
                         <h3>Subclassing & Variable Access</h3>
                         <p>In Ricochet, class declarations use the postfix structure <code>Name Parent subclass</code>. We end definitions and blocks using the universal word <code>end</code>.</p>
                         <p>Comments are enclosed in double parentheses <code>(( ... ))</code>. Comments immediately preceding declarations compile as their docstring documentation.</p>
-                        <p>Variables are declared with postfix <code>var</code> (e.g., <code>amount var</code>), written with <code>set</code>, and read with <code>get</code>. Field mutation uses dot keywords: <code>$user .email</code> retrieves the field, and <code>"a@example.com" $user .email set</code> sets it.</p>
-                        <p>Method calls use the explicit dot form <code>object .methodName</code>. In methods, the receiver is bound to <code>$self</code>.</p>
+                        <p>Variables are declared with postfix <code>var</code> (e.g., <code>amount var</code>), written with <code>set</code>, and read with <code>get</code>. Field mutation uses dot keywords: <code>$user .email</code> retrieves the field, and <code>"a@example.com" $user .$email set</code> sets it.</p>
+                        <p>Method calls use the explicit dot form <code>$object .methodName</code>. In methods, the receiver is bound to <code>$self</code>.</p>
                     </div>
 
                     <div class="static-code-card" id="walkthrough-code">
@@ -288,17 +288,17 @@ User Model subclass
   name field
 
   displayName method
-    $self .name empty? if
-      $self .email
+    $$self .name empty? if
+      $$self .email
     else
-      $self .name
+      $$self .name
     end
   end
 end
 
 user var
 User new $user set
-"Alice" $user .name set
+"Alice" $user .$name set
 $user .displayName println
 
 <span style="color: #71717a;">(( Output terminal: Alice ))</span></code></pre>
