@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solace — Agentic AI Coding Harness in Ricochet</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Solace is an autonomous agent coordinator, tool sandbox executor, and live terminal cockpit built entirely in the Ricochet programming language.">
+    <meta name="keywords" content="Solace, Ricochet, AI agents, agentic harness, concatenative, Forth, coding assistant, sandbox execution, Rust VM">
+    <meta name="author" content="Ricochet Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Solace — Agentic AI Coding Harness in Ricochet">
+    <meta property="og:description" content="An autonomous agent coordinator and cockpit, proving the power of Ricochet's capability-first stack OOP.">
+    <meta property="og:image" content="assets/solace_logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Solace — Agentic AI Coding Harness in Ricochet">
+    <meta property="twitter:description" content="An autonomous agent coordinator and cockpit, proving the power of Ricochet's capability-first stack OOP.">
+    <meta property="twitter:image" content="assets/solace_logo.png">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="solace.css">
+</head>
+<body>
+
+    <!-- Background Cyber Grid and Glows -->
+    <div class="cyber-grid"></div>
+    <div class="mesh-glow">
+        <div class="glow-blue"></div>
+        <div class="glow-purple"></div>
+        <div class="glow-orange"></div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="solace-navbar">
+        <div class="nav-container">
+            <a href="index.html" class="brand">
+                <img src="assets/solace_logo.png" alt="Solace Logo" class="brand-logo">
+                <span class="brand-name">SOLACE</span>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html" class="nav-link">Ricochet Home</a></li>
+                    <li><a href="#cockpit" class="nav-link">Cockpit</a></li>
+                    <li><a href="#features" class="nav-link">Features</a></li>
+                    <li><a href="#architecture" class="nav-link">Architecture</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" onclick="window.open('https://github.com/BARKx4/Solace', '_blank')">GITHUB REPO</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-logo-container">
+                    <img src="assets/solace_logo.png" alt="Solace Logo" class="hero-logo-img">
+                </div>
+                <div class="hero-title-container">
+                    <span class="hero-subtitle">Agentic AI Coding Harness</span>
+                    <h1 class="hero-main-title">SOLACE</h1>
+                </div>
+                <p class="hero-tagline">
+                    An autonomous agent coordinator, tool sandbox executor, and live terminal cockpit. 
+                    Designed for capability-safe AI software engineering, built entirely in the 
+                    <strong>Ricochet</strong> postfix programming language.
+                </p>
+                <div class="hero-badge-container">
+                    <div class="hero-badge">
+                        <span class="hero-badge-pulse"></span>
+                        Agentic Harness v0.3.2
+                    </div>
+                    <div class="hero-badge ricochet">
+                        Built in Ricochet OOP
+                    </div>
+                    <div class="hero-badge">
+                        Capability-First Sandbox
+                    </div>
+                </div>
+                <div class="hero-actions">
+                    <button class="btn btn-primary" onclick="window.open('https://github.com/BARKx4/Solace', '_blank')">View on GitHub</button>
+                    <button class="btn btn-secondary" onclick="document.getElementById('cockpit').scrollIntoView({behavior: 'smooth'})">Explore Cockpit</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Showcase Cockpit Section -->
+        <section class="showcase-section" id="cockpit">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Interactive Tour</span>
+                    <h2 class="section-title">The Agent Cockpit</h2>
+                    <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Click on the glowing hotspots on the dashboard to inspect the architectural modules of the Solace agent execution environment.</p>
+                </div>
+
+                <div class="browser-mockup">
+                    <div class="browser-header">
+                        <div class="browser-dots">
+                            <div class="browser-dot"></div>
+                            <div class="browser-dot"></div>
+                            <div class="browser-dot"></div>
+                        </div>
+                        <div class="browser-address">
+                            <span>https://</span>solace.ricochet.local/cockpit
+                        </div>
+                    </div>
+                    <div class="browser-content">
+                        <img src="assets/solace_cockpit.png" alt="Solace Agent Cockpit Dashboard" class="dashboard-img">
+                        <!-- Hotspots -->
+                        <div class="hotspot hotspot-sidebar" data-target="sidebar"></div>
+                        <div class="hotspot hotspot-readiness" data-target="readiness"></div>
+                        <div class="hotspot hotspot-approval" data-target="approval"></div>
+                        <div class="hotspot hotspot-history" data-target="history"></div>
+                        <div class="hotspot hotspot-transcript" data-target="transcript"></div>
+                    </div>
+                </div>
+
+                <!-- Info Panel dynamically loaded via JS -->
+                <div class="hotspot-info-container" id="hotspot-info">
+                    <h3 class="hotspot-info-title" id="info-title">Select a Hotspot</h3>
+                    <p class="hotspot-info-desc" id="info-desc">Click any of the glowing cyan points on the dashboard browser mockup above to learn how Solace manages sessions, sandboxes, human approvals, and agent transcripts using the Ricochet runtime.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section" id="features">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Core Capabilities</span>
+                    <h2 class="section-title">Engineered for Safe Autonomy</h2>
+                </div>
+                
+                <div class="features-grid">
+                    <!-- Feature 1 -->
+                    <div class="feature-card">
+                        <div class="feature-icon-container">🤖</div>
+                        <h3 class="feature-title">Dynamic Orchestration</h3>
+                        <p class="feature-desc">Solace runs multiple asynchronous agent execution loops coordinated via Ricochet’s object model. Class-based message passing coordinates planning, thinking, and executing steps.</p>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="feature-card purple">
+                        <div class="feature-icon-container">🛡️</div>
+                        <h3 class="feature-title">Capability Sandboxing</h3>
+                        <p class="feature-desc">By leveraging Ricochet’s capability-first design, agents only have the powers explicitly granted. Destructive side-effects like file writes are isolated and checked at the bytecode boundary.</p>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="feature-card orange">
+                        <div class="feature-icon-container">🔍</div>
+                        <h3 class="feature-title">Stack-Aware Debugging</h3>
+                        <p class="feature-desc">Unlike opaque Python agent scripts, Solace utilizes Ricochet's VM metadata. Inspect precise execution paths, stack frames, and variables in real-time if an agent gets stuck in a loop.</p>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="feature-card green">
+                        <div class="feature-icon-container">💻</div>
+                        <h3 class="feature-title">Developer Cockpit</h3>
+                        <p class="feature-desc">A premium interface featuring active session lists, tool mappings, diff viewports, and detailed live run transcripts. Solace tracks LLM token usage and execution times out of the box.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Architecture & Code Section -->
+        <section class="architecture-section" id="architecture">
+            <div class="container">
+                <div class="architect-layout">
+                    <div class="architect-info">
+                        <span class="section-label">Language in Action</span>
+                        <h2>The Power of Concatenative Architecture</h2>
+                        <p>
+                            Writing an agent harness in a stack-based language might seem unconventional, but it yields extraordinary structural clarity. Because every operation resolves on a data stack, agent state manipulation becomes highly transparent.
+                        </p>
+                        
+                        <ul class="arch-highlights">
+                            <li class="arch-highlight-item">
+                                <span class="arch-icon">✓</span>
+                                <div class="arch-text">
+                                    <h4>Compact Runtime Signature</h4>
+                                    <p>The Ricochet bytecode VM runs with negligible memory overhead compared to typical heavy Node or Python environments.</p>
+                                </div>
+                            </li>
+                            <li class="arch-highlight-item">
+                                <span class="arch-icon">✓</span>
+                                <div class="arch-text">
+                                    <h4>No Side-Effect Pollution</h4>
+                                    <p>VM tasks run with isolated runtime stacks, making context leakage or unintended side effects structurally impossible.</p>
+                                </div>
+                            </li>
+                            <li class="arch-highlight-item">
+                                <span class="arch-icon">✓</span>
+                                <div class="arch-text">
+                                    <h4>Extremely Fast Dispatch</h4>
+                                    <p>Dynamic OOP methods resolve quickly through the bytecode compiler, maintaining responsive agent coordination.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Syntax Highlighted Code Editor -->
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span class="code-title">solace/agent.rco</span>
+                            <span class="code-lang-badge">RICOCHET</span>
+                        </div>
+                        <div class="code-body">
+                            <pre><code><span class="hl-comment">(( Solace Agent Loop in Ricochet ))</span>
+<span class="hl-class">Agent Object subclass</span>
+  llm_client field
+  memory field
+  tools field
+<span class="hl-class">end</span>
+
+<span class="hl-comment">(( Executes a single reasoning cycle ))</span>
+<span class="hl-keyword">( prompt -> response ) run_step method</span>
+  prompt <span class="hl-keyword">var</span>
+  prompt <span class="hl-keyword">set</span>
+  
+  <span class="hl-comment">(( Retrieve history from memory ))</span>
+  self .memory <span class="hl-keyword">get</span> .get_history <span class="hl-keyword">call</span>
+  history <span class="hl-keyword">var</span>
+  history <span class="hl-keyword">set</span>
+
+  <span class="hl-comment">(( Run LLM prompt completions ))</span>
+  history <span class="hl-keyword">get</span> prompt <span class="hl-keyword">get</span> 
+  self .tools <span class="hl-keyword">get</span> self .llm_client <span class="hl-keyword">get</span> 
+  .complete <span class="hl-keyword">call</span> response <span class="hl-keyword">var</span>
+  response <span class="hl-keyword">set</span>
+
+  <span class="hl-comment">(( Inspect and execute tool calls ))</span>
+  response <span class="hl-keyword">get</span> .tool_calls <span class="hl-keyword">get</span> empty? not <span class="hl-keyword">if</span>
+    response <span class="hl-keyword">get</span> .tool_calls <span class="hl-keyword">get</span> each: ( tool_call )
+      tool_call <span class="hl-keyword">var</span>
+      tool_call <span class="hl-keyword">set</span>
+      self .tools <span class="hl-keyword">get</span> tool_call <span class="hl-keyword">get</span> .execute <span class="hl-keyword">call</span>
+      result <span class="hl-keyword">var</span>
+      result <span class="hl-keyword">set</span>
+      self .memory <span class="hl-keyword">get</span> tool_call <span class="hl-keyword">get</span> result <span class="hl-keyword">get</span>
+      .add_tool_result! <span class="hl-keyword">drop</span>
+    <span class="hl-keyword">end</span>
+    <span class="hl-comment">(( Re-run next step recursively ))</span>
+    "Proceed" self .run_step <span class="hl-keyword">call</span>
+  <span class="hl-keyword">else</span>
+    response <span class="hl-keyword">get</span> .content <span class="hl-keyword">get</span>
+  <span class="hl-keyword">end</span>
+<span class="hl-keyword">end</span></code></pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="assets/solace_logo.png" alt="Solace Logo" class="footer-logo-img">
+                <span class="footer-brand-name">SOLACE</span>
+            </div>
+            <div class="footer-slogan">AGENTIC AI CODING HARNESS</div>
+            <ul class="footer-links">
+                <li><a href="index.html" class="footer-link">Ricochet Home</a></li>
+                <li><a href="https://github.com/BARKx4/Solace" class="footer-link">Solace GitHub</a></li>
+                <li><a href="https://github.com/BARKx4/Ricochet" class="footer-link">Ricochet GitHub</a></li>
+            </ul>
+            <p class="copyright">&copy; 2026 Solace Project. Built in Ricochet. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Hotspot Logic -->
+    <script>
+        const hotspotData = {
+            sidebar: {
+                title: "Autonomous Workflow Sidebar",
+                desc: "Seamlessly navigate between active execution Sessions, custom Tool definitions, repository Diff viewports, and local Workspaces. Solace allows coordinating multiple workspace threads simultaneously."
+            },
+            readiness: {
+                title: "Agent Readiness & Context Monitor",
+                desc: "Tracks essential agent execution states. Provides real-time metrics on language model connectivity, active tools sandbox status, and current token budgets (e.g., 18.2k / 75k max tokens in active context)."
+            },
+            approval: {
+                title: "Human-in-the-Loop Approval Queue",
+                desc: "Provides strict control over autonomous actions. When an agent requests a capability-restricted operation (such as running terminal processes or writing codebase files), execution pauses here for your approval."
+            },
+            history: {
+                title: "Run History & Session Logs",
+                desc: "Maintains a complete audit log of agent run sessions. Shows exact task names, execution times, and status results (e.g. completed, failed, pending) so you can debug past agent behavior."
+            },
+            transcript: {
+                title: "Reasoning Transcripts & Stack Operations",
+                desc: "A scrollable live transcript of the agent's step-by-step thinking, observations, and tool executions. Because it runs on Ricochet, debugging details map straight to data stack transitions."
+            }
+        };
+
+        const hotspots = document.querySelectorAll('.hotspot');
+        const infoTitle = document.getElementById('info-title');
+        const infoDesc = document.getElementById('info-desc');
+
+        hotspots.forEach(hotspot => {
+            hotspot.addEventListener('click', () => {
+                const target = hotspot.getAttribute('data-target');
+                const data = hotspotData[target];
+                
+                if (data) {
+                    // Highlight selected hotspot
+                    hotspots.forEach(h => h.style.background = 'var(--solace-blue)');
+                    hotspot.style.background = 'var(--solace-orange)';
+                    
+                    // Update content with transition effect
+                    const container = document.getElementById('hotspot-info');
+                    container.style.opacity = '0';
+                    container.style.transform = 'translateY(10px)';
+                    
+                    setTimeout(() => {
+                        infoTitle.textContent = data.title;
+                        infoDesc.textContent = data.desc;
+                        container.style.opacity = '1';
+                        container.style.transform = 'translateY(0)';
+                    }, 200);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

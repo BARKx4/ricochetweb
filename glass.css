@@ -209,6 +209,21 @@ section {
     width: 100%;
 }
 
+.nav-link.highlight-solace {
+    color: #00bcff !important;
+    font-weight: 700;
+    text-shadow: 0 0 8px rgba(0, 188, 255, 0.3);
+}
+
+.nav-link.highlight-solace::after {
+    background: linear-gradient(90deg, #00bcff, #00e676) !important;
+}
+
+.nav-link.highlight-solace:hover {
+    color: #00e676 !important;
+    text-shadow: 0 0 12px rgba(0, 230, 118, 0.5);
+}
+
 .nav-cta {
     background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
     border: 1px solid var(--primary-light);
@@ -2034,4 +2049,53 @@ section {
     padding-top: 60px;
     padding-bottom: 40px;
     text-align: center;
+}
+
+/* ==========================================================================
+   Solace Showcase Banner
+   ========================================================================== */
+.solace-banner-section {
+    background: rgba(255, 255, 255, 0.03) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-top: 1px solid rgba(0, 188, 255, 0.15) !important;
+    border-bottom: 1px solid rgba(0, 188, 255, 0.15) !important;
+    padding: 80px 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.solace-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 48px;
+    align-items: center;
+}
+
+.solace-banner-visual {
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 188, 255, 0.2) !important;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), 0 0 30px rgba(0, 188, 255, 0.15) !important;
+    transition: var(--transition-smooth);
+}
+
+.solace-banner-visual:hover {
+    border-color: rgba(157, 78, 221, 0.4) !important;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(157, 78, 221, 0.25) !important;
+}
+
+.solace-banner-visual img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: brightness(0.95);
+}
+
+@media (max-width: 992px) {
+    .solace-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+    }
 }
