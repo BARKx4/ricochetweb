@@ -716,8 +716,8 @@ end</code></pre>
                             <div class="cli-desc-col">Run the current directory as an MVC web app. <code>--watch</code> enables live hot-reloading of controllers and templates with request snapshots.</div>
                         </div>
                         <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco package [path] [--gui] [--mvc] --output &lt;exe&gt;</code></div>
-                            <div class="cli-desc-col">Create a standalone launcher executable with embedded bytecode. <code>--gui</code> enables native OS GUI mode; <code>--mvc</code> includes the MVC views and controllers layer.</div>
+                            <div class="cli-cmd-col"><code>rco package [path] [--gui] [--mvc] [--tui] --output &lt;exe&gt;</code></div>
+                            <div class="cli-desc-col">Create a standalone launcher executable with embedded bytecode. <code>--gui</code> enables native OS GUI mode; <code>--mvc</code> includes the MVC views and controllers layer; <code>--tui</code> configures terminal UI execution (suppresses standard final stack dump).</div>
                         </div>
                         <div class="cli-row">
                             <div class="cli-cmd-col"><code>rco routes [path]</code></div>
@@ -809,7 +809,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scriptscceptance.ps1</c
                         <li>HTTP and filesystem access are host capabilities. The CLI enables them for trusted local scripts; embedded hosts can leave them disabled. HTTP calls currently use a 10 second timeout and a 1 MiB response body cap.</li>
                         <li>Web controller execution and template expressions have instruction budgets so runaway server code returns a fault instead of hanging a request.</li>
                         <li>`rco serve --watch` is fully supported, allowing live hot-reloading of controllers and templates with snapshot-based state restoration.</li>
-                        <li>Standalone desktop application packaging is supported via `rco package` with `--gui` and `--mvc` flags for native OS execution.</li>
+                        <li>Standalone desktop application packaging is supported via `rco package` with `--gui`, `--mvc`, and `--tui` flags for native OS or terminal execution.</li>
                         <li>Package imports are static, and `rco install` is not implemented yet. GitHub sources can be recorded with `--no-fetch`; fetching uses `git clone` when enabled.</li>
                         <li>Async and AI package words are not implemented yet.</li>
                         <li>Result values cannot be used directly as conditions. Use `ok?`, then `value` or `error`.</li>

@@ -1368,6 +1368,86 @@ const WORDS = [
     "example": "\"https://api.example\" $payload http .post-json"
   },
   {
+    "word": "tui",
+    "aliases": [],
+    "group": "system",
+    "stack": "-> terminalCapability",
+    "body": "Pushes the Terminal UI capability when the host enables it.",
+    "example": "tui .clear"
+  },
+  {
+    "word": ".enter!",
+    "aliases": [],
+    "group": "system",
+    "stack": "tui -> result",
+    "body": "Enters the terminal alternate screen and enables raw input mode.",
+    "example": "tui .enter! value"
+  },
+  {
+    "word": ".leave!",
+    "aliases": [],
+    "group": "system",
+    "stack": "tui -> result",
+    "body": "Leaves the alternate screen and restores the original terminal mode.",
+    "example": "tui .leave! value"
+  },
+  {
+    "word": ".clear",
+    "aliases": [],
+    "group": "system",
+    "stack": "tui -> result",
+    "body": "Clears the active terminal viewport.",
+    "example": "tui .clear value"
+  },
+  {
+    "word": ".move-to!",
+    "aliases": [],
+    "group": "system",
+    "stack": "col:number row:number tui -> result",
+    "body": "Moves the cursor to the 0-indexed column and row coordinates.",
+    "example": "10 5 tui .move-to!"
+  },
+  {
+    "word": ".write!",
+    "aliases": [],
+    "group": "system",
+    "stack": "text:string tui -> result",
+    "body": "Writes string contents directly to standard output.",
+    "example": "\"Hello TUI\" tui .write!"
+  },
+  {
+    "word": ".flush!",
+    "aliases": [],
+    "group": "system",
+    "stack": "tui -> result",
+    "body": "Flushes the standard output write buffer.",
+    "example": "tui .flush!"
+  },
+  {
+    "word": ".size",
+    "aliases": [],
+    "group": "system",
+    "stack": "tui -> size:array",
+    "body": "Pushes a 2-element array containing the terminal width (columns) and height (rows).",
+    "example": "tui .size value first"
+  },
+  {
+    "word": ".poll-key",
+    "aliases": [],
+    "group": "system",
+    "stack": "timeout_ms:number tui -> bool",
+    "body": "Polls for standard input key events, waiting up to the given timeout milliseconds.",
+    "example": "100 tui .poll-key"
+  },
+  {
+    "word": ".read-key",
+    "aliases": [],
+    "group": "system",
+    "stack": "tui -> key:string",
+    "body": "Blocks and reads the next key event string from standard input.",
+    "example": "tui .read-key"
+  },
+  {
     "word": "inspect",
     "aliases": [],
     "group": "inspect",
