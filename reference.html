@@ -702,6 +702,54 @@ end</code></pre>
                 </div>
                 <div class="cli-list-wrapper">
                     <div class="cli-list-grid" id="ref-cli-grid">
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco new &lt;path&gt;</code></div>
+                            <div class="cli-desc-col">Create an MVC Ricochet app with routes, controllers, a model, views, and smoke tests.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco serve [--host HOST] [--port PORT] [--debug] [--watch]</code></div>
+                            <div class="cli-desc-col">Run the current directory as an MVC web app. <code>--watch</code> enables live hot-reloading of controllers and templates with request snapshots.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco package [path] [--gui] [--mvc] --output &lt;exe&gt;</code></div>
+                            <div class="cli-desc-col">Create a standalone launcher executable with embedded bytecode. <code>--gui</code> enables native OS GUI mode; <code>--mvc</code> includes the MVC views and controllers layer.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco routes [path]</code></div>
+                            <div class="cli-desc-col">Print MVC routes as <code>METHOD path Controller#action</code>; defaults to current directory.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco test [--debug] [--filter PATTERN] [path]</code></div>
+                            <div class="cli-desc-col">Run <code>TestCase</code> subclasses, optionally matching <code>ClassName.methodName</code> by substring. In MVC projects, app sources load before tests.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco check [path]</code></div>
+                            <div class="cli-desc-col">Compile-check one file, a folder of <code>.rco</code> files, or an MVC app.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco fmt [--check] [path]</code></div>
+                            <div class="cli-desc-col">Format one <code>.rco</code> file or every <code>.rco</code> file under a directory.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco repl [--debug]</code></div>
+                            <div class="cli-desc-col">Run interactive Ricochet input and print the stack after each chunk.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco run [--debug] [--step] [--breakpoint LINE] &lt;path&gt; [args...]</code></div>
+                            <div class="cli-desc-col">Compile and execute a script with CLI arguments available through <code>args</code>.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco run-bytecode [--debug] &lt;path&gt; [args...]</code></div>
+                            <div class="cli-desc-col">Execute a previously built <code>.rcob</code> bytecode file.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco build [path]</code></div>
+                            <div class="cli-desc-col">Write bytecode to <code>build/app.rcob</code>; defaults to <code>main.rco</code>.</div>
+                        </div>
+                        <div class="cli-row">
+                            <div class="cli-cmd-col"><code>rco add &lt;source&gt; [--name NAME] [--no-fetch]</code></div>
+                            <div class="cli-desc-col">Record a path or <code>github:owner/repo@ref</code> package dependency in <code>ricochet.toml</code> and <code>ricochet.lock</code>.</div>
+                        </div>
                     </div>
                 </div>
 
@@ -755,7 +803,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scriptscceptance.ps1</c
                         <li>Integer values are `i64`; the lexer currently reads non-negative decimal number literals.</li>
                         <li>HTTP and filesystem access are host capabilities. The CLI enables them for trusted local scripts; embedded hosts can leave them disabled. HTTP calls currently use a 10 second timeout and a 1 MiB response body cap.</li>
                         <li>Web controller execution and template expressions have instruction budgets so runaway server code returns a fault instead of hanging a request.</li>
-                        <li>`rco serve --watch` is a planned hot reload surface and currently exits with a clear not-implemented error.</li>
+                        <li>`rco serve --watch` is fully supported, allowing live hot-reloading of controllers and templates with snapshot-based state restoration.</li>
+                        <li>Standalone desktop application packaging is supported via `rco package` with `--gui` and `--mvc` flags for native OS execution.</li>
                         <li>Package imports are static, and `rco install` is not implemented yet. GitHub sources can be recorded with `--no-fetch`; fetching uses `git clone` when enabled.</li>
                         <li>Async and AI package words are not implemented yet.</li>
                         <li>Result values cannot be used directly as conditions. Use `ok?`, then `value` or `error`.</li>

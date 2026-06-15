@@ -536,9 +536,9 @@ end</code></pre>
           <div><code>rco run [--debug] [--step] [--breakpoint LINE] &lt;path&gt; [args...]</code><span>Compile and execute a script with CLI arguments available through `args`.</span></div>
           <div><code>rco run-bytecode [--debug] &lt;path&gt; [args...]</code><span>Execute a previously built `.rcob` bytecode file.</span></div>
           <div><code>rco build [path]</code><span>Write bytecode to `build/app.rcob`; defaults to `main.rco`.</span></div>
-          <div><code>rco package [path] --output &lt;exe&gt;</code><span>Create a standalone launcher executable with embedded bytecode; defaults to `main.rco`.</span></div>
+          <div><code>rco package [path] [--gui] [--mvc] --output &lt;exe&gt;</code><span>Create a standalone launcher executable with embedded bytecode. <code>--gui</code> enables native OS GUI mode; <code>--mvc</code> includes the MVC views and controllers layer.</span></div>
           <div><code>rco add &lt;source&gt; [--name NAME] [--no-fetch]</code><span>Record a path or `github:owner/repo@ref` package dependency in `ricochet.toml` and `ricochet.lock`.</span></div>
-          <div><code>rco serve [--host HOST] [--port PORT] [--debug] [--watch]</code><span>Run the current directory as an MVC web app. `--watch` currently fails loudly until hot reload is wired.</span></div>
+          <div><code>rco serve [--host HOST] [--port PORT] [--debug] [--watch]</code><span>Run the current directory as an MVC web app. <code>--watch</code> enables live hot-reloading of controllers and templates with request snapshots.</span></div>
           <div><code>rco test [--debug] [--filter PATTERN] [path]</code><span>Run `TestCase` subclasses, optionally matching `ClassName.methodName` by substring. In an MVC project, app sources load before tests.</span></div>
         </div>
         <div class="example-grid compact-examples">
@@ -578,7 +578,8 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\acceptance.ps1</
           <li>Integer values are `i64`; the lexer currently reads non-negative decimal number literals.</li>
           <li>HTTP and filesystem access are host capabilities. The CLI enables them for trusted local scripts; embedded hosts can leave them disabled. HTTP calls currently use a 10 second timeout and a 1 MiB response body cap.</li>
           <li>Web controller execution and template expressions have instruction budgets so runaway server code returns a fault instead of hanging a request.</li>
-          <li>`rco serve --watch` is a planned hot reload surface and currently exits with a clear not-implemented error.</li>
+          <li>`rco serve --watch` is fully supported, allowing live hot-reloading of controllers and templates with snapshot-based state restoration.</li>
+          <li>Standalone desktop application packaging is supported via `rco package` with `--gui` and `--mvc` flags for native OS execution.</li>
           <li>Package imports are static, and `rco install` is not implemented yet. GitHub sources can be recorded with `--no-fetch`; fetching uses `git clone` when enabled.</li>
           <li>Async and AI package words are not implemented yet.</li>
           <li>Result values cannot be used directly as conditions. Use `ok?`, then `value` or `error`.</li>
