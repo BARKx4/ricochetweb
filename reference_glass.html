@@ -52,7 +52,7 @@
         </div>
     </header>
 
-        <main id="top">
+            <main id="top">
         <!-- Reference Hero Section -->
         <section class="ref-hero" id="ref-hero-section">
             <div class="container ref-hero-grid">
@@ -64,7 +64,7 @@
                         operators, symbols, OOP, MVC, Active Record, templates, tests, and debugger behavior.
                     </p>
                     <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
-                        <div class="cmd-item"><code>rco new my_app</code></div>
+                        <div class="cmd-item"><code>rco new --with-sqlite my_app</code></div>
                         <div class="cmd-item"><code>rco fmt app.rco</code></div>
                         <div class="cmd-item"><code>rco routes my_app</code></div>
                         <div class="cmd-item"><code>rco test my_app</code></div>
@@ -131,7 +131,7 @@
                         <path d="M472 227 L528 326" class="connector"></path>
                         
                         <text x="78" y="404" class="caption">$name "home/index" swap view</text>
-                        <text x="78" y="438" class="caption">$className $methodName [ ... ] !method</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
                     </svg>
                 </div>
             </div>
@@ -146,14 +146,14 @@
                     <p class="section-desc">Verify your local virtual machine installation works correctly with this bootstrap class and execution sequence.</p>
                 </div>
                 <div class="code-block-wrapper">
-                    <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy smoke script" title="Copy">copy</button><code>User Model subclass
-  email field
-  "displayName" [ $$self .email ] !method
+                    <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy smoke script" title="Copy">copy</button><code>User Model Subclass
+  "email" Accessor
+  [ self email.get ] "displayName" Method
 end
 
 User new
-"ada@example.com" swap .$email set
-.displayName
+"ada@example.com" swap email.set
+displayName
 println</code></pre>
                 </div>
             </div>
@@ -179,9 +179,9 @@ println</code></pre>
                         <header class="syntax-card-header">
                             <h3>Class Declarations</h3>
                         </header>
-                        <pre><code>User Model subclass
-  users table
-  email field
+                        <pre><code>User Model Subclass
+  "users" Table
+  "email" Accessor
 end</code></pre>
                         <p>Declaration shape stays postfix: declaration name first, declaration operator last.</p>
                     </article>
@@ -197,18 +197,28 @@ tags Set</code></pre>
                     </article>
                     <article class="syntax-card">
                         <header class="syntax-card-header">
+                            <h3>Reference Prefix</h3>
+                        </header>
+                        <pre><code>"users" name var
+$name array
+$users "Ada" push! drop
+$users count println</code></pre>
+                        <p>`$name` reads an existing binding for ordinary static variable access. Keep `get` for dynamic by-name reads such as `"name" get` or `fieldName get`. Declaration words still use bare names or strings, so `$name array` reads the variable `name` and declares an array using that runtime string. Function and method locals refresh within the active call frame, while top-level declarations stay shared.</p>
+                    </article>
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
                             <h3>Argument Lists</h3>
                         </header>
-                        <pre><code>( ctx -> Response ) "index" [
+                        <pre><code>( ctx -> Response ) [
   $ctx "home/index" swap view
-] !method</code></pre>
+] "index" Method</code></pre>
                         <p>Parentheses create optional input/output metadata for functions and methods.</p>
                     </article>
                     <article class="syntax-card">
                         <header class="syntax-card-header">
                             <h3>Blocks</h3>
                         </header>
-                        <pre><code>[ $$self .email ]</code></pre>
+                        <pre><code>[ self email.get ]</code></pre>
                         <p>Square brackets create first-class bytecode blocks. Use `call` to execute a block value.</p>
                     </article>
                     <article class="syntax-card">
@@ -218,7 +228,7 @@ tags Set</code></pre>
                         <pre><code>result dup ok? if
   value
 else
-  error .message
+  error "message" at
 end</code></pre>
                         <p>`if else end` is postfix: the condition is already on the stack before `if`.</p>
                     </article>
@@ -226,8 +236,8 @@ end</code></pre>
                         <header class="syntax-card-header">
                             <h3>Loops</h3>
                         </header>
-                        <pre><code>$count 10 &lt; while
-  $count 1 + $count set
+                        <pre><code>count get 10 &lt; while
+  count get 1 + count set
 end</code></pre>
                         <p>The condition expression before `while` is re-executed before every iteration. `break` exits and `continue` rechecks the condition.</p>
                     </article>
@@ -235,9 +245,9 @@ end</code></pre>
                         <header class="syntax-card-header">
                             <h3>Members</h3>
                         </header>
-                        <pre><code>$user .email
-"ada@example.com" $user .$email set</code></pre>
-                        <p>Dot words push member selectors for `get` and `set`, and call methods when used directly.</p>
+                        <pre><code>user email.get
+"ada@example.com" user email.set</code></pre>
+                        <p>Postfix selectors call methods directly. Generated accessors use `field.get` and `field.set` selectors.</p>
                     </article>
                     <article class="syntax-card">
                         <header class="syntax-card-header">
@@ -246,17 +256,42 @@ end</code></pre>
                         <pre><code>"lib/math" import
 7 triple
 
-"greeter/greeting" import
-packageHello</code></pre>
+"forms/validation" import
+"email" "ada@example.com" form_field
+"value" at</code></pre>
                         <p>Static string imports load relative `.rco` files before the importing file. If the relative file is missing, imports shaped like `package/module` resolve through `[dependencies.package]` in `ricochet.toml`. Dynamic imports remain a future package/runtime-loader feature.</p>
                     </article>
                     <article class="syntax-card">
                         <header class="syntax-card-header">
                             <h3>Templates</h3>
                         </header>
-                        <pre><code>&lt;strong&gt;{ $user .name }&lt;/strong&gt;
+                        <pre><code>&lt;strong&gt;{ $user name.get }&lt;/strong&gt;
 &lt;small&gt;{ 20 22 + }&lt;/small&gt;</code></pre>
                         <p>Each `{ ... }` expression runs Ricochet and must leave exactly one renderable value.</p>
+                    </article>
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Desktop Webview</h3>
+                        </header>
+                        <pre><code>state map
+state get "count" 1 put! drop
+"Count: " state get "count" at to_string concat webview_text countText var
+"Increment" "increment" webview_button button var
+actions array
+actions get "Increment" "increment" "increment_counter" webview_action push! drop
+"Counter" $countText $button concat state get actions get webview_window_state value document var</code></pre>
+                        <p>The webview globals build escaped HTML fragments and state/action document maps for desktop webview hosts.</p>
+                    </article>
+                    <article class="syntax-card">
+                        <header class="syntax-card-header">
+                            <h3>Terminal UI</h3>
+                        </header>
+                        <pre><code>tui_enter value drop
+"Hello TUI" tui_write value drop
+tui_flush value drop
+tui_read_key value drop
+tui_leave value drop</code></pre>
+                        <p>The TUI globals drive alternate-screen terminal apps with drawing and key input.</p>
                     </article>
                     <article class="syntax-card">
                         <header class="syntax-card-header">
@@ -329,47 +364,44 @@ DELETE "/users/:id" UserController "destroy" route</code></pre>
                         </div>
                         <p class="card-description">Project style is one class per file, with the filename matching the class name.</p>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( app/Models/User.rco ))
-User Model subclass
-  users table
-  id field
-  email field
-  name field
+User Model Subclass
+  "users" Table
+  "id" Accessor
+  "email" Accessor
+  "name" Accessor
 
-  "displayName" [
-    $$self .name
-    dup nil? if
-      drop $$self .email
+  [
+    self name.get nil? if
+      self email.get
     else
-      return
+      self name.get
     end
-  ] !method
+  ] "displayName" Method
 end</code></pre>
                     </article>
                     <article class="code-example-card">
                         <div class="card-header">
-                            <h3>Runtime Class And Method Names</h3>
+                            <h3>Runtime Class And Accessor Names</h3>
                         </div>
-                        <p class="card-description">Strings and variables can drive declaration operators, which is where Ricochet starts to feel different.</p>
+                        <p class="card-description">Strings and variables can drive targeted declaration operators, which is where Ricochet starts to feel different.</p>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>"Widget" className var
-"label" methodName var
 
-$className "Object" subclass
-$className "name" field
-$className $methodName [ $$self .name ] !method
+className get "Object" Subclass
+className get "name" Accessor
 
-$className new
-"dynamic" swap .$name set
-.label</code></pre>
+className get new
+"dynamic" swap name.set
+name.get</code></pre>
                     </article>
                     <article class="code-example-card">
                         <div class="card-header">
                             <h3>Dynamic Dispatch</h3>
                         </div>
-                        <p class="card-description">Use `.methodName` for direct method calls or `send` when the method name is itself a value.</p>
+                        <p class="card-description">Use a postfix selector for direct method calls or `send` when the method name is itself a value.</p>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>User new
-"ada@example.com" swap .$email set
-dup .displayName println
-"displayName" send println</code></pre>
+"ada@example.com" swap email.set
+dup displayName println
+dup "displayName" send println</code></pre>
                     </article>
                 </div>
             </div>
@@ -431,8 +463,23 @@ routes = "config/routes.rco"
 [web.views]
 escape = "html"
 
-[dependencies.greeter]
-path = "./packages/greeter"</code></pre>
+[web.static]
+dir = "public"
+mount = "/assets"
+
+[web.capabilities]
+fs_root = "."
+env_allow = ["RICOCHET_SESSION_SECRET"]
+http_allow_hosts = ["127.0.0.1"]
+
+[web.session]
+signing_secret_env = "RICOCHET_SESSION_SECRET"
+encryption_secret_env = "RICOCHET_SESSION_ENCRYPTION_SECRET"
+
+[dependencies.forms]
+path = "./packages/ricochet_forms"
+package = "@ricochet/forms"
+version = "^0.1.0"</code></pre>
                     </article>
                     <article class="code-example-card">
                         <div class="card-header">
@@ -451,12 +498,12 @@ DELETE "/users/:id" UserController "destroy" route</code></pre>
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( app/Controllers/HomeController.rco ))
-HomeController Controller subclass
-  "index" [
+HomeController Controller Subclass
+  [
     "Hello Ricochet" title var
-    $ctx
+    ctx get
     "home/index" swap view
-  ] !method
+  ] "index" Method
 end</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
@@ -465,17 +512,17 @@ end</code></pre>
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( app/Models/User.rco ))
-User Model subclass
-  email field
-  name field
+User Model Subclass
+  "email" Accessor
+  "name" Accessor
 
-  "displayName" [
-    $$self .name nil? if
-      $$self .email
+  [
+    self name.get nil? if
+      self email.get
     else
-      $$self .name
+      self name.get
     end
-  ] !method
+  ] "displayName" Method
 end</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
@@ -484,18 +531,18 @@ end</code></pre>
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( app/Controllers/UserController.rco ))
-UserController Controller subclass
-  "index" [
+UserController Controller Subclass
+  [
     users array
     User new
-    "ada@example.com" swap .$email set
-    "Ada Lovelace" swap .$name set
-    $users .push! drop
-    $users .count userCount var
+    "ada@example.com" swap email.set
+    "Ada Lovelace" swap name.set
+    users get swap push! drop
+    users get count userCount var
     "Users" title var
-    $ctx
+    ctx get
     "users/index" swap view
-  ] !method
+  ] "index" Method
 end</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
@@ -503,12 +550,86 @@ end</code></pre>
                             <h3>Redirect And Headers</h3>
                         </div>
                         
-                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>LoginController Controller subclass
-  "create" [
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>LoginController Controller Subclass
+  [
     "/dashboard" redirect
     303 status
     "cache-control" "no-store" header
-  ] !method
+  ] "create" Method
+end</code></pre>
+                    </article>
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Request Context</h3>
+                        </div>
+                        <p class="card-description">For `POST`, `PUT`, `PATCH`, and `DELETE`, MVC parses URL-encoded forms, JSON bodies, and multipart forms. Declared action Args bind route params first, then form fields, JSON object fields, upload fields, query params, and context values. `request` includes `body`, `json`, `uploads`, and `files`; upload maps include `name`, `filename`, `content_type`, `size`, `text`, and `data_base64`.</p>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>ContextController Controller Subclass
+  ( request cookies config file ) [
+    file var
+    config var
+    cookies var
+    request var
+    map
+    "method" request get "method" at put!
+    "theme" cookies get "theme" at put!
+    "package" config get "package" at "name" at put!
+    "json_name" request get "json" at "name" at put!
+    "upload_text" file get "text" at put!
+    json
+  ] "show" Method
+end</code></pre>
+                    </article>
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Session Map</h3>
+                        </div>
+                        
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>SessionController Controller Subclass
+  ( session ) [
+    session var
+    session get "user" at nil? if
+      session get "user" "Ada" put! drop
+    end
+    session get "user" at text
+  ] "show" Method
+end</code></pre>
+                    </article>
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Logger</h3>
+                        </div>
+                        
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>LogController Controller Subclass
+  ( logger ) [
+    logger var
+    "loaded" logger get info drop
+    "careful" logger get warn drop
+    "ok" text
+  ] "index" Method
+end</code></pre>
+                    </article>
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>AI Capability</h3>
+                        </div>
+                        
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( ricochet.toml ))
+[ai.default]
+provider = "openai"
+model = "gpt-4.1-mini"
+api_key = "${OPENAI_API_KEY}"
+
+(( app/Controllers/AiController.rco ))
+AiController Controller Subclass
+  ( ai ) [
+    ai var
+    "Write one sentence about Ricochet" ai get chat result var
+    result get ok? if
+      result get value "text" at text
+    else
+      result get error "message" at text
+    end
+  ] "index" Method
 end</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
@@ -517,7 +638,7 @@ end</code></pre>
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>&lt;main&gt;
-  &lt;h1&gt;{ $title }&lt;/h1&gt;
+  &lt;h1&gt;{ title get }&lt;/h1&gt;
   &lt;p&gt;{ 20 22 + }&lt;/p&gt;
 &lt;/main&gt;</code></pre>
                     </article>
@@ -540,11 +661,11 @@ end</code></pre>
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( app/Models/User.rco ))
-User Model subclass
-  users table
-  id field
-  email field
-  name field
+User Model Subclass
+  "users" Table
+  "id" Accessor
+  "email" Accessor
+  "name" Accessor
 end</code></pre>
                     </article>
                     <article class="code-example-card">
@@ -552,21 +673,27 @@ end</code></pre>
                             <h3>Model Class Calls</h3>
                         </div>
                         
-                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>User .all
-42 User .find
-"email" "ada@example.com" User .where
-10 User .limit
-User .count
-User .first
-1 User .exists?
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>User all
+User default_page
+42 User find_record
+"email" "ada@example.com" User where
+10 User limit
+10 20 User page
+"email" "asc" 10 20 User order_page
+"email" "ada@example.com" 10 User where_limit
+"email" "ada@example.com" 10 20 User where_page
+"email" "ada@example.com" "id" "desc" 10 20 User where_order_page
+User count_records
+User first_record
+1 User exists?
 attributes map
-"email" "ada@example.com" $attributes .put! drop
-"name" "Ada" $attributes .put! drop
-$attributes User .insert
+attributes get "email" "ada@example.com" put! drop
+attributes get "name" "Ada" put! drop
+attributes get User insert
 
 updates map
-"email" "grace@example.com" $updates .put! drop
-42 $updates User .update</code></pre>
+updates get "email" "grace@example.com" put! drop
+42 updates get User update</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
                         <div class="card-header">
@@ -574,23 +701,36 @@ updates map
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( app/Controllers/UserController.rco ))
-UserController Controller subclass
-  ( ctx -> Response ) "index" [
-    User .all
+UserController Controller Subclass
+  ( ctx -> Response ) [
+    User all
     dup ok? if
       value users var
-      $ctx "users/index" swap view
+      ctx get "users/index" swap view
     else
-      error .message text
+      error "message" at text
     end
-  ] !method
+  ] "index" Method
 end</code></pre>
+                    </article>
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Result Envelope For App Boundaries</h3>
+                        </div>
+                        
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>meta map
+meta get "capability" "workspace.read" put! drop
+
+"payload" ok meta get result_envelope envelope var
+envelope get "ok" at println
+envelope get "data" at println
+envelope get "meta" at "capability" at println</code></pre>
                     </article>
                 </div>
             </div>
         </section>
 
-        <!-- Turing Complete (NEW) -->
+        <!-- Turing Complete -->
         <section id="turing-complete" class="ref-section">
             <div class="container">
                 <div class="section-header">
@@ -608,12 +748,12 @@ end</code></pre>
 6 multiplicand var
 7 multiplier var
 
-$multiplier 0 &gt; while
-  $product $multiplicand + $product set
-  $multiplier 1 - $multiplier set
+multiplier get 0 &gt; while
+  product get multiplicand get + product set
+  multiplier get 1 - multiplier set
 end
 
-$product println</code></pre>
+product get println</code></pre>
                     </article>
                     <article class="code-example-card">
                         <div class="card-header">
@@ -622,11 +762,11 @@ $product println</code></pre>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>0 count var
 
-$count 10 &lt; while
-  $count 1 + $count set
-  $count 3 = if continue end
-  $count 6 = if break end
-  $count println
+count get 10 &lt; while
+  count get 1 + count set
+  count get 3 = if continue end
+  count get 6 = if break end
+  count get println
 end</code></pre>
                     </article>
                     <article class="code-example-card">
@@ -634,16 +774,16 @@ end</code></pre>
                             <h3>Unary Counter Shape</h3>
                         </div>
                         <p class="card-description">For an abstract unbounded counter, object chains can represent Peano-style natural numbers independently of the fixed-width integer convenience type.</p>
-                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>Counter Object subclass
-  previous field
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>Counter Object Subclass
+  "previous" Accessor
 end
 
 nil counter var
 
-$counter Counter new .$previous set $counter set
-$counter Counter new .$previous set $counter set
-$counter nil? false = while
-  $counter .previous $counter set
+counter get Counter new previous.set counter set
+counter get Counter new previous.set counter set
+counter get nil? false = while
+  counter get previous.get counter set
 end</code></pre>
                     </article>
                 </div>
@@ -663,10 +803,13 @@ end</code></pre>
                         <div class="card-header">
                             <h3>Realtime Trace</h3>
                         </div>
-                        <p class="card-description">Debug mode prints each instruction with stack before and after. Step mode pauses and accepts `step`, `continue`, or `abort`.</p>
+                        <p class="card-description">Debug mode prints each instruction with stack before and after. Step mode pauses and accepts `step`, `next`, `out`, `continue`, `abort`, `stack`, `locals`, `globals`, `self`, or `tasks`; trace files record JSON debug events for tooling, `rco debug --json` streams the same event contract as JSON Lines, and `rco debug-adapter` serves standard Debug Adapter Protocol requests for IDEs.</p>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>rco run --debug app.rco
 rco run --debug --step app.rco
 rco run --breakpoint 12 app.rco
+rco debug --json app.rco
+rco debug-adapter
+rco run --trace-file trace.json app.rco
 rco repl --debug</code></pre>
                     </article>
                     <article class="code-example-card">
@@ -686,11 +829,11 @@ FAULT [&lt;main&gt;] unknown word typo
                         </div>
                         
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>(( tests/UserTest.rco ))
-UserTest TestCase subclass
-  "testDisplayName" [
+UserTest TestCase Subclass
+  [
     "Ada"
-    "Ada" assert-equals
-  ] !method
+    "Ada" assert_equals
+  ] "testDisplayName" Method
 end</code></pre>
                     </article>
                 </div>
@@ -707,54 +850,6 @@ end</code></pre>
                 </div>
                 <div class="cli-list-wrapper">
                     <div class="cli-list-grid" id="ref-cli-grid">
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco new &lt;path&gt;</code></div>
-                            <div class="cli-desc-col">Create an MVC Ricochet app with routes, controllers, a model, views, and smoke tests.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco serve [--host HOST] [--port PORT] [--debug] [--watch]</code></div>
-                            <div class="cli-desc-col">Run the current directory as an MVC web app. <code>--watch</code> enables live hot-reloading of controllers and templates with request snapshots.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco package [path] [--gui] [--mvc] [--tui] --output &lt;exe&gt;</code></div>
-                            <div class="cli-desc-col">Create a standalone launcher executable with embedded bytecode. <code>--gui</code> enables native OS GUI mode; <code>--mvc</code> includes the MVC views and controllers layer; <code>--tui</code> configures terminal UI execution (suppresses standard final stack dump).</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco routes [path]</code></div>
-                            <div class="cli-desc-col">Print MVC routes as <code>METHOD path Controller#action</code>; defaults to current directory.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco test [--debug] [--filter PATTERN] [path]</code></div>
-                            <div class="cli-desc-col">Run <code>TestCase</code> subclasses, optionally matching <code>ClassName.methodName</code> by substring. In MVC projects, app sources load before tests.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco check [path]</code></div>
-                            <div class="cli-desc-col">Compile-check one file, a folder of <code>.rco</code> files, or an MVC app.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco fmt [--check] [path]</code></div>
-                            <div class="cli-desc-col">Format one <code>.rco</code> file or every <code>.rco</code> file under a directory.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco repl [--debug]</code></div>
-                            <div class="cli-desc-col">Run interactive Ricochet input and print the stack after each chunk.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco run [--debug] [--step] [--breakpoint LINE] &lt;path&gt; [args...]</code></div>
-                            <div class="cli-desc-col">Compile and execute a script with CLI arguments available through <code>args</code>.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco run-bytecode [--debug] &lt;path&gt; [args...]</code></div>
-                            <div class="cli-desc-col">Execute a previously built <code>.rcob</code> bytecode file.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco build [path]</code></div>
-                            <div class="cli-desc-col">Write bytecode to <code>build/app.rcob</code>; defaults to <code>main.rco</code>.</div>
-                        </div>
-                        <div class="cli-row">
-                            <div class="cli-cmd-col"><code>rco add &lt;source&gt; [--name NAME] [--no-fetch]</code></div>
-                            <div class="cli-desc-col">Record a path or <code>github:owner/repo@ref</code> package dependency in <code>ricochet.toml</code> and <code>ricochet.lock</code>.</div>
-                        </div>
                     </div>
                 </div>
 
@@ -763,26 +858,126 @@ end</code></pre>
                         <div class="card-header">
                             <h3>CLI Script Words</h3>
                         </div>
-                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>args .count println
-"DATABASE_URL" env dup ok? if value println else error .message eprint end
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>args count println
+"DATABASE_URL" env_get dup ok? if value println else error "message" at eprint end
 cwd value println
 now println
 100 random println</code></pre>
                     </article>
                     <article class="code-example-card">
                         <div class="card-header">
+                            <h3>Numeric Conversions</h3>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>1.5 2 + println
+12.0 to_integer value println
+12.5 to_integer error "kind" at println
+255 to_unsigned_tinyint value println
+"1.23456789" to_float32 value println</code></pre>
+                    </article>
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Date And Time</h3>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>"2026-06-18T13:14:15.250Z" timestamp_parse value startedAt var
+startedAt get timestamp_format value println
+startedAt get "%Y-%m-%d %H:%M:%S" timestamp_format_pattern value println
+startedAt get timestamp_parts value parts var
+parts get "year" at println
+startedAt get 2 duration_hours value timestamp_add value later var
+startedAt get later get timestamp_diff value println
+"2026-02-28" date_parse value date var
+date get 1 date_add_days value nextDate var
+nextDate get "%Y-%m-%d" date_format value println
+date get nextDate get date_diff_days value println</code></pre>
+                    </article>
+                    <article class="code-example-card">
+                        <div class="card-header">
                             <h3>Packages</h3>
                         </div>
-                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>rco add ./packages/greeter
-rco add github:BARKx4/ricochet_auth@v0.1.0 --no-fetch</code></pre>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>rco publish ./packages/ricochet_forms --registry ../ricochet-registry
+rco publish ./packages/ricochet_forms --registry ../ricochet-registry --provenance-file provenance.json --signature-file forms.sig --signature-kind minisign
+rco registry rebuild ../ricochet-registry
+rco registry check ../ricochet-registry
+rco search forms --registry-url file:///E:/path/to/ricochet-registry/index.toml
+rco add registry:@ricochet/forms --registry ../ricochet-registry --as forms --version "^0.1.0"
+rco add registry:@ricochet/forms --registry-url file:///E:/path/to/ricochet-registry/index.toml --as forms --version "^0.1.0"
+rco add github:BARKx4/ricochet_auth@v0.1.0 --no-fetch
+rco install
+rco verify
+rco audit --json</code></pre>
+                    </article>
+                    <article class="code-example-card">
+                        <div class="card-header">
+                            <h3>Tasks</h3>
+                        </div>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>10 base var
+[ 100 sleep base get 5 + ] spawn task var
+task get task_status
+task get running?
+task get completed?
+tasks count
+task get await
+task get release_task
+task get task_status
+handles array
+handles get [ 20 2 + ] spawn push! drop
+handles get [ 30 4 + ] spawn push! drop
+handles get await_all</code></pre>
                     </article>
                     <article class="code-example-card">
                         <div class="card-header">
                             <h3>Capabilities</h3>
                         </div>
-                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>"README.md" fs .read-text value .count println
-"https://example.com" http .get value response var
-"status" $response .at println</code></pre>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>"README.md" fs_read_text value count println
+"https://example.com" http_get value response var
+response get "status" at println
+"https://example.com" http_get_task request var
+request get await value asyncResponse var
+asyncResponse get "body" at println
+workspaceOptions map
+"README.md" workspaceOptions get workspace_read_text value readme var
+"." workspaceOptions get workspace_list value workspaceEntries var
+workspaceEntries get count println
+settings map
+provider map
+provider get "api_key" "PROVIDER_API_KEY" secret_env put! drop
+settings get "provider" provider get put! drop
+path array
+path get "provider" push! drop
+path get "api_key" push! drop
+settings get path get config_get value secret_resolve value token var
+payload map
+payload get "probe" true put! drop
+providerHosts array
+providerHosts get "api.example" push! drop
+"POST" "https://api.example/v1/models" http_request_new value providerRequest var
+providerRequest get token get http_bearer_auth value providerRequest set
+providerRequest get payload get http_json_body value providerRequest set
+providerRequest get "allowed_hosts" providerHosts get put! drop
+providerRequest get 30000 http_timeout value providerRequest set
+providerRequest get "max_response_bytes" 1048576 put! drop
+providerRequest get http_request_task await value providerResponse var
+providerResponse get "status" at println
+processArgs array
+processArgs get "status" push! drop
+processOptions map
+processOptions get "GIT_TERMINAL_PROMPT" "0" process_env_put value processOptions set
+"git" processArgs get processOptions get process_spawn value processResult var
+processResult get "success" at println
+processOptions get "stdout_max_bytes" 1048576 put! drop
+"git" processArgs get processOptions get process_start value processJob var
+processReadOptions map
+processJob get "id" at processReadOptions get process_read value processOutput var
+processOutput get "stdout" at println
+processJob get "id" at process_release value drop
+runtime_capabilities "process" at "enabled" at println
+approvalOperation map
+approvalOperation get "capability" "workspace.write" put! drop
+approvalOptions map
+approvalOperation get approvalOptions get approval_create value approval var
+approval get "id" at approval get "token" at approval_claim value "claimed" at println
+runtime_capabilities "approval" at "records" at println
+"Ready" tui_write value drop tui_flush value drop</code></pre>
                     </article>
                     <article class="code-example-card wide-card">
                         <div class="card-header">
@@ -790,6 +985,30 @@ rco add github:BARKx4/ricochet_auth@v0.1.0 --no-fetch</code></pre>
                         </div>
                         <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>cargo build -p ricochet_cli --bin rco
 powershell.exe -NoProfile -ExecutionPolicy Bypass -File scriptscceptance.ps1</code></pre>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Showcase Apps -->
+        <section id="showcase" class="ref-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Beta apps to inspect</span>
+                    <h2>Showcase Apps</h2>
+                    <p class="section-desc">Explore reference applications built to test the Ricochet runtime.</p>
+                </div>
+                <div class="code-examples-grid">
+                    <article class="code-example-card wide-card">
+                        <div class="card-header">
+                            <h3>Repo-Local Examples</h3>
+                        </div>
+                        <p class="card-description">The showcase folder includes a SQLite notes MVC app, a first-party package consumer, an AI provider request probe, a GUI v2 task monitor, and a debugger demo.</p>
+                        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code block" title="Copy">copy</button><code>rco check examples/showcase/sqlite_notes
+rco run examples/showcase/package_auth_forms/main.rco
+rco run examples/showcase/ai_provider_probe/main.rco
+rco gui examples/showcase/gui_task_monitor.rco
+rco debug --step examples/showcase/debugger_demo.rco</code></pre>
                     </article>
                 </div>
             </div>
@@ -805,17 +1024,20 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scriptscceptance.ps1</c
                 </div>
                 <div class="limits-card">
                     <ul class="limit-list" id="ref-limits-list">
-                        <li>Integer values are `i64`; the lexer currently reads non-negative decimal number literals.</li>
-                        <li>HTTP and filesystem access are host capabilities. The CLI enables them for trusted local scripts; embedded hosts can leave them disabled. HTTP calls currently use a 10 second timeout and a 1 MiB response body cap.</li>
+                        <li>Ricochet v1 is a developer beta target for building and testing usable local MVC web apps. It is not a production deployment promise.</li>
+                        <li>`Number` values are signed `i64` integers. Decimal or exponent literals produce finite `Float` values backed by `f64`; mixed numeric math promotes to `Float`. `to_int`, `to_tinyint`, `to_unsigned_int`, `to_float32`, `to_float64`, and related conversion words provide checked range/precision boundaries. Exact decimal and money values remain future work.</li>
+                        <li>HTTP, filesystem, environment, process, PTY, and socket access are host capabilities. The v1 beta policy keeps `--capability-profile trusted` as the local-development default and uses `--capability-profile sandboxed` for untrusted examples, package review, bug repros, and third-party code. Sandboxed starts with filesystem and HTTP disabled, then `--fs-root PATH`, `--http-allow-host HOST`, and `--env-allow NAME` can open bounded access. Raw TCP and WebSocket clients/listeners are separately opt-in with `--allow-sockets` or bounded with `--socket-allow-host HOST`, then exposed through retained `tcp_*` and `ws_*` words; accepted listener connections reuse the ordinary retained read/write/send/close/release words. Direct child process execution is always opt-in with `--allow-process`; `--process-root PATH` narrows process and PTY cwd values independently from the filesystem root. `process_spawn` captures a bounded blocking result, while `process_start`, `process_jobs`, `process_job`, `process_read`, `process_cancel`, and `process_release` provide capped retained long-running jobs. PTY sessions are separately opt-in with `--allow-pty` and expose `pty_start`, `pty_write`, `pty_read`, `pty_resize`, `pty_stop`, `pty_release`, `pty_list`, and `pty_detail`. Runtime approval records are available to local apps through `approval_create`, `approval_claim`, `approval_complete`, `approval_reject`, and `approval_detail`; MVC request VMs share the same approval registry so one-time claims work across requests. `rco serve` also keeps process environment access disabled unless `--allow-env` or `--env-allow` is passed for a trusted local MVC app. `--no-fs`, `--fs-readonly`, `--no-http`, and `--no-env` further narrow host powers. Simple HTTP calls use a 10 second timeout and a 1 MiB response body cap; retained HTTP streams are capped and can be released with `http_stream_release`; `http_request` and `http_request_task` can set bounded `timeout_ms`, `max_response_bytes`, `allowed_hosts`, and `allowed_schemes` per request. Header names and values are validated before connecting.</li>
+                        <li>MVC request body parsing is in-memory with a 16 MiB beta limit. Multipart uploads expose UTF-8 `text` when possible and `data_base64` for arbitrary bytes; streaming upload APIs remain planned work.</li>
                         <li>Web controller execution and template expressions have instruction budgets so runaway server code returns a fault instead of hanging a request.</li>
-                        <li>`rco serve --watch` is fully supported, allowing live hot-reloading of controllers and templates with snapshot-based state restoration.</li>
-                        <li>Standalone desktop application packaging is supported via `rco package` with `--gui`, `--mvc`, and `--tui` flags for native OS or terminal execution.</li>
-                        <li>Package imports are static, and `rco install` is not implemented yet. GitHub sources can be recorded with `--no-fetch`; fetching uses `git clone` when enabled.</li>
-                        <li>Async and AI package words are not implemented yet.</li>
-                        <li>Result values cannot be used directly as conditions. Use `ok?`, then `value` or `error`.</li>
-                        <li>Top-level `method` declarations are rejected; methods belong inside classes or are installed with `!method`.</li>
-                        <li>Active Record targets existing PostgreSQL schemas in v1. Schema migrations are a later branch.</li>
-                        <li>Template expressions must leave exactly one scalar renderable value: nil, bool, number, or string.</li>
+                        <li>The built-in session map uses a cookie named `ricochet_session`; configure `[web.session] signing_secret_env` to HMAC-sign it, or `[web.session] encryption_secret_env` to emit authenticated encrypted v2 cookies. `rco new --with-sqlite` includes a local beta form/session login loop; `@ricochet/auth` provides beta guard/token helpers, while production credential policy remains app/package work.</li>
+                        <li>`rco serve --watch` is a development hot reload path. Active requests keep their runtime snapshot; new requests use the newest successfully reloaded revision, and `--debug --watch` prints reload traces with changed files. Watched MVC runtimes honor the same CLI and manifest-declared filesystem, HTTP, environment, process, and PTY capability setup as ordinary `rco serve`.</li>
+                        <li>Package imports are static. GitHub sources can be recorded with `--no-fetch`; fetching uses `git clone` when enabled.</li>
+                        <li>Task values support eager `spawn`, explicit `await`/`await_all`, retained completed/failed status, explicit cleanup with `release_task`, and basic inspection with `id`, `info`, `task_status`, `pending?`, `running?`, `completed?`, `failed?`, `tasks`, and `runtime_capabilities "tasks" at`; HTTP globals also expose `http_get_task`, `http_post_json_task`, and `http_request_task` for task-returning requests. Debug pause events include task snapshots; deeper suspended-task stack inspection remains planned work.</li>
+                        <li>The MVC `ai` capability supports OpenAI-compatible chat completions through `[ai.default]`; `@ricochet/ai` provides beta provider HTTP request-map helpers. Streaming and richer structured schema validation remain planned package work.</li>
+                        <li>Result values cannot be used directly as conditions. Use `ok?`, then `value` or `error`; use `result_envelope` when an app/API boundary needs a `{ ok, data, error, meta }` map.</li>
+                        <li>Top-level method declarations are rejected; methods belong inside classes and use `[ body ] "name" Method`.</li>
+                        <li>Active Record targets existing SQLite, PostgreSQL, and MySQL/MariaDB schemas in v1. SQL migrations can be applied from `db/migrations` for those adapters.</li>
+                        <li>Template expressions must leave exactly one scalar renderable value: nil, bool, number, float, or string.</li>
                     </ul>
                 </div>
             </div>
