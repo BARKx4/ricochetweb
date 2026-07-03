@@ -83,7 +83,7 @@
             <path d="M472 226 L528 238" class="connector"></path>
             <path d="M472 226 L528 326" class="connector"></path>
             <text x="78" y="404" class="caption">$name "home/index" swap view</text>
-            <text x="78" y="438" class="caption">$className $methodName [ ... ] !method</text>
+            <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
           </svg>
         </div>
       </section>
@@ -93,14 +93,14 @@
           <p class="eyebrow">First test target</p>
           <h2 id="quickstart-title">Copy/Paste Smoke Script</h2>
         </div>
-        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy smoke script" title="Copy">copy</button><code>User Model subclass
-  email field
-  "displayName" [ $$self .email ] !method
+        <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy smoke script" title="Copy">copy</button><code>User Model Subclass
+  "email" Accessor
+  [ self email.get ] "displayName" Method
 end
 
 User new
-"ada@example.com" swap .$email set
-.displayName
+"ada@example.com" swap email.set
+displayName
 println</code></pre>
       </section>
 
@@ -117,9 +117,9 @@ println</code></pre>
           </article>
           <article>
             <h3>Class Declarations</h3>
-            <pre><code>User Model subclass
-  users table
-  email field
+            <pre><code>User Model Subclass
+  "users" Table
+  "email" Accessor
 end</code></pre>
             <p>Declaration shape stays postfix: declaration name first, declaration operator last.</p>
           </article>
@@ -133,14 +133,14 @@ tags Set</code></pre>
           </article>
           <article>
             <h3>Argument Lists</h3>
-            <pre><code>( ctx -> Response ) "index" [
+            <pre><code>( ctx -> Response ) [
   $ctx "home/index" swap view
-] !method</code></pre>
+] "index" Method</code></pre>
             <p>Parentheses create optional input/output metadata for functions and methods.</p>
           </article>
           <article>
             <h3>Blocks</h3>
-            <pre><code>[ $$self .email ]</code></pre>
+            <pre><code>[ self email.get ]</code></pre>
             <p>Square brackets create first-class bytecode blocks. Use `call` to execute a block value.</p>
           </article>
           <article>
@@ -148,22 +148,22 @@ tags Set</code></pre>
             <pre><code>result dup ok? if
   value
 else
-  error .message
+  error "message" at
 end</code></pre>
             <p>`if else end` is postfix: the condition is already on the stack before `if`.</p>
           </article>
           <article>
             <h3>Loops</h3>
-            <pre><code>$count 10 &lt; while
-  $count 1 + $count set
+            <pre><code>count get 10 &lt; while
+  count get 1 + count set
 end</code></pre>
             <p>The condition expression before `while` is re-executed before every iteration. `break` exits and `continue` rechecks the condition.</p>
           </article>
           <article>
             <h3>Members</h3>
-            <pre><code>$user .email
-"ada@example.com" $user .$email set</code></pre>
-            <p>Dot words push member selectors for `get` and `set`, and call methods when used directly.</p>
+            <pre><code>user email.get
+"ada@example.com" user email.set</code></pre>
+            <p>Postfix selectors call methods directly. Generated accessors use `field.get` and `field.set` selectors.</p>
           </article>
           <article>
             <h3>Imports</h3>
@@ -172,11 +172,11 @@ end</code></pre>
 
 "greeter/greeting" import
 packageHello</code></pre>
-            <p>Static string imports load relative `.rco` files before the importing file. If the relative file is missing, imports shaped like `package/module` resolve through `[dependencies.package]` in `ricochet.toml`. Dynamic imports remain a future package/runtime-loader feature.</p>
+            <p>Static string imports load relative `.rco` files before the importing file. If the relative file is missing, imports shaped like `package/module` resolve through `[dependencies.package]` in `ricochet.toml`. Dynamic imports are supported at runtime using evaluated module strings.</p>
           </article>
           <article>
             <h3>Templates</h3>
-            <pre><code>&lt;strong&gt;{ $user .name }&lt;/strong&gt;
+            <pre><code>&lt;strong&gt;{ $user name.get }&lt;/strong&gt;
 &lt;small&gt;{ 20 22 + }&lt;/small&gt;</code></pre>
             <p>Each `{ ... }` expression runs Ricochet and must leave exactly one renderable value.</p>
           </article>
@@ -229,20 +229,19 @@ DELETE "/users/:id" UserController "destroy" route</code></pre>
             <h3>Class-First Model File</h3>
             <p>Project style is one class per file, with the filename matching the class name.</p>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy class-first model example" title="Copy">copy</button><code>(( app/Models/User.rco ))
-User Model subclass
-  users table
-  id field
-  email field
-  name field
+User Model Subclass
+  "users" Table
+  "id" Accessor
+  "email" Accessor
+  "name" Accessor
 
-  "displayName" [
-    $$self .name
-    dup nil? if
-      drop $$self .email
+  [
+    self name.get nil? if
+      self email.get
     else
-      return
+      self name.get
     end
-  ] !method
+  ] "displayName" Method
 end</code></pre>
           </article>
 
@@ -250,23 +249,22 @@ end</code></pre>
             <h3>Runtime Class And Method Names</h3>
             <p>Strings and variables can drive declaration operators, which is where Ricochet starts to feel different.</p>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy runtime class example" title="Copy">copy</button><code>"Widget" className var
-"label" methodName var
+"name" fieldName var
 
-$className "Object" subclass
-$className "name" field
-$className $methodName [ $$self .name ] !method
+className get "Object" Subclass
+className get fieldName get Accessor
 
-$className new
-"dynamic" swap .$name set
-.label</code></pre>
+className get new
+"dynamic" swap name.set
+name.get</code></pre>
           </article>
 
           <article class="example-panel">
             <h3>Dynamic Dispatch</h3>
-            <p>Use `.methodName` for direct method calls or `send` when the method name is itself a value.</p>
+            <p>Use a postfix selector for direct method calls or `send` when the method name is itself a value.</p>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy dynamic dispatch example" title="Copy">copy</button><code>User new
-"ada@example.com" swap .$email set
-dup .displayName println
+"ada@example.com" swap email.set
+dup displayName println
 "displayName" send println</code></pre>
           </article>
         </div>
@@ -314,58 +312,58 @@ DELETE "/users/:id" UserController "destroy" route</code></pre>
           <article class="example-panel wide">
             <h3>Controller</h3>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy controller example" title="Copy">copy</button><code>(( app/Controllers/HomeController.rco ))
-HomeController Controller subclass
-  "index" [
+HomeController Controller Subclass
+  [
     "Hello Ricochet" title var
-    $ctx
+    ctx get
     "home/index" swap view
-  ] !method
+  ] "index" Method
 end</code></pre>
           </article>
 
           <article class="example-panel wide">
             <h3>Model Used By MVC</h3>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy MVC model example" title="Copy">copy</button><code>(( app/Models/User.rco ))
-User Model subclass
-  email field
-  name field
+User Model Subclass
+  "email" Accessor
+  "name" Accessor
 
-  "displayName" [
-    $$self .name nil? if
-      $$self .email
+  [
+    self name.get nil? if
+      self email.get
     else
-      $$self .name
+      self name.get
     end
-  ] !method
+  ] "displayName" Method
 end</code></pre>
           </article>
 
           <article class="example-panel wide">
             <h3>Controller With Collection</h3>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy collection controller example" title="Copy">copy</button><code>(( app/Controllers/UserController.rco ))
-UserController Controller subclass
-  "index" [
+UserController Controller Subclass
+  [
     users array
     User new
-    "ada@example.com" swap .$email set
-    "Ada Lovelace" swap .$name set
-    $users .push! drop
-    $users .count userCount var
+    "ada@example.com" swap email.set
+    "Ada Lovelace" swap name.set
+    users get swap push! drop
+    users get count userCount var
     "Users" title var
-    $ctx
+    ctx get
     "users/index" swap view
-  ] !method
+  ] "index" Method
 end</code></pre>
           </article>
 
           <article class="example-panel wide">
             <h3>Redirect And Headers</h3>
-            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy web response example" title="Copy">copy</button><code>LoginController Controller subclass
-  "create" [
+            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy web response example" title="Copy">copy</button><code>LoginController Controller Subclass
+  [
     "/dashboard" redirect
     303 status
     "cache-control" "no-store" header
-  ] !method
+  ] "create" Method
 end</code></pre>
           </article>
 
@@ -388,46 +386,46 @@ end</code></pre>
           <article class="example-panel">
             <h3>Model Mapping</h3>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy Active Record model example" title="Copy">copy</button><code>(( app/Models/User.rco ))
-User Model subclass
-  users table
-  id field
-  email field
-  name field
+User Model Subclass
+  "users" Table
+  "id" Accessor
+  "email" Accessor
+  "name" Accessor
 end</code></pre>
           </article>
 
           <article class="example-panel">
             <h3>Model Class Calls</h3>
-            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy Active Record calls example" title="Copy">copy</button><code>User .all
-42 User .find
-"email" "ada@example.com" User .where
-10 User .limit
-User .count
-User .first
-1 User .exists?
+            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy Active Record calls example" title="Copy">copy</button><code>User all
+42 User find_record
+"email" "ada@example.com" User where
+10 User limit
+User count_records
+User first_record
+1 User exists?
 attributes map
-"email" "ada@example.com" $attributes .put! drop
-"name" "Ada" $attributes .put! drop
-$attributes User .insert
+"email" "ada@example.com" attributes get put! drop
+"name" "Ada" attributes get put! drop
+attributes get User insert
 
 updates map
-"email" "grace@example.com" $updates .put! drop
-42 $updates User .update</code></pre>
+"email" "grace@example.com" updates get put! drop
+42 updates get User update</code></pre>
           </article>
 
           <article class="example-panel wide">
             <h3>Controller With Stack Result Handling</h3>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy Active Record controller example" title="Copy">copy</button><code>(( app/Controllers/UserController.rco ))
-UserController Controller subclass
-  ( ctx -> Response ) "index" [
-    User .all
+UserController Controller Subclass
+  ( ctx -> Response ) [
+    User all
     dup ok? if
       value users var
-      $ctx "users/index" swap view
+      ctx get "users/index" swap view
     else
-      error .message text
+      error "message" at text
     end
-  ] !method
+  ] "index" Method
 end</code></pre>
           </article>
         </div>
@@ -446,39 +444,39 @@ end</code></pre>
 6 multiplicand var
 7 multiplier var
 
-$multiplier 0 &gt; while
-  $product $multiplicand + $product set
-  $multiplier 1 - $multiplier set
+multiplier get 0 &gt; while
+  product get multiplicand get + product set
+  multiplier get 1 - multiplier set
 end
 
-$product println</code></pre>
+product get println</code></pre>
           </article>
 
           <article class="example-panel">
             <h3>Loop Control</h3>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy loop control example" title="Copy">copy</button><code>0 count var
 
-$count 10 &lt; while
-  $count 1 + $count set
-  $count 3 = if continue end
-  $count 6 = if break end
-  $count println
+count get 10 &lt; while
+  count get 1 + count set
+  count get 3 = if continue end
+  count get 6 = if break end
+  count get println
 end</code></pre>
           </article>
 
           <article class="example-panel">
             <h3>Unary Counter Shape</h3>
             <p>For an abstract unbounded counter, object chains can represent Peano-style natural numbers independently of the fixed-width integer convenience type.</p>
-            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy unary counter example" title="Copy">copy</button><code>Counter Object subclass
-  previous field
+            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy unary counter example" title="Copy">copy</button><code>Counter Object Subclass
+  "previous" Accessor
 end
 
 nil counter var
 
-$counter Counter new .$previous set $counter set
-$counter Counter new .$previous set $counter set
-$counter nil? false = while
-  $counter .previous $counter set
+counter get Counter new previous.set counter set
+counter get Counter new previous.set counter set
+counter get nil? false = while
+  counter get previous.get counter set
 end</code></pre>
           </article>
         </div>
@@ -512,11 +510,11 @@ FAULT [&lt;main&gt;] unknown word typo
           <article class="example-panel wide">
             <h3>TestCase</h3>
             <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy test example" title="Copy">copy</button><code>(( tests/UserTest.rco ))
-UserTest TestCase subclass
-  "testDisplayName" [
+UserTest TestCase Subclass
+  [
     "Ada"
-    "Ada" assert-equals
-  ] !method
+    "Ada" assert_equals
+  ] "testDisplayName" Method
 end</code></pre>
           </article>
         </div>
@@ -544,8 +542,8 @@ end</code></pre>
         <div class="example-grid compact-examples">
           <article class="example-panel">
             <h3>CLI Script Words</h3>
-            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy CLI words example" title="Copy">copy</button><code>args .count println
-"DATABASE_URL" env dup ok? if value println else error .message eprint end
+            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy CLI words example" title="Copy">copy</button><code>args count println
+"DATABASE_URL" env_get dup ok? if value println else error "message" at eprint end
 cwd value println
 now println
 100 random println</code></pre>
@@ -557,9 +555,9 @@ rco add github:BARKx4/ricochet_auth@v0.1.0 --no-fetch</code></pre>
           </article>
           <article class="example-panel">
             <h3>Capabilities</h3>
-            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy capability example" title="Copy">copy</button><code>"README.md" fs .read-text value .count println
-"https://example.com" http .get value response var
-"status" $response .at println</code></pre>
+            <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy capability example" title="Copy">copy</button><code>"README.md" fs_read_text value count println
+"https://example.com" http_get value response var
+response get "status" at println</code></pre>
           </article>
           <article class="example-panel wide">
             <h3>Acceptance Suite</h3>
@@ -575,17 +573,20 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File scripts\acceptance.ps1</
           <h2>Known Current Limits</h2>
         </div>
         <ul class="limit-list">
-          <li>Integer values are `i64`; the lexer currently reads non-negative decimal number literals.</li>
-          <li>HTTP and filesystem access are host capabilities. The CLI enables them for trusted local scripts; embedded hosts can leave them disabled. HTTP calls currently use a 10 second timeout and a 1 MiB response body cap.</li>
+          <li>Ricochet v1 is a developer beta target for building and testing usable local MVC web apps. It is not a production deployment promise.</li>
+          <li>`Number` values are signed `i64` integers. Decimal or exponent literals produce finite `Float` values backed by `f64`; mixed numeric math promotes to `Float`. Exact decimal and money values remain future work.</li>
+          <li>HTTP, filesystem, environment, process, PTY, and socket access are host capabilities. The v1 beta policy keeps `--capability-profile trusted` as the local-development default and uses `--capability-profile sandboxed` for untrusted examples, package review, bug repros, and third-party code.</li>
           <li>Web controller execution and template expressions have instruction budgets so runaway server code returns a fault instead of hanging a request.</li>
-          <li>`rco serve --watch` is fully supported, allowing live hot-reloading of controllers and templates with snapshot-based state restoration.</li>
+          <li>The built-in session map uses a cookie named `ricochet_session`; configure `[web.session] signing_secret_env` to HMAC-sign it, or `[web.session] encryption_secret_env` to emit authenticated encrypted v2 cookies.</li>
+          <li>`rco serve --watch` is a development hot reload path. Active requests keep their runtime snapshot; new requests use the newest successfully reloaded revision.</li>
           <li>Standalone desktop application packaging is supported via `rco package` with `--gui`, `--mvc`, and `--tui` flags for native OS or terminal execution.</li>
-          <li>Package imports are static, and `rco install` is not implemented yet. GitHub sources can be recorded with `--no-fetch`; fetching uses `git clone` when enabled.</li>
-          <li>Async and AI package words are not implemented yet.</li>
-          <li>Result values cannot be used directly as conditions. Use `ok?`, then `value` or `error`.</li>
-          <li>Top-level `method` declarations are rejected; methods belong inside classes or are installed with `!method`.</li>
-          <li>Active Record targets existing PostgreSQL schemas in v1. Schema migrations are a later branch.</li>
-          <li>Template expressions must leave exactly one scalar renderable value: nil, bool, number, or string.</li>
+          <li>Static imports remain the preferred compile-time path. Dynamic runtime imports are available through `import_dynamic`, `module_get`, and `module_call`, with lock-file and manifest path checks.</li>
+          <li>Task values support eager `spawn`, explicit `await`/`await_all`, retained completed/failed status, explicit cleanup with `release_task`, and basic inspection.</li>
+          <li>The MVC `ai` capability supports OpenAI-compatible chat completions through `[ai.default]`; streaming and richer structured schema validation are supported.</li>
+          <li>Result values cannot be used directly as conditions. Use `ok?`, then `value` or `error`; use `result_envelope` when an app/API boundary needs a `{ ok, data, error, meta }` map.</li>
+          <li>Top-level method declarations are rejected; methods belong inside classes and use `[ body ] "name" Method`.</li>
+          <li>Active Record targets existing SQLite, PostgreSQL, and MySQL/MariaDB schemas in v1. SQL migrations can be applied from `db/migrations` for those adapters.</li>
+          <li>Template expressions must leave exactly one renderable value; arrays, maps, and safe HTML fragments are supported by the current template renderer.</li>
         </ul>
       </section>
     </main>

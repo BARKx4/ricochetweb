@@ -109,7 +109,7 @@
                             <div class="example-selector-wrapper">
                                 <span class="selector-label">Load Template:</span>
                                 <select class="select-dropdown" id="example-select">
-                                    <option value="subclass">User Model subclass</option>
+                                    <option value="subclass">User Model Subclass</option>
                                     <option value="variables">Variables setup</option>
                                     <option value="fibonacci">Fibonacci Numbers</option>
                                     <option value="factorial">Factorial</option>
@@ -261,10 +261,10 @@
                 <div class="walkthrough-grid" id="docs-walkthrough">
                     <div class="walkthrough-content" id="walkthrough-text">
                         <h3>Subclassing & Variable Access</h3>
-                        <p>In Ricochet, class declarations use the postfix structure <code>Name Parent subclass</code>. We end definitions and blocks using the universal word <code>end</code>.</p>
+                        <p>In Ricochet, class declarations use the postfix structure <code>Name Parent Subclass</code>. We end definitions and blocks using the universal word <code>end</code>.</p>
                         <p>Comments are enclosed in double parentheses <code>(( ... ))</code>. Comments immediately preceding declarations compile as their docstring documentation.</p>
-                        <p>Variables are declared with postfix <code>var</code> (e.g., <code>amount var</code>), written with <code>set</code>, and read with <code>get</code>. Field mutation uses dot keywords: <code>$user .email</code> retrieves the field, and <code>"a@example.com" $user .$email set</code> sets it.</p>
-                        <p>Method calls use the explicit dot form <code>$object .methodName</code>. In methods, the receiver is bound to <code>$self</code>.</p>
+                        <p>Variables are declared with postfix <code>var</code> (for example, <code>amount var</code> or <code>100 amount var</code>), written with <code>set</code>, and read with <code>$name</code> or dynamic <code>get</code>. Generated accessors stay postfix: <code>user email.get</code> reads a field, and <code>"a@example.com" user email.set</code> sets it.</p>
+                        <p>Method calls keep the receiver before the selector, such as <code>user displayName</code>. In methods, the receiver is available as <code>self</code>.</p>
                     </div>
 
                     <div class="static-code-card" id="walkthrough-code">
@@ -283,7 +283,7 @@ User Model Subclass
   "name" Accessor
 
   [
-    self name.get empty? if
+    self name.get nil? if
       self email.get
     else
       self name.get

@@ -4,10 +4,11 @@
  */
 
 class RicochetResult {
-    constructor(isOk, value, errorMessage) {
+    constructor(isOk, value, errorValue) {
         this.isOk = isOk;
         this.value = value;
-        this.errorMessage = errorMessage;
+        this.errorValue = errorValue;
+        this.errorMessage = errorValue && typeof errorValue === 'object' ? errorValue.message : errorValue;
     }
 }
 
@@ -159,6 +160,15 @@ class RicochetVM {
         };
 
         // Result constructor & attributes
+        this.dictionary['ok'] = () => {
+            const val = this.pop();
+            this.push(new RicochetResult(true, val, null));
+        };
+        this.dictionary['fail'] = () => {
+            const message = this.pop();
+            const kind = this.pop();
+            this.push(new RicochetResult(false, null, { kind, message }));
+        };
         this.dictionary['new-result'] = () => {
             const errorMsg = this.pop();
             const isOk = this.pop();
@@ -173,14 +183,15 @@ class RicochetVM {
         this.dictionary['error'] = () => {
             const res = this.pop();
             if (!(res instanceof RicochetResult)) throw new Error("Expected Result object (error)");
-            this.push(res); // Push itself, error messages are accessed via .message
+            this.push(res.errorValue || { message: res.errorMessage || 'nil' });
         };
 
         // Variables primitives
         this.dictionary['var'] = () => {
             const varName = this.pop();
             if (typeof varName !== 'string') throw new Error("Variable declaration requires a symbol/name");
-            this.variables[varName] = 'nil';
+            const initialValue = this.dataStack.length > 0 ? this.pop() : 'nil';
+            this.variables[varName] = initialValue;
             
             // Add variable word to dictionary, which pushes its name symbol when executed
             this.dictionary[varName] = () => {
@@ -218,6 +229,24 @@ class RicochetVM {
                 if (!(sym in this.variables)) throw new Error(`Variable "${sym}" must be declared with var first`);
                 this.variables[sym] = val;
             }
+        };
+
+        this.dictionary['at'] = () => {
+            const key = this.pop();
+            const container = this.pop();
+            if (container === null || container === undefined || container === 'nil') {
+                this.push('nil');
+                return;
+            }
+            if (Array.isArray(container)) {
+                this.push(container[Number(key)] ?? 'nil');
+                return;
+            }
+            if (typeof container === 'object') {
+                this.push(Object.prototype.hasOwnProperty.call(container, key) ? container[key] : 'nil');
+                return;
+            }
+            throw new Error("at requires a map, object, or array");
         };
 
         // OOP subclass and definition primitives
@@ -788,7 +817,7 @@ User Model Subclass
   "name" Accessor
 
   [
-    self name.get empty? if
+    self name.get nil? if
       self email.get
     else
       self name.get
@@ -856,31 +885,13 @@ end
 $result println
 `,
 
-    result: `(( Define User class first ))
-User Model Subclass
-end
-
-(( expected login failure Result testing ))
-User open-class
-  [
-    email var
-    email set
-    
-    $email "admin@ricochet.org" equals if
-      "Welcome Admin!" 1 nil new-result
-    else
-      nil 0 "Invalid credentials" new-result
-    end
-  ] "login" Method
-end
-
-User new user var
-"admin@ricochet.org" $user login result set
+    result: `(( expected failure Result testing ))
+"Auth" "Invalid credentials" fail result var
 
 $result ok? if
   "Success: " print $result value println
 else
-  "Failed: " print $result message println
+  "Failed: " print $result error "message" at println
 end
 `
 };
