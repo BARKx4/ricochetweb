@@ -306,54 +306,19 @@ $user .displayName println
         </section>
 
         <!-- Install Section -->
-        <section id="install">
+        <section id="install" style="text-align: center; padding: 100px 0; position: relative; overflow: hidden;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 600px; height: 600px; background: radial-gradient(circle, rgba(0, 188, 255, 0.05) 0%, transparent 70%); filter: blur(80px); pointer-events: none;"></div>
+            
             <div class="container">
-                <div class="section-header">
-                    <span class="section-label">Quickstart</span>
-                    <h2 class="section-title" id="install-heading">Install Tooling</h2>
-                    <p class="section-desc">Get the Ricochet CLI compiler and package manager up and running instantly.</p>
+                <div class="section-header" style="max-width: 650px; margin: 0 auto 40px auto; text-align: center;">
+                    <span class="section-label">Installation</span>
+                    <h2 class="section-title" id="install-heading">Get Ricochet</h2>
+                    <p class="section-desc">Ricochet is distributed as precompiled native package executables for Windows, Linux, and macOS. Visit our GitHub releases to download the latest setup installer or portable binaries.</p>
                 </div>
-
-                <div class="walkthrough-grid" id="install-guide">
-                    <div class="terminal-card" id="terminal-pane">
-                        <div class="terminal-header">
-                            <div class="window-dots">
-                                <span class="dot red"></span>
-                                <span class="dot yellow"></span>
-                                <span class="dot green"></span>
-                            </div>
-                            <button class="copy-btn" id="copy-install-btn">COPY CODE</button>
-                        </div>
-                        <div class="terminal-body">
-                            <div class="terminal-line">
-                                <span class="prompt">$</span>
-                                <span class="command" id="install-cmd-text">rco new web blog</span>
-                            </div>
-                            <div class="terminal-line output-line">
-                                <span class="prompt">></span>
-                                <span>Created blog project: ricochet.toml, config/routes.rco</span>
-                            </div>
-                            <div class="terminal-line">
-                                <span class="prompt">$</span>
-                                <span class="command">rco run app.rco</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="walkthrough-content" id="terminal-text">
-                        <h3>Built-in Tooling</h3>
-                        <p>The <code>ricochet</code> CLI (short alias <code>rco</code>) includes everything you need:</p>
-                        <ul style="list-style-type: none; padding-left: 0; margin-bottom: 24px;">
-                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco new</code>: Creates a minimal web/cli project scaffolding</li>
-                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco serve --watch</code>: Live HTTP server with snapshot hot-reloading</li>
-                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco repl</code>: Ephemeral live metaprogramming workspace</li>
-                            <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco test --debug</code>: Runs test classes under VM debugger</li>
-                        </ul>
-                        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-                            <button class="btn btn-primary" onclick="window.open('https://github.com/BARKx4/Ricochet/releases', '_blank')">Download Executables</button>
-                            <button class="btn btn-secondary" onclick="window.open('https://github.com/BARKx4/Ricochet', '_blank')">View GitHub</button>
-                        </div>
-                    </div>
+                
+                <div style="display: flex; flex-direction: column; align-items: center; gap: 24px; position: relative; z-index: 1;">
+                    <a href="https://github.com/BARKx4/Ricochet/releases" target="_blank" class="btn btn-primary" style="padding: 16px 36px; font-size: 1.15rem; font-weight: 700; border-radius: 8px; box-shadow: 0 4px 20px rgba(0, 188, 255, 0.25); text-decoration: none;">Download Executable Packages</a>
+                    <a href="https://github.com/BARKx4/Ricochet" target="_blank" class="btn btn-secondary" style="padding: 12px 28px; font-size: 1rem; text-decoration: none;">View Source on GitHub</a>
                 </div>
             </div>
         </section>
