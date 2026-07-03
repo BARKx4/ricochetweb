@@ -385,7 +385,7 @@ design docs and the current implementation:
 - Active Record SQL generation validates identifiers and parameterizes values,
   which is the right injection boundary.
 - Reference docs and examples are now aligned with name-first collection
-  declarations and `.push!` chaining.
+  declarations and `.push` chaining.
 
 ## Suggested Next Sprint Order
 

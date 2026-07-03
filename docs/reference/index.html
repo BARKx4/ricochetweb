@@ -347,7 +347,7 @@ UserController Controller Subclass
     User new
     "ada@example.com" swap email.set
     "Ada Lovelace" swap name.set
-    users get swap push! drop
+    users get swap push drop
     users get count userCount var
     "Users" title var
     ctx get
@@ -404,12 +404,12 @@ User count_records
 User first_record
 1 User exists?
 attributes map
-"email" "ada@example.com" attributes get put! drop
-"name" "Ada" attributes get put! drop
+attributes get "email" "ada@example.com" put drop
+attributes get "name" "Ada" put drop
 attributes get User insert
 
 updates map
-"email" "grace@example.com" updates get put! drop
+updates get "email" "grace@example.com" put drop
 42 updates get User update</code></pre>
           </article>
 

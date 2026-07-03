@@ -88,16 +88,16 @@ user .email get
 "a@example.com" user .email set
 ```
 
-Collection mutation is marked with receiver-style bang methods. Mutators return
-the same collection reference so they can be chained or dropped explicitly:
+Collection mutation uses container-first words. Mutators return the same
+collection reference so they can be chained or dropped explicitly:
 
 ```forth
-"a@example.com" users get .push! drop
-"theme" "dark" config get .put! drop
+users get "a@example.com" push drop
+config get "theme" "dark" put drop
 ```
 
-The older stack words `!push` and `!put` remain compatibility aliases, but
-`.push!` and `.put!` are canonical for new code.
+Leading-bang and trailing-bang collection aliases are obsolete; use `push`,
+`put`, `insert_at`, `remove`, `remove_at`, and `clear_items` for new code.
 
 Predicate words conventionally end with `?`:
 
@@ -517,10 +517,10 @@ User .all
 42 User .find
 "email" "ada@example.com" User .where
 attributes map
-"email" "ada@example.com" attributes get .put! drop
+attributes get "email" "ada@example.com" put drop
 attributes get User .insert
 updates map
-"email" "grace@example.com" updates get .put! drop
+updates get "email" "grace@example.com" put drop
 42 updates get User .update
 ```
 
