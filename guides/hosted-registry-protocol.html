@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hosted Registry Protocol - Ricochet Guides — Ricochet Reference Guides</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Hosted Registry Protocol: Immutable hosted package metadata, secure publish and yank flows, mirrorable artifact paths, and static registry fallback semantics.">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../index.css">
+</head>
+<body class="reference-page guide-page">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="brand" id="nav-brand">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="../index.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="../index.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="../reference.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="../solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="../index.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='../index.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Protocol target</span>
+                    <h1 class="ref-hero-title">Hosted Registry Protocol</h1>
+                    <p class="ref-hero-tagline">Immutable hosted package metadata, secure publish and yank flows, mirrorable artifact paths, and static registry fallback semantics.</p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>docs/reference/guides/hosted-registry-protocol.html</code></div>
+<div class="cmd-item"><code>docs/wiki/hosted-registry-protocol.html</code></div>
+<div class="cmd-item"><code>ricochet-hosted-registry-v1</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide Layout Section -->
+        <section class="ref-section">
+            <div class="container guide-layout">
+                <aside class="guide-toc" aria-label="On this page">
+          <strong>On This Page</strong>
+          <a href="#identity">Identity</a>
+          <a href="#metadata">Metadata</a>
+          <a href="#endpoints">Endpoints</a>
+          <a href="#security">Security</a>
+          <a href="#mirror">Mirror Fallback</a>
+          <a href="#sequence">Sequence</a>
+        </aside>
+                <article class="guide-content">
+                    <div class="guide-breadcrumb">
+                        <a href="../reference.html">&larr; Back to Guides Portal</a>
+                    </div>
+                    <p>The hosted registry protocol is the Epic 8 implementation target. It extends Ricochet beyond local and static registries without replacing the current <code>ricochet-static-registry-v1</code> workflow.</p>
+          <p>Hosted registry base URLs use HTTPS outside local fake-server tests. Static mirrors continue to use <code>file://</code> or <code>https://</code> index URLs.</p>
+          <p>Ricochet currently implements hosted client operations for discovery, search, metadata fetch, archive fetch, install, lockfile verification, publish, and yank, plus a local hosted registry reference server through <code>rco registry serve</code> and static mirror export through <code>rco registry mirror</code>.</p>
+
+          <h2 id="identity">Identity</h2>
+          <p>The protocol name is Ricochet Hosted Registry Protocol and the version string is <code>ricochet-hosted-registry-v1</code>. Canonical JSON responses use vendor media types such as <code>application/vnd.ricochet.registry.package.v1+json</code>, and package archives use <code>application/vnd.ricochet.package.archive.v1+gzip</code>.</p>
+          <p>Package identities match the static registry rules. Unscoped names use ASCII letters, numbers, <code>_</code>, and <code>-</code>. Scoped names use <code>@scope/name</code> with the same segment rules, as in <code>@ricochet/forms</code>. Endpoint paths encode the full package identity as one percent-encoded segment.</p>
+          <p>Hosted clients fetch discovery before search, install, publish, or yank. A discovery response includes the protocol and registry base URL used for later endpoints and artifact resolution.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>{
+  "protocol": "ricochet-hosted-registry-v1",
+  "base_url": "https://registry.example"
+}</code></pre>
+
+          <h2 id="metadata">Metadata</h2>
+          <p>Version records are immutable once published. A registry rejects any publish for an existing package/version pair, even if the uploaded bytes match the original. Yanking marks a version unavailable without deleting the historical metadata or artifacts.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>{
+  "protocol": "ricochet-hosted-registry-v1",
+  "package": {
+    "name": "@ricochet/forms",
+    "latest": "0.1.0"
+  },
+  "versions": [
+    {
+      "version": "0.1.0",
+      "yanked": false,
+      "archive": {
+        "path": "artifacts/@ricochet/forms/0.1.0/forms-0.1.0.tar.gz",
+        "integrity": "sha256:&lt;64 lowercase hex&gt;"
+      },
+      "package_integrity": "sha256:&lt;64 lowercase hex&gt;",
+      "provenance": {
+        "attestation_path": "artifacts/@ricochet/forms/0.1.0/provenance.attestation",
+        "attestation_integrity": "sha256:&lt;64 lowercase hex&gt;",
+        "signature_path": "artifacts/@ricochet/forms/0.1.0/forms.sig",
+        "signature_integrity": "sha256:&lt;64 lowercase hex&gt;",
+        "signature_kind": "minisign"
+      }
+    }
+  ]
+}</code></pre>
+          <p>Every version has <code>archive.path</code>, <code>archive.integrity</code>, <code>package_integrity</code>, and <code>yanked</code>. Provenance and signature fields are optional, but <code>signature_kind</code> is valid only with signature bytes and signature integrity. Clients preserve unknown signature kinds and report them as unverified unless policy requires a known verifier.</p>
+
+          <h2 id="endpoints">Endpoints</h2>
+          <p>The required endpoint set is intentionally small: <code>GET /v1</code> for discovery, <code>GET /v1/search</code> for search, <code>GET /v1/packages/{package}</code> for package metadata, <code>GET /v1/packages/{package}/versions/{version}</code> for one immutable record, <code>PUT /v1/packages/{package}/versions/{version}</code> for publish, and <code>POST /v1/packages/{package}/versions/{version}/yank</code> for yanking.</p>
+          <p>The read client accepts compact search responses with <code>protocol</code> and a <code>packages</code> array. Each result includes a package <code>name</code> and latest non-yanked semver <code>latest</code>; <code>results</code> is accepted as a beta compatibility alias. Hosted search prints the same simple <code>name version</code> style as static search.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>{
+  "protocol": "ricochet-hosted-registry-v1",
+  "packages": [
+    {
+      "name": "@ricochet/forms",
+      "latest": "0.1.0"
+    }
+  ]
+}</code></pre>
+          <p>Artifact paths are registry-relative. Clients resolve them against the registry base URL discovered from <code>GET /v1</code>, not against the package metadata URL, reject absolute paths, leading slashes, backslashes, <code>.</code> or <code>..</code> segments, and any resolved URL outside the registry origin, then hash the archive bytes, unpack safely, confirm package name/version, and recompute the unpacked package tree <code>sha256:</code>.</p>
+          <p>Error responses use an envelope with <code>error.code</code>, <code>error.message</code>, optional <code>details</code>, and <code>request_id</code>. Duplicate publishes return <code>409 Conflict</code> with a stable code such as <code>version_exists</code>. Rate limits use <code>429</code> with <code>Retry-After</code>.</p>
+
+          <h2 id="security">Security</h2>
+          <p>Publish uses <code>rco publish PACKAGE --registry-url https://registry.example --token-env RICOCHET_REGISTRY_TOKEN</code>. Yank uses <code>rco registry yank PACKAGE VERSION --registry-url https://registry.example --token-env RICOCHET_REGISTRY_TOKEN</code>.</p>
+          <p>Publish and yank requests use bearer tokens resolved from secret references. Future CLI configuration stores references such as <code>token = { secret_env = "RICOCHET_REGISTRY_TOKEN" }</code>, not literal tokens. Tokens must not be written to <code>ricochet.toml</code>, <code>ricochet.lock</code>, reports, or traces.</p>
+          <p>Mutating requests use client-generated <code>Idempotency-Key</code> headers bound to publisher, method, path, and body digest. Replaying the same key with identical bytes returns the original result; replaying it with different bytes returns <code>409 Conflict</code> with <code>idempotency_conflict</code>. Registries may also require a fresh <code>Ricochet-Date</code> header.</p>
+          <p>Published version records stay immutable. Yanking appends availability state projected as <code>yanked</code>, <code>yanked_at</code>, <code>yanked_by</code>, and optionally <code>yank_event_id</code>; it does not rewrite archive paths, integrity fields, provenance, signature data, publisher, or <code>published_at</code>. Clients may cache immutable fields and artifacts for long periods, but package metadata and yank overlays must use validators and short or <code>must-revalidate</code> lifetimes.</p>
+          <p>Publisher authorization is package-scoped. Clients pin the registry source, package identity, exact version, archive integrity, package tree integrity, provenance integrity, signature integrity, and signature kind in <code>ricochet.lock</code>. Ordinary installs reject same-version hosted metadata or artifact changes that conflict with the lock.</p>
+          <p>The reference server runs locally with <code>rco registry serve ./hosted-registry --publisher "@ricochet/*=RICOCHET_REGISTRY_TOKEN"</code>. It binds to <code>127.0.0.1:3001</code> by default, prints the discovered base URL on startup, stores metadata in <code>registry.json</code>, and stores package, provenance, and signature artifacts below <code>artifacts/</code>. <code>--token-env NAME</code> grants one all-package publisher token for local beta workflows; repeated <code>--publisher PACKAGE=ENV</code> policies grant exact packages or <code>@scope/*</code> scopes. The reference server verifies uploaded archive bytes, package tree integrity, manifest package identity/version, provenance/signature digests, idempotency keys, and duplicate-version rejection before persisting metadata.</p>
+
+          <h2 id="mirror">Mirror Fallback</h2>
+          <p>Hosted metadata exports to the current static format through <code>rco registry mirror REGISTRY_URL PATH</code>. The command writes <code>ricochet-static-registry-v1</code> indexes, package metadata, registry-relative archive paths, yanked records, and provenance/signature fields so existing static registry clients can keep using <code>--registry-url file://.../index.toml</code> or <code>--registry-url https://.../index.toml</code>.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>[registry]
+format = "ricochet-static-registry-v1"
+
+[packages]
+"@ricochet/forms" = "packages/@ricochet/forms.toml"</code></pre>
+
+          <h2 id="sequence">Sequence</h2>
+          <p>The hosted read client, publish/yank client, reference server, real-server duplicate publish rejection, and static mirror export slices are implemented.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="../index.html#features" class="footer-link">Features</a></li>
+                <li><a href="../index.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="../reference.html" class="footer-link">Docs</a></li>
+                <li><a href="../index.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="../guide.js"></script>
+</body>
+</html>

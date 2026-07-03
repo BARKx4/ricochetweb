@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feature Overview - Ricochet Guides — Ricochet Reference Guides</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Feature Overview: A guided snapshot of the current Ricochet beta surface: language runtime, web apps, packages, tools, and safety posture.">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../index.css">
+</head>
+<body class="reference-page guide-page">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="brand" id="nav-brand">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="../index.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="../index.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="../reference.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="../solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="../index.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='../index.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Platform map</span>
+                    <h1 class="ref-hero-title">Feature Overview</h1>
+                    <p class="ref-hero-tagline">A guided snapshot of the current Ricochet beta surface: language runtime, web apps, packages, tools, and safety posture.</p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>docs/reference/guides/features.html</code></div>
+<div class="cmd-item"><code>docs/wiki/features.html</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide Layout Section -->
+        <section class="ref-section">
+            <div class="container guide-layout">
+                <aside class="guide-toc" aria-label="On this page">
+          <strong>On This Page</strong>
+          <a href="#current-features">Current Features</a>
+        </aside>
+                <article class="guide-content">
+                    <div class="guide-breadcrumb">
+                        <a href="../reference.html">&larr; Back to Guides Portal</a>
+                    </div>
+                    <p>Ricochet is currently aimed at a developer-facing v1 beta: a usable web app foundation that developers can scaffold, run, inspect, and extend.</p>
+          <h2 id="current-features">Current Features</h2>
+          <ul>
+            <li>Language runtime: Rust bytecode VM, dynamic OOP, persistent REPL images, source-like bytecode emission, stack/debug tracing, regular expressions, collections, and postfix control flow.</li>
+            <li>Task model: first-class task values with <code>spawn</code>, <code>await</code>, <code>await_all</code>, retained completed/failed status, explicit <code>release_task</code> cleanup, eager background execution, task inspection, and task-returning HTTP helpers.</li>
+            <li>Approval model: local apps can create approval records, claim a generated token exactly once, and complete or reject the record with retained audit state through <code>approval_create</code>, <code>approval_claim</code>, <code>approval_complete</code>, <code>approval_reject</code>, <code>approval_detail</code>, and <code>approval_release</code>.</li>
+            <li>Host capabilities: filesystem/workspace, HTTP, TCP/WebSocket sockets, environment, sleep, TUI, webview, opt-in process execution, and opt-in PTY sessions can be inspected with <code>runtime_capabilities</code>; direct child process execution uses <code>process_spawn</code>, <code>process_spawn_task</code>, or retained <code>process_start</code> jobs with optional <code>process_write</code> stdin.</li>
+            <li>Desktop GUI beta: trusted local scripts can build escaped <code>webview</code> document maps, preview them with <code>rco gui</code>, and package them as native Windows/macOS WebView executables or Linux system-browser GUI launchers with <code>rco package --gui</code>. MVC projects can also be packaged as local-server desktop GUI apps with <code>rco package --gui --mvc</code>.</li>
+            <li>Terminal UI beta: trusted local scripts can use the <code>tui</code> capability for alternate-screen terminal apps with drawing, cursor movement, flushing, size checks, and key polling/reading through <code>rco tui</code> or <code>rco package --tui</code>.</li>
+            <li>CLI workflow: run <code>.rco</code> scripts, format source, build and run bytecode, save/inspect VM images, emit readable source-like bytecode views, package standalone executables, generate Markdown docs, run Ricochet tests, and serve local web apps.</li>
+            <li>Debugging workflow: trace instruction execution, pause on source breakpoints, step into/over/out of calls, inspect stack/locals/globals at pauses, and inspect task snapshots at pauses; write JSON runtime traces with <code>rco run --trace-file</code>, stream JSON Lines with <code>rco debug --json</code>, or serve IDEs through <code>rco debug-adapter</code> over Debug Adapter Protocol stdio.</li>
+            <li>Package workflow: record, install, verify, audit, and locally publish path/GitHub/registry dependencies, enforce semver requirements, pin Git dependencies to immutable commits in <code>ricochet.lock</code>, store deterministic <code>sha256:</code> package-content integrity hashes, attach provenance/signature digests to registry packages, rebuild/check static mirrorable registries, search static registry indexes, install scoped registry packages through <code>--registry-url</code>, and import package sources by local alias.</li>
+            <li>First-party beta packages: repo-local <code>@ricochet/auth</code>, <code>@ricochet/ai</code>, <code>@ricochet/python</code>, <code>@ricochet/forms</code>, and <code>@ricochet/test_helpers</code> packages provide session guards, fail-closed CSRF helpers, credential/password policy helpers, Argon2id password hash/verify wrappers, provider HTTP request builders, whole-body and retained-stream SSE/NDJSON parsing, process-backed Python SDK bridge helpers, form/validation helpers, and package test utilities without moving app-specific workflows into language core.</li>
+            <li>MVC web apps: scaffold projects, list routes, serve apps, use hot reload during local development, serve static assets from <code>public/</code> under <code>/assets</code>, and render templates with controller-provided view data, escaped interpolation, and embedded postfix script/control blocks.</li>
+            <li>Controller context: request params, query, URL-encoded and multipart form data, JSON request bodies, in-memory file uploads, headers, cookies, lightweight session state, logger, safe manifest config, database capability, and optional AI capability are available to controllers.</li>
+            <li>Sessions and cookies: sessions are HMAC-signed by default with a per-process beta key or a manifest-provided secret, can use authenticated encrypted v2 cookies, and emit secure cookie attributes for non-local requests.</li>
+            <li>Active Record: map models to existing SQLite, PostgreSQL, and MySQL/MariaDB tables with <code>find_record</code>, <code>all</code>, <code>where</code>, <code>count_records</code>, <code>first_record</code>, <code>exists?</code>, <code>insert</code>, <code>update</code>, <code>default_page</code>, <code>limit</code>, <code>page</code>, <code>order_page</code>, <code>where_limit</code>, <code>where_page</code>, and <code>where_order_page</code>.</li>
+            <li>Database migrations: generate and apply ordered SQL or native Ricochet DSL migrations from <code>db/migrations</code> to SQLite, PostgreSQL, or MySQL/MariaDB projects and track them in <code>schema_migrations</code>.</li>
+            <li>Local beta scaffold: <code>rco new --with-sqlite</code> creates a zero-service app with a seeded SQLite database, <code>/users</code> Active Record page, and copyable form/session login loop. New apps include <code>public/app.css</code> served at <code>/assets/app.css</code>.</li>
+            <li>AI integration: MVC apps can opt into an OpenAI-compatible <code>[ai.default]</code> provider and receive an <code>ai</code> controller capability whose <code>chat</code> method returns <code>Result</code> maps.</li>
+            <li>Result contracts: stack <code>Result</code> values use <code>ok?</code>, <code>value</code>, and <code>error</code>; <code>result_envelope</code> converts them to <code>{ ok, data, error, meta }</code> maps for app/API boundaries that need stable structured responses.</li>
+            <li>HTTP streams: retained <code>http_stream_start</code>, <code>http_stream_read</code>, <code>http_stream</code>, <code>http_streams</code>, <code>http_stream_cancel</code>, and <code>http_stream_release</code> jobs support bounded offset reads for SSE or other long-running response bodies.</li>
+            <li>Socket clients and listeners: retained <code>tcp_connect</code>/<code>tcp_listen</code> plus <code>tcp_read</code>/<code>tcp_write</code>, and <code>ws_connect</code>/<code>ws_listen</code> plus <code>ws_read</code>/<code>ws_send</code>, support bounded raw TCP and WebSocket client/server development behind explicit socket capability flags.</li>
+            <li>Security posture: sandboxable host capabilities, no-follow HTTP redirects, import/dependency path containment, signed default sessions, Argon2id password hashing primitives, package-level credential/password policy helpers, view/template traversal guards, and TLS-required remote PostgreSQL connections.</li>
+          </ul>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="../index.html#features" class="footer-link">Features</a></li>
+                <li><a href="../index.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="../reference.html" class="footer-link">Docs</a></li>
+                <li><a href="../index.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="../guide.js"></script>
+</body>
+</html>

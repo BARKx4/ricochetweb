@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language And Runtime - Ricochet Guides — Ricochet Reference Guides</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Language And Runtime: Syntax patterns and runtime examples for bindings, persistent images, source emission, numbers, tasks, HTTP helpers, date/time, secrets, and webview documents.">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../index.css">
+</head>
+<body class="reference-page guide-page">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="brand" id="nav-brand">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="../index.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="../index.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="../reference.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="../solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="../index.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='../index.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Postfix core</span>
+                    <h1 class="ref-hero-title">Language And Runtime</h1>
+                    <p class="ref-hero-tagline">Syntax patterns and runtime examples for bindings, persistent images, source emission, numbers, tasks, HTTP helpers, date/time, secrets, and webview documents.</p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>docs/reference/guides/language-runtime.html</code></div>
+<div class="cmd-item"><code>docs/wiki/language-runtime.html</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide Layout Section -->
+        <section class="ref-section">
+            <div class="container guide-layout">
+                <aside class="guide-toc" aria-label="On this page">
+          <strong>On This Page</strong>
+          <a href="#persistent-images-and-source-emission">Persistent Images And Source Emission</a>
+          <a href="#numbers">Numbers</a>
+          <a href="#tasks">Tasks</a>
+          <a href="#date-time-and-duration">Date, Time, And Duration</a>
+          <a href="#provider-settings-and-secrets">Provider Settings And Secrets</a>
+          <a href="#ai-package-contracts">AI Package Contracts</a>
+          <a href="#webview-documents">Webview Documents</a>
+        </aside>
+                <article class="guide-content">
+                    <div class="guide-breadcrumb">
+                        <a href="../reference.html">&larr; Back to Guides Portal</a>
+                    </div>
+                    <p>Read an existing binding with <code>$name</code>. Declaration words still keep the name-first shape, and <code>$</code> is useful when a declaration name is itself stored in another variable:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;users&quot; name var
+$name array
+$users &quot;Ada&quot; push! drop
+$users count println</code></pre>
+          <p>Top-level declarations are shared across the VM. Function and method calls get fresh local declaration scopes, so helper locals declared with <code>var</code>, <code>array</code>, <code>map</code>, <code>list</code>, or <code>Set</code> refresh within the active call and do not leak into later calls.</p>
+          <h2 id="persistent-images-and-source-emission">Persistent Images And Source Emission</h2>
+          <p>Use <code>rco repl --image PATH</code> to resume interactive bindings, classes, and functions across process restarts. The separate <a href="images-source.html">Images And Source Emission</a> guide covers <code>:save</code>, <code>:load</code>, <code>:bindings</code>, <code>rco image save</code>, <code>rco image inspect</code>, and <code>rco emit-source</code>.</p>
+          <h2 id="numbers">Numbers</h2>
+          <p>Ricochet has two numeric runtime values: <code>Number</code> is signed 64-bit integer storage, and <code>Float</code> is finite 64-bit floating-point storage. Plain integer literals stay exact <code>Number</code> values; decimal or exponent literals become <code>Float</code>. Mixed numeric math promotes to <code>Float</code>, and conversion words provide checked boundaries for database- or package-facing intent:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>1.5 2 + println
+12.0 to_integer value println
+12.5 to_integer error &quot;kind&quot; at println
+255 to_unsigned_tinyint value println
+&quot;1.23456789&quot; to_float32 value println</code></pre>
+          <h2 id="tasks">Tasks</h2>
+          <p>Spawn a task and await its result:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>[ 40 2 + ] spawn answer var
+$answer task_status
+$answer running?
+tasks count
+$answer await
+$answer release_task
+$answer task_status
+handles array
+$handles [ 20 2 + ] spawn push! drop
+$handles [ 30 4 + ] spawn push! drop
+$handles await_all</code></pre>
+          <p>HTTP capability calls can also be launched as tasks:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;https://example.com&quot; http_get_task request var
+$request await value response var
+$response &quot;status&quot; at println</code></pre>
+          <p>Long-running HTTP responses can be retained and read incrementally by offset. <code>http_stream_read</code> accepts <code>offset</code> and optional <code>max_bytes</code>; missing or nil <code>max_bytes</code> reads all currently retained bytes from the offset. Read results include the stream snapshot fields plus <code>body</code>, <code>from_offset</code>, <code>next_offset</code>, backward-compatible <code>offset</code> as the next offset, <code>bytes_len</code>, and <code>done</code>. <code>done</code> becomes true only after the stream stops and the read has consumed all currently retained bytes:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;GET&quot; &quot;https://api.example/v1/events&quot; http_request_new value request var
+$request 60000 http_timeout value request set
+$request http_stream_start value stream var
+
+options map
+$options &quot;max_bytes&quot; 4096 put! drop
+false done var
+$done false = while
+  $stream &quot;id&quot; at $options http_stream_read value chunk var
+  $chunk &quot;body&quot; at println
+  $options &quot;offset&quot; $chunk &quot;next_offset&quot; at put! drop
+  $chunk &quot;done&quot; at done set
+end</code></pre>
+          <h2 id="date-time-and-duration">Date, Time, And Duration</h2>
+          <p>Date, timestamp, and duration words use UTC Unix epoch milliseconds as their timestamp boundary. RFC3339 parsing accepts offsets and normalizes to UTC; format patterns use Chrono/strftime syntax:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;2026-06-18T13:14:15.250Z&quot; timestamp_parse value startedAt var
+$startedAt timestamp_format value println
+$startedAt &quot;%Y-%m-%d %H:%M:%S&quot; timestamp_format_pattern value println
+$startedAt timestamp_parts value parts var
+$parts &quot;year&quot; at println
+
+$startedAt 2 duration_hours value timestamp_add value later var
+$startedAt $later timestamp_diff value println
+
+&quot;2026-02-28&quot; date_parse value date var
+$date 1 date_add_days value nextDate var
+$nextDate &quot;%Y-%m-%d&quot; date_format value println
+$date $nextDate date_diff_days value println</code></pre>
+          <h2 id="provider-settings-and-secrets">Provider Settings And Secrets</h2>
+          <p>For authenticated provider calls, keep settings as ordinary maps and store secret references instead of secret values. <code>secret_env</code> creates an env-backed reference, <code>config_get</code> reads required nested settings, and <code>secret_resolve</code> reads the value only at the point of use under the environment capability. <code>http_request_new</code>, <code>http_bearer_auth</code>, <code>http_json_body</code>, and <code>http_timeout</code> cover the common request-map plumbing while preserving the same runtime host allowlist and no-follow redirect policy as the simpler HTTP words:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>settings map
+provider map
+$provider &quot;api_key&quot; &quot;PROVIDER_API_KEY&quot; secret_env put! drop
+$settings &quot;provider&quot; $provider put! drop
+
+path array
+$path &quot;provider&quot; push! drop
+$path &quot;api_key&quot; push! drop
+$settings $path config_get value secret_resolve value token var
+
+payload map
+$payload &quot;probe&quot; true put! drop
+&quot;POST&quot; &quot;https://api.example/v1/models&quot; http_request_new value request var
+$request $token http_bearer_auth value request set
+$request $payload http_json_body value request set
+$request 30000 http_timeout value request set
+$request http_request value response var
+$response &quot;status&quot; at println</code></pre>
+          <h2 id="ai-package-contracts">AI Package Contracts</h2>
+          <p>First-party AI package helpers can keep the provider contract separate from the HTTP transport while still resolving secrets only at the point of use:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;ai/openai&quot; import
+
+&quot;openai&quot; &quot;https://api.openai.com/v1&quot; &quot;gpt-4.1-mini&quot; ai_provider provider var
+messages array
+$messages &quot;Use one paragraph.&quot; ai_system_message push! drop
+$messages &quot;Explain Ricochet packages.&quot; ai_user_message push! drop
+options map
+tools array
+3 100 1000 ai_retry_policy retry var
+$provider &quot;gpt-4.1-mini&quot; $messages $options $tools $retry ai_chat_request contract var
+
+&quot;OPENAI_API_KEY&quot; ai_secret_ref secret_resolve value token var
+[
+  attempt var
+  chatRequest var
+  $provider &quot;base_url&quot; at $token $chatRequest &quot;model&quot; at $chatRequest &quot;messages&quot; at ai_openai_chat_request request var
+  $request http_request
+] executor var
+
+$contract $executor ai_openai_execute_chat value &quot;text&quot; at println</code></pre>
+          <p>The same executor boundary is used by <code>examples/showcase/ai_provider_probe/fake_provider.rco</code> for offline provider tests and by <code>local_model_request.rco</code> for local OpenAI-compatible endpoints. Anthropic Messages API flows use <code>ai_anthropic_provider</code>, <code>ai_anthropic_chat_request</code>, <code>ai_anthropic_execute_chat</code>, and <code>ai_anthropic_stream_events</code>; see <code>examples/showcase/ai_provider_probe/anthropic_request.rco</code> for a dry-run request shape. Native Ollama <code>/api/chat</code> flows use the same contract shape with <code>ai_ollama_provider</code>, <code>ai_ollama_chat_request</code>, <code>ai_ollama_execute_chat</code>, and <code>ai_ollama_stream_events</code>; see <code>examples/showcase/ai_provider_probe/ollama_native_request.rco</code>.</p>
+          <p>For long-running AI streams, pair retained <code>http_stream_read</code> chunks with provider stream state instead of parsing each chunk body directly:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>$request http_stream_start value stream var
+ai_openai_stream_state state var
+false done var
+
+$done false = while
+  $state 4096 ai_stream_read_options options var
+  $stream &quot;id&quot; at $options http_stream_read value chunk var
+  $state $chunk ai_openai_stream_read_events value read var
+  $read &quot;events&quot; at [
+    event var
+    $event &quot;kind&quot; at &quot;delta&quot; = if
+      $event &quot;data&quot; at print
+    end
+  ] each drop
+  $read &quot;state&quot; at state set
+  $read &quot;done&quot; at done set
+end</code></pre>
+          <p>Use <code>ai_anthropic_stream_state</code> with <code>ai_anthropic_stream_read_events</code> for Anthropic SSE, and <code>ai_ollama_stream_state</code> with <code>ai_ollama_stream_read_events</code> for Ollama NDJSON. The state keeps the next <code>offset</code>, parser <code>buffer</code>, monotonically increasing <code>event_offset</code>, provider <code>protocol_done</code>, transport <code>http_done</code>, and final <code>done</code> flag.</p>
+          <h2 id="webview-documents">Webview Documents</h2>
+          <p>Build a webview document for desktop UI hosts:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>state map
+$state &quot;count&quot; 1 put! drop
+&quot;Count: &quot; $state &quot;count&quot; at to_string concat webview_text countText var
+&quot;Increment&quot; &quot;increment&quot; webview_button button var
+actions array
+$actions &quot;Increment&quot; &quot;increment&quot; &quot;increment_counter&quot; webview_action push! drop
+&quot;&lt;main&gt;&quot; $countText concat
+$countText concat
+$button concat
+&quot;&lt;/main&gt;&quot; concat body var
+&quot;Counter&quot; $body $state $actions webview_window_state value document var</code></pre>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="../index.html#features" class="footer-link">Features</a></li>
+                <li><a href="../index.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="../reference.html" class="footer-link">Docs</a></li>
+                <li><a href="../index.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="../guide.js"></script>
+</body>
+</html>

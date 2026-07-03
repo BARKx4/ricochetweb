@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web And Data - Ricochet Guides — Ricochet Reference Guides</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Web And Data: Serve Ricochet MVC projects, use hot reload, configure databases, parse requests, and work with Active Record.">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../index.css">
+</head>
+<body class="reference-page guide-page">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="brand" id="nav-brand">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="../index.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="../index.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="../reference.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="../solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="../index.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='../index.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">MVC apps</span>
+                    <h1 class="ref-hero-title">Web And Data</h1>
+                    <p class="ref-hero-tagline">Serve Ricochet MVC projects, use hot reload, configure databases, parse requests, and work with Active Record.</p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>docs/reference/guides/web-and-data.html</code></div>
+<div class="cmd-item"><code>docs/wiki/web-and-data.html</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide Layout Section -->
+        <section class="ref-section">
+            <div class="container guide-layout">
+                <aside class="guide-toc" aria-label="On this page">
+          <strong>On This Page</strong>
+          <a href="#sqlite-scaffold">SQLite Scaffold</a>
+          <a href="#postgresql">PostgreSQL</a>
+          <a href="#mysql-and-mariadb">MySQL And MariaDB</a>
+          <a href="#templates">Templates</a>
+          <a href="#migrations-and-seeds">Migrations And Seeds</a>
+          <a href="#request-data">Request Data</a>
+        </aside>
+                <article class="guide-content">
+                    <div class="guide-breadcrumb">
+                        <a href="../reference.html">&larr; Back to Guides Portal</a>
+                    </div>
+                    <p>Serve an MVC app from its project directory:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>rco serve --host 127.0.0.1 --port 3000
+rco serve --allow-env --http-allow-host 127.0.0.1
+rco serve --env-allow OPENAI_API_KEY --http-allow-host api.openai.com
+rco serve --allow-process --fs-root .
+rco serve --allow-process --process-root .\scripts
+rco serve --allow-pty --fs-root .
+rco serve --watch
+rco serve --debug
+rco serve --watch --fs-root . --http-allow-host 127.0.0.1</code></pre>
+          <p><code>--watch</code> reloads Ricochet MVC routes, controllers, models, views, and the manifest between requests. If a reload fails, the request returns a clear MVC error and the next request retries after you fix the source. Combine <code>--watch</code> with <code>--debug</code> to print reload trace lines with the new revision and changed files. The same filesystem, HTTP, environment, process, and PTY capability flags used by ordinary <code>rco serve</code> are also honored by watched MVC runtimes and by each hot-reloaded revision.</p>
+          <p><code>rco serve --debug</code> also records MVC request fault pauses. Before a controller action, view render, or response metadata failure becomes an HTTP 500 response, the server prints a <code>FAULT request ...</code> line with the method, path, controller/action, revision, stage, and error text.</p>
+          <p>Use <code>rco doctor [path]</code> for a read-only health check of a source file, source tree, package project, or MVC app. Add <code>--capabilities</code> to print the MVC manifest capability surface that will matter for trusted local beta apps. Package projects can also run <code>rco verify [path]</code> to check dependency manifest/lock consistency, local path containment, git package cache commit matches, and locked package-content integrity without fetching or rewriting anything.</p>
+          <p><code>rco serve</code> keeps MVC process environment access disabled unless you pass <code>--allow-env</code> or one or more <code>--env-allow NAME</code> entries. Prefer <code>--env-allow</code> for trusted local beta apps that store secret references as environment variable names. <code>--no-env</code> keeps the default disabled behavior explicit, and conflicts with both env-opening flags.</p>
+          <h2 id="templates">Templates</h2>
+          <p>MVC views use ordinary HTML files with Ricochet template markers. <code>{ ... }</code> runs an expression and renders exactly one scalar value: nil, bool, number, float, or string. Values are HTML-escaped by default.</p>
+          <p>Use <code>{&#37; ... do &#37;}</code> for non-rendering setup code. Script blocks share template locals with later expressions and blocks, and they must leave no values on the stack. Use postfix <code>{&#37; condition if &#37;}</code>, <code>{&#37; else &#37;}</code>, and <code>{&#37; end &#37;}</code> for conditionals. Use <code>{&#37; collection &quot;item&quot; each &#37;}</code> and <code>{&#37; end &#37;}</code> to loop arrays, lists, sets, or maps; map items expose <code>key</code> and <code>value</code>.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>{&#37; &quot;Featured users&quot; &quot;heading&quot; var do &#37;}
+&lt;h1&gt;{ heading get }&lt;/h1&gt;
+{&#37; show get if &#37;}
+  &lt;ul&gt;
+    {&#37; users get &quot;user&quot; each &#37;}
+      &lt;li&gt;{ user get &quot;name&quot; at }&lt;/li&gt;
+    {&#37; end &#37;}
+  &lt;/ul&gt;
+{&#37; else &#37;}
+  &lt;p&gt;No users&lt;/p&gt;
+{&#37; end &#37;}</code></pre>
+          <p>Template directives are compiled only by the template renderer; <code>do</code>, <code>if</code>, <code>else</code>, <code>each</code>, and <code>end</code> in <code>{&#37; ... &#37;}</code> are not new global VM words. Template markers are rejected inside HTML attributes, <code>&lt;script&gt;</code>, and <code>&lt;style&gt;</code> so untrusted view data stays in text context.</p>
+          <h2 id="sqlite-scaffold">SQLite Scaffold</h2>
+          <p>For a zero-service local beta app, <code>rco new --with-sqlite my_beta_app</code> creates <code>db/development.sqlite3</code>, seeds <code>users</code>, configures Active Record, and adds <code>/login</code>, <code>/me</code>, and <code>/logout</code> routes that exercise form params and the session cookie. The manifest shape is:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>[database.default]
+adapter = &quot;sqlite&quot;
+url = &quot;db/development.sqlite3&quot;</code></pre>
+          <p>For production credential flows, import <code>@ricochet/auth</code> and validate credentials before storing password hashes. The core <code>password_hash</code> and <code>password_verify</code> words use Argon2id PHC-format hashes; the auth package wraps them with credential normalization, length/common-password checks, and a generic <code>auth_credentials_verify</code> result map for login paths.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;auth/session&quot; import
+
+&quot;Ada@Example.COM&quot; &quot;Long unique passphrase 2026&quot; auth_password_hash value hash var
+&quot; ada@example.com &quot; &quot;Long unique passphrase 2026&quot; &quot;ada@example.com&quot; $hash auth_credentials_verify</code></pre>
+          <h2 id="postgresql">PostgreSQL</h2>
+          <p>For a Postgres-backed app, use the same manifest shape with a Postgres URL:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>[database.default]
+adapter = &quot;postgres&quot;
+url = &quot;${DATABASE_URL}&quot; # use sslmode=require for remote databases</code></pre>
+          <p>Ricochet requires TLS for remote Postgres connections. <code>sslmode=disable</code> is accepted only for <code>localhost</code> or loopback development databases.</p>
+          <h2 id="mysql-and-mariadb">MySQL And MariaDB</h2>
+          <p>For a MySQL or MariaDB-backed app, use the MySQL adapter with a <code>mysql://</code> URL:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>[database.default]
+adapter = &quot;mysql&quot;
+url = &quot;${MYSQL_URL}&quot;</code></pre>
+          <p>Active Record maps model declarations to existing tables, and <code>rco migrate</code> applies ordered SQL or Ricochet DSL migrations from <code>db/migrations</code> while recording applied versions in <code>schema_migrations</code>.</p>
+          <h2 id="migrations-and-seeds">Migrations And Seeds</h2>
+          <p>Use <code>rco migrate new NAME [path]</code> to create an apply-only SQL migration, or <code>rco migrate new NAME --dsl [path]</code> to create paired Ricochet migration DSL files. Use <code>rco migrate status [path]</code> to list ordered migration files and <code>rco migrate apply [path]</code> to apply pending SQL or DSL. Existing <code>VERSION_name.sql</code> files remain compatible. For reversible migrations, use paired SQL or DSL files such as <code>VERSION_name.up.sql</code>, <code>VERSION_name.down.sql</code>, <code>VERSION_name.up.rco</code>, and <code>VERSION_name.down.rco</code>.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>rco migrate status
+rco migrate new create_notes --dsl
+rco migrate apply
+rco migrate rollback --steps 1
+rco migrate dump --output db/schema.sql
+rco seed</code></pre>
+          <p>Migration DSL files are compiled only by the migration command; the DSL words are not global runtime words. The DSL stays postfix and covers safe table, column, index, and string-literal default operations:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;notes&quot; table_create
+&quot;id&quot; &quot;integer&quot; column primary_key
+&quot;body&quot; &quot;text&quot; column not_null
+&quot;status&quot; &quot;text&quot; column not_null &quot;writer's draft&quot; default
+
+&quot;notes&quot; &quot;archived_at&quot; &quot;text&quot; column_add
+&quot;notes&quot; &quot;archived_at&quot; &quot;archived_on&quot; column_rename
+&quot;idx_notes_status&quot; &quot;notes&quot; &quot;status&quot; index_create
+&quot;uq_notes_body&quot; &quot;notes&quot; &quot;body&quot; unique_index_create</code></pre>
+          <p>Rollback DSL uses the same postfix shape:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;idx_notes_status&quot; &quot;notes&quot; index_drop
+&quot;uq_notes_body&quot; &quot;notes&quot; index_drop
+&quot;notes&quot; &quot;archived_on&quot; column_drop
+&quot;notes&quot; table_drop</code></pre>
+          <p><code>rco migrate rollback [path] --steps N</code> rolls back applied SQLite, PostgreSQL, and MySQL/MariaDB migrations newest-first and fails loudly when a migration has no matching down SQL or DSL file. MySQL and MariaDB DDL can auto-commit depending on the statement; Ricochet records the migration as rolled back only after the down migration succeeds.</p>
+          <p><code>rco migrate dump [path] --output db/schema.sql</code> writes a deterministic beta DDL snapshot for SQLite, PostgreSQL, and MySQL/MariaDB user objects. The dump excludes <code>schema_migrations</code> and adapter-internal objects where applicable. It is not a byte-for-byte replacement for <code>pg_dump</code> or <code>mysqldump</code>.</p>
+          <p><code>rco seed [path]</code> runs <code>db/seeds/*.sql</code> and <code>db/seeds/*.rco</code> in filename order for SQLite, PostgreSQL, and MySQL/MariaDB projects. Ricochet seed files load project models and receive the <code>db</code> capability. Seeds are not tracked, so non-idempotent seed files run again on every invocation. Raw MySQL migration batches do not support <code>DELIMITER</code> routine-body syntax in this beta path.</p>
+          <h2 id="request-data">Request Data</h2>
+          <p>MVC actions parse <code>application/x-www-form-urlencoded</code>, <code>application/json</code>, and <code>multipart/form-data</code> request bodies for <code>POST</code>, <code>PUT</code>, <code>PATCH</code>, and <code>DELETE</code>. Declared action Args bind route params first, then form fields, JSON object fields, upload fields, query params, and finally context values. The same data is available through <code>$ctx &quot;request&quot; at</code>: <code>form</code> holds text fields, <code>json</code> and <code>body</code> hold parsed JSON values, <code>uploads</code> is keyed by multipart file field name, and <code>files</code> contains every uploaded file. Upload values include <code>name</code>, <code>field</code>, <code>stream_id</code>, <code>filename</code>, <code>content_type</code>, <code>size_known</code>, <code>size</code>, <code>text</code> for small UTF-8 bytes, and <code>data_base64</code> for small arbitrary file bytes. Larger files are retained as temporary upload streams and can be consumed with <code>upload_read</code>, inspected with <code>upload_stream</code>, listed with <code>upload_streams</code>, and released with <code>upload_release</code>. Configure <code>[web.uploads]</code> bounds with <code>max_request_bytes</code>, <code>max_file_bytes</code>, <code>memory_threshold_bytes</code>, and <code>max_retained_streams</code>.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="../index.html#features" class="footer-link">Features</a></li>
+                <li><a href="../index.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="../reference.html" class="footer-link">Docs</a></li>
+                <li><a href="../index.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="../guide.js"></script>
+</body>
+</html>

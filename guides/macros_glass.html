@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compile-Time Macros - Ricochet Guides — Ricochet Reference Guides</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Compile-Time Macros: Generate Ricochet expression AST before bytecode while preserving the language's postfix shape and fail-closed host safety.">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../glass.css">
+</head>
+<body class="reference-page guide-page">
+
+    <!-- Header Banner -->
+    <div class="header-banner" id="site-header-banner">
+        <img src="../assets/hero_logo.jpg" alt="Ricochet Hero" class="header-hero-img">
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="../index_glass.html" class="brand" id="nav-brand">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="../index_glass.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="../index_glass.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="../reference_glass.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="../solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="../index_glass.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='../index_glass.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Compile-time beta</span>
+                    <h1 class="ref-hero-title">Compile-Time Macros</h1>
+                    <p class="ref-hero-tagline">Generate Ricochet expression AST before bytecode while preserving the language's postfix shape and fail-closed host safety.</p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>docs/reference/guides/macros.html</code></div>
+<div class="cmd-item"><code>docs/wiki/macros.html</code></div>
+<div class="cmd-item"><code>rco expand app.rco --json</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide Layout Section -->
+        <section class="ref-section">
+            <div class="container guide-layout">
+                <aside class="guide-toc" aria-label="On this page">
+          <strong>On This Page</strong>
+          <a href="#expression-macros">Expression Macros</a>
+          <a href="#item-row-macros">Item Row Macros</a>
+          <a href="#imports">Imports</a>
+          <a href="#examples">Examples</a>
+          <a href="#inspection">Inspection</a>
+          <a href="#current-limits">Current Limits</a>
+        </aside>
+                <article class="guide-content">
+                    <div class="guide-breadcrumb">
+                        <a href="../reference_glass.html">&larr; Back to Guides Portal</a>
+                    </div>
+                    <p>Compile-time macros are a beta source-transformation surface. They expand parsed Ricochet AST before bytecode is generated, so generated code keeps the same postfix shape as handwritten code.</p>
+          <p>Use macros when a repeated declaration or expression pattern is clearer as a small local language feature. Macro bodies run in a restricted compile-time evaluator with no filesystem, network, process, database, clock, randomness, task, or capability access.</p>
+
+          <h2 id="expression-macros">Expression Macros</h2>
+          <p>Macro names are string literals and calls are explicit:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;unless&quot; Macro
+  ( condition body -&gt; expansion )
+  [
+    [
+      $condition ast_splice not if
+        $body ast_splice call
+      end
+    ] quote_ast
+  ]
+end
+
+$ready [
+  &quot;not ready&quot; println
+] &quot;unless&quot; macro_call</code></pre>
+          <p><code>quote_ast</code> converts a quoted block into expression AST. Inside quoted output, <code>$arg ast_splice</code> inserts the caller's parsed operand instead of generating a runtime <code>$arg</code> read.</p>
+
+          <h2 id="item-row-macros">Item Row Macros</h2>
+          <p>Use <code>quote_items</code> when a macro call owns a whole item and should emit one or more item rows. Rows that do not match a declaration encoding stay ordinary expression items, so class-body declaration rows such as <code>Accessor</code>, <code>Field</code>, <code>Table</code>, and <code>Method</code> keep the same shape as handwritten class bodies:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;accessors&quot; Macro
+  [
+    [
+      &quot;email&quot; Accessor
+      &quot;name&quot; Accessor
+    ] quote_items
+  ]
+end
+
+User Model Subclass
+  &quot;accessors&quot; macro_call
+end</code></pre>
+          <p><code>quote_items</code> is intentionally rejected inside larger expressions. Use <code>quote_ast</code> for expression-position expansion.</p>
+          <p>At top level, <code>quote_items</code> can also emit real declaration items with the macro-only row encodings below:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;function_rows&quot; Macro
+  [
+    [
+      [ &quot;hello from generated function&quot; println ] &quot;greet&quot; function
+      ( name -&gt; String ) [ &quot;hello &quot; $name + ] &quot;greeting&quot; function
+    ] quote_items
+  ]
+end
+
+&quot;model_row&quot; Macro
+  [
+    [
+      [
+        &quot;users&quot; Table
+        &quot;email&quot; Accessor
+        [ self email.get ] &quot;label&quot; Method
+      ] User Model Subclass
+    ] quote_items
+  ]
+end</code></pre>
+          <p>Generated declaration bodies expand in the macro definition scope. If an imported public macro emits a function body that calls a private helper macro from the imported module, that private helper resolves from the imported module rather than from the caller.</p>
+
+          <h2 id="imports">Imports</h2>
+          <p>Static imports expose public macros from the imported module during compilation. Macro declarations whose names start with <code>_</code> are private to their defining module but can still be used by public macros from that module:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>(( lib/macros.rco ))
+&quot;_helper&quot; Macro
+  [
+    [ &quot;from helper&quot; println ] quote_ast
+  ]
+end
+
+&quot;say_ok&quot; Macro
+  [
+    [ &quot;_helper&quot; macro_call ] quote_ast
+  ]
+end</code></pre>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>(( main.rco ))
+&quot;lib/macros&quot; import
+&quot;say_ok&quot; macro_call</code></pre>
+          <p>Unqualified calls prefer local macros. If exactly one imported module exports a matching macro, that macro is used. If multiple imports export the same name, the compiler fails and asks for a qualified call:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>&quot;lib/macros#say_ok&quot; macro_call
+&quot;self#local_macro&quot; macro_call</code></pre>
+          <p>Package path imports use the same manifest and containment rules as ordinary static imports. <code>rco expand --json</code> now reports canonical package-aware macro module IDs with safe lock metadata when <code>ricochet.lock</code> is present, so package macros can be traced without exposing local cache paths.</p>
+
+          <h2 id="examples">Examples</h2>
+          <p>Use the public examples to see both local and package-authored macro workflows:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>rco run examples/macro_release_scorecard.rco
+rco run examples/showcase/package_macro_queue_report/main.rco
+Push-Location examples/showcase/package_macro_queue_report
+rco expand main.rco --json</code></pre>
+          <p><code>examples/macro_release_scorecard.rco</code> shows a local declaration macro building a release scorecard function with a private helper macro for repeated count lines. <code>examples/showcase/package_macro_queue_report</code> shows a package-style macro module exporting a public <code>install_queue_report</code> macro, keeping <code>_count_line</code> private, and producing package-aware expansion metadata for the locked dependency.</p>
+
+          <h2 id="inspection">Inspection</h2>
+          <p><code>rco expand</code> prints expanded source without executing runtime code:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>rco expand app.rco
+rco expand app.rco --json</code></pre>
+          <p>The JSON form includes stable v1 contract metadata through <code>schema</code>, <code>sources</code>, <code>source_map</code>, and <code>cache</code>, alongside the expanded AST, macro tables, imports, traces, diagnostics, and output hash.</p>
+
+          <h2 id="current-limits">Current Limits</h2>
+          <ul>
+            <li>Macro declaration names must be string literals and cannot contain <code>#</code>.</li>
+            <li>Runtime imports do not load macros.</li>
+            <li>Macro bodies are fail-closed and can use only the compile-time helper surface.</li>
+            <li>Expansion depth, same-macro recursion, evaluator steps, and generated AST nodes are bounded.</li>
+            <li><code>quote_items</code> declaration rows are supported only where a whole declaration item is valid.</li>
+          </ul>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="../index_glass.html#features" class="footer-link">Features</a></li>
+                <li><a href="../index_glass.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="../reference_glass.html" class="footer-link">Docs</a></li>
+                <li><a href="../index_glass.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="../guide.js"></script>
+</body>
+</html>

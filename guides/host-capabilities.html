@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Capabilities And Safety - Ricochet Guides — Ricochet Reference Guides</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Host Capabilities And Safety: Filesystem, HTTP, process, PTY, sockets, approvals, and sandboxing behavior for local scripts and MVC apps.">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../index.css">
+</head>
+<body class="reference-page guide-page">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="brand" id="nav-brand">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="../index.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="../index.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="../reference.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="../solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="../index.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='../index.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Boundary controls</span>
+                    <h1 class="ref-hero-title">Host Capabilities And Safety</h1>
+                    <p class="ref-hero-tagline">Filesystem, HTTP, process, PTY, sockets, approvals, and sandboxing behavior for local scripts and MVC apps.</p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>docs/reference/guides/host-capabilities.html</code></div>
+<div class="cmd-item"><code>docs/wiki/host-capabilities.html</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide Layout Section -->
+        <section class="ref-section">
+            <div class="container guide-layout">
+                <aside class="guide-toc" aria-label="On this page">
+          <strong>On This Page</strong>
+          <a href="#workspace-filesystem-helpers">Workspace Filesystem Helpers</a>
+          <a href="#process-environment">Process Environment</a>
+          <a href="#process-execution">Process Execution</a>
+          <a href="#pty-sessions">PTY Sessions</a>
+          <a href="#approvals">Approvals</a>
+          <a href="#runtime-safety-notes">Runtime Safety Notes</a>
+        </aside>
+                <article class="guide-content">
+                    <div class="guide-breadcrumb">
+                        <a href="../reference.html">&larr; Back to Guides Portal</a>
+                    </div>
+                    <p>Ricochet keeps powerful host behavior behind explicit capability controls.</p>
+          <h2 id="workspace-filesystem-helpers">Workspace Filesystem Helpers</h2>
+          <p>Workspace helpers provide structured filesystem access for local apps while preserving the same <code>--fs-root</code> and <code>--fs-readonly</code> bounds as the lower-level <code>fs_*</code> words. <code>fs_delete</code> removes a file, symlink, or empty directory; <code>workspace_delete</code> adds explicit <code>recursive</code> and <code>missing_ok</code> options and refuses to delete the configured filesystem root:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>options map
+writeOptions map
+$writeOptions &quot;create_parent_dirs&quot; true put! drop
+&quot;README.md&quot; $options workspace_read_text value readme var
+&quot;.&quot; $options workspace_list value entries var
+&quot;generated/out.txt&quot; &quot;hello&quot; $writeOptions workspace_write_text value written var
+$written &quot;relative_path&quot; at println
+deleteOptions map
+$deleteOptions &quot;recursive&quot; true put! drop
+&quot;generated&quot; $deleteOptions workspace_delete value drop
+runtime_capabilities &quot;workspace&quot; at &quot;root&quot; at println</code></pre>
+          <h2 id="process-environment">Process Environment</h2>
+          <p>Use <code>process_env_put</code> when a child process needs a bounded environment value without hand-building the nested <code>env</code> options map:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>args array
+options map
+$options &quot;GIT_TERMINAL_PROMPT&quot; &quot;0&quot; process_env_put value options set
+&quot;git&quot; $args $options process_spawn value</code></pre>
+          <h2 id="process-execution">Process Execution</h2>
+          <p>Process execution is stronger than the ordinary trusted local profile and stays disabled unless you pass <code>--allow-process</code>. Use <code>process_spawn</code> with a direct command string, an argument array, and an options map when you want to run a process to completion. <code>--process-root PATH</code> narrows process and PTY <code>cwd</code> values independently from <code>--fs-root</code>; when omitted, process cwd containment falls back to the filesystem root if one is configured:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>args array
+$args &quot;status&quot; push! drop
+options map
+$options &quot;timeout_ms&quot; 10000 put! drop
+&quot;git&quot; $args $options process_spawn value result var
+$result &quot;success&quot; at println</code></pre>
+          <p>Use <code>process_start</code> for long-running jobs. The runtime keeps a retained job registry with bounded captured output, and it can be inspected across MVC requests with <code>process_jobs</code>, <code>process_job</code>, <code>process_read</code>, and <code>process_cancel</code>. Set <code>stdin_open</code> to true when the child needs incremental input through <code>process_write</code>. Release completed jobs with <code>process_release</code>:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>args array
+$args &quot;status&quot; push! drop
+options map
+$options &quot;stdout_max_bytes&quot; 1048576 put! drop
+&quot;git&quot; $args $options process_start value job var
+readOptions map
+$job &quot;id&quot; at $readOptions process_read value output var
+$output &quot;stdout&quot; at println
+$job &quot;id&quot; at process_release value drop</code></pre>
+          <h2 id="pty-sessions">PTY Sessions</h2>
+          <p>PTY sessions are separate and also opt in. Use <code>--allow-pty</code> for trusted scripts or MVC apps that need a real pseudo-terminal. Command names and shell newlines are host-specific:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>args array
+$args &quot;repl&quot; push! drop
+options map
+&quot;rco&quot; $args $options pty_start value session var
+$session &quot;id&quot; at &quot;1 2 +\r\n&quot; pty_write value drop
+readOptions map
+$session &quot;id&quot; at $readOptions pty_read value screen var
+$screen &quot;output&quot; at println
+stopOptions map
+$session &quot;id&quot; at $stopOptions pty_stop value drop
+$session &quot;id&quot; at pty_release value drop</code></pre>
+          <h2 id="approvals">Approvals</h2>
+          <p>Approval records are runtime-local and shared across MVC requests. <code>approval_create</code> returns a generated token once; <code>approval_claim</code> consumes that token exactly once before the caller performs the mutating operation:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>operation map
+$operation &quot;capability&quot; &quot;workspace.write&quot; put! drop
+$operation &quot;summary&quot; &quot;Write generated file&quot; put! drop
+options map
+$operation $options approval_create value approval var
+$approval &quot;id&quot; at $approval &quot;token&quot; at approval_claim value claim var
+$claim &quot;claimed&quot; at println
+$approval &quot;id&quot; at approval_detail value detail var
+$approval &quot;id&quot; at approval_release value drop</code></pre>
+          <h2 id="runtime-safety-notes">Runtime Safety Notes</h2>
+          <p>The CLI uses the <code>trusted</code> capability profile by default for local scripts. Pass <code>--capability-profile sandboxed</code> with <code>rco run</code>, <code>rco run-bytecode</code>, <code>rco repl</code>, or <code>rco test</code> to start with filesystem, HTTP, TUI, and webview disabled. Process execution, PTY sessions, and TCP/WebSocket sockets are disabled unless explicitly enabled in either profile.</p>
+          <p>In the sandboxed profile, <code>--fs-root &lt;path&gt;</code> enables filesystem access only under that directory, <code>--fs-readonly</code> denies writes, <code>--http-allow-host &lt;host&gt;</code> enables HTTP only for named hosts, and <code>--allow-tui</code> enables terminal UI access, while <code>--allow-webview</code> enables webview document building. <code>--no-fs</code>, <code>--no-http</code>, <code>--no-tui</code>, and <code>--no-webview</code> still deny those host powers explicitly in either profile.</p>
+          <p><code>--allow-sockets</code> enables raw TCP and WebSocket clients/listeners; prefer <code>--socket-allow-host &lt;host&gt;</code> for bounded socket access when running examples, tests, or third-party code. Listener bind hosts are checked with the same allowlist as outbound destinations.</p>
+          <p><code>--allow-process</code> enables direct child process execution with captured stdout/stderr, bounded output, blocking <code>process_spawn</code>, and long-running <code>process_start</code> jobs retained up to a per-host cap; use <code>process_write</code> for retained jobs started with open stdin, and <code>process_release</code> to drop completed jobs. <code>--process-root &lt;path&gt;</code> can make process and PTY cwd resolution narrower than the filesystem workspace. <code>--allow-pty</code> enables retained pseudo-terminal sessions through <code>pty_start</code>, <code>pty_write</code>, <code>pty_read</code>, <code>pty_resize</code>, <code>pty_stop</code>, <code>pty_release</code>, <code>pty_list</code>, and <code>pty_detail</code>.</p>
+          <p><code>--env-allow &lt;name&gt;</code> enables or narrows environment variable reads and writes to named variables, <code>--no-env</code> denies environment/current-directory access, and <code>--no-sleep</code> denies script sleeps. Embedded hosts can leave capabilities disabled. HTTP calls do not follow redirects, use a timeout and response body cap, and filesystem access remains powerful CLI behavior unless you deny or bound it with these flags.</p>
+          <p>For MVC servers, <code>rco serve</code> enables filesystem and HTTP only through <code>--fs-root</code> and <code>--http-allow-host</code>, and enables process environment access only through <code>--allow-env</code> or <code>--env-allow</code>. MVC process execution requires <code>--allow-process</code>, MVC PTY sessions require <code>--allow-pty</code>, and <code>--process-root</code> can narrow execution cwd values. Watched MVC runtimes use the same capability setup and share retained approval, process, and PTY registries across hot reloads.</p>
+          <p>For v1 beta testing, keep <code>trusted</code> for your own local scripts and generated apps. Use <code>sandboxed</code> for untrusted examples, bug reports, package reviews, or third-party code, opening only the filesystem root or HTTP hosts the test actually needs.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="../index.html#features" class="footer-link">Features</a></li>
+                <li><a href="../index.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="../reference.html" class="footer-link">Docs</a></li>
+                <li><a href="../index.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="../guide.js"></script>
+</body>
+</html>

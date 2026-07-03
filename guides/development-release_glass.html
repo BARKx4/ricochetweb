@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Development And Release - Ricochet Guides — Ricochet Reference Guides</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Development And Release: Benchmarks, local verification, reference validation, release packaging, tags, and nightly artifacts.">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="../glass.css">
+</head>
+<body class="reference-page guide-page">
+
+    <!-- Header Banner -->
+    <div class="header-banner" id="site-header-banner">
+        <img src="../assets/hero_logo.jpg" alt="Ricochet Hero" class="header-hero-img">
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="../index_glass.html" class="brand" id="nav-brand">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="../index_glass.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="../index_glass.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="../reference_glass.html" class="nav-link nav-active" id="link-docs">Docs</a></li>
+                    <li><a href="../solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="../index_glass.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='../index_glass.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+    <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Contributor workflow</span>
+                    <h1 class="ref-hero-title">Development And Release</h1>
+                    <p class="ref-hero-tagline">Benchmarks, local verification, reference validation, release packaging, tags, and nightly artifacts.</p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>docs/reference/guides/development-release.html</code></div>
+<div class="cmd-item"><code>docs/wiki/development-release.html</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guide Layout Section -->
+        <section class="ref-section">
+            <div class="container guide-layout">
+                <aside class="guide-toc" aria-label="On this page">
+          <strong>On This Page</strong>
+          <a href="#benchmarks">Benchmarks</a>
+          <a href="#developing-ricochet">Developing Ricochet</a>
+          <a href="#verification">Verification</a>
+          <a href="#release-packaging">Release Packaging</a>
+          <a href="#production-release-commands">Production Release Commands</a>
+          <a href="#reference-docs">Reference Docs</a>
+        </aside>
+                <article class="guide-content">
+                    <div class="guide-breadcrumb">
+                        <a href="../reference_glass.html">&larr; Back to Guides Portal</a>
+                    </div>
+                    <h2 id="benchmarks">Benchmarks</h2>
+          <p><code>rco bench</code> runs a repeatable local benchmark suite for parser/compiler work, VM arithmetic, function and method dispatch, collection mutation, JSON encode/decode, template rendering, package verification, and a SQLite MVC request path. Use <code>rco bench --smoke</code> for CI-sized coverage or <code>rco bench --iterations 5</code> for a local baseline. The current website-copy baseline lives in <code>docs/benchmarks/2026-06-17-baseline.html</code>.</p>
+          <h2 id="developing-ricochet">Developing Ricochet</h2>
+          <p>Use Cargo when changing the Rust implementation itself. For an uninstalled source-tree run, this is equivalent to <code>rco run examples/basic-oop.rco</code>:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>cargo run -p ricochet_cli --bin rco -- run examples/basic-oop.rco</code></pre>
+          <h2 id="verification">Verification</h2>
+          <p>For contributor verification, use a current stable Rust toolchain and install the formatter, linter, and audit plugin explicitly:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>rustup component add rustfmt clippy
+cargo install cargo-audit --locked</code></pre>
+          <p>Then run:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>cargo fmt --all -- --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+cargo audit --deny warnings
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\acceptance.ps1</code></pre>
+          <p>The acceptance suite validates the static reference docs, editor assets, word inventory drift check, examples, scaffolded project checks/tests, and a live <code>rco serve</code> smoke request against the generated no-database scaffold.</p>
+          <h2 id="release-packaging">Release Packaging</h2>
+          <p>See <code>docs/releases/v0.1.19-rc.3.html</code> for the current release-candidate notes, hardening checklist, and artifact smoke-test expectations.</p>
+          <p>Windows release packages are built from this repository with:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\package-release.ps1</code></pre>
+          <p>The script builds <code>rco.exe</code>, <code>rco-gui.exe</code>, <code>rco-app.exe</code>, and <code>ricochet.exe</code>, creates a portable ZIP, writes <code>SHA256SUMS.txt</code>, and creates a Windows <code>.exe</code> installer when NSIS <code>makensis.exe</code> is installed. It also writes <code>ARTIFACTS-windows-x64.json</code>, a machine-readable release manifest covering the ZIP, installer when present, checksum file, and signing-status report. GitHub Actions installs NSIS automatically in the release workflow.</p>
+          <p>Windows signing is controlled with <code>-SigningMode auto|require|skip|dry-run</code>. Local and branch dry-runs can use <code>-SigningMode dry-run</code> to write a <code>SIGNING-windows-x64.txt</code> report without requiring a certificate. Production tag releases use <code>require</code> in CI so missing <code>signtool.exe</code>, <code>RICOCHET_WINDOWS_CERT_SHA1</code>, or a certificate installed in <code>Cert:\CurrentUser\My</code> fails loudly instead of publishing unsigned artifacts. Set <code>RICOCHET_WINDOWS_TIMESTAMP_URL</code> to override the default timestamp server.</p>
+          <p>For production tag builds, GitHub Actions imports the Authenticode certificate before packaging with <code>scripts/setup-windows-signing-certificate.ps1</code>. Configure <code>RICOCHET_WINDOWS_CERT_PFX_BASE64</code> for the base64 <code>.pfx</code>, <code>RICOCHET_WINDOWS_CERT_PASSWORD</code> for its password, and optional <code>RICOCHET_WINDOWS_CERT_SHA1</code> to validate the expected thumbprint. The setup step writes the imported thumbprint back to <code>RICOCHET_WINDOWS_CERT_SHA1</code> for the package script.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>$env:RICOCHET_WINDOWS_CERT_PFX_BASE64 = [Convert]::ToBase64String([IO.File]::ReadAllBytes("C:\path\ricochet-signing.pfx"))
+$env:RICOCHET_WINDOWS_CERT_PASSWORD = "&lt;pfx password&gt;"
+$envFile = Join-Path ([IO.Path]::GetTempPath()) ("ricochet-windows-signing-" + [guid]::NewGuid().ToString("N") + ".ps1")
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\setup-windows-signing-certificate.ps1 -Required -EnvFile $envFile
+. $envFile</code></pre>
+          <p>Validate a Windows output directory with:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-release-artifacts.ps1 -Target windows-x64 -RequireInstaller
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-store-packaging.ps1 -Target windows-x64</code></pre>
+          <p>Omit <code>-RequireInstaller</code> for local dry-runs on machines without NSIS; CI keeps it enabled because release jobs install NSIS and require the installer artifact.</p>
+          <p>For production tag outputs, verify the Authenticode signatures on the portable ZIP contents and installer before upload:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-release-signatures.ps1 -Target windows-x64 -RequireProduction -ExpectedWindowsThumbprint $env:RICOCHET_WINDOWS_CERT_SHA1</code></pre>
+          <p>Linux release packages are built on Linux with:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>bash scripts/package-release-linux.sh</code></pre>
+          <p>The script builds <code>rco</code>, <code>rco-gui</code>, <code>rco-app</code>, and <code>ricochet</code>, creates a portable tarball with an <code>install.sh</code> helper, writes <code>SHA256SUMS-linux-x64.txt</code>, and creates a Debian <code>.deb</code> package with <code>dpkg-deb</code>. It also writes <code>ARTIFACTS-linux-x64.json</code>, including SHA-256, size, source, signing report, and detached <code>.asc</code> signature relationships when signatures are produced.</p>
+          <p>Linux release packages include a terminal desktop launcher for <code>rco repl</code>, an SVG icon, AppStream metainfo, a changelog, maintainer metadata, and the bundled reference docs/packages/examples. GUI applications produced by <code>rco package --gui --linux-package tar|deb</code> include their own <code>.desktop</code>, AppStream, icon, and changelog metadata.</p>
+          <p>Linux detached artifact signatures are controlled with <code>--signature-mode auto|require|skip|dry-run</code>. Dry-run mode writes <code>SIGNING-linux-x64.txt</code>; production tag releases use <code>require</code> in CI and expect <code>RICOCHET_LINUX_GPG_KEY</code> to name an imported GPG key.</p>
+          <p>For production tag builds, GitHub Actions imports the GPG private key before packaging with <code>scripts/setup-linux-gpg-key.sh</code>. Configure <code>RICOCHET_LINUX_GPG_PRIVATE_KEY_BASE64</code> for a base64 armored or binary secret-key export, optional <code>RICOCHET_LINUX_GPG_KEY</code> to validate/select a key, and optional <code>RICOCHET_LINUX_GPG_OWNERTRUST_BASE64</code> for ownertrust. When exactly one key is imported and no selector is provided, the setup step writes the imported fingerprint to <code>RICOCHET_LINUX_GPG_KEY</code>.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>export RICOCHET_LINUX_GPG_PRIVATE_KEY_BASE64="$(gpg --armor --export-secret-keys KEYID | base64 -w0)"
+export RICOCHET_LINUX_GPG_KEY="KEYID"
+env_file="$(mktemp)"
+bash scripts/setup-linux-gpg-key.sh --required --env-file "$env_file"
+set -a
+. "$env_file"
+set +a</code></pre>
+          <p>Validate a Linux output directory with:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>pwsh -NoProfile -File ./scripts/validate-release-artifacts.ps1 -Target linux-x64 -RequireDeb
+pwsh -NoProfile -File ./scripts/validate-store-packaging.ps1 -Target linux-x64</code></pre>
+          <p>For production tag outputs, verify every detached GPG signature against the selected signing key before upload:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>pwsh -NoProfile -File ./scripts/verify-release-signatures.ps1 -Target linux-x64 -RequireProduction -GpgKey $env:RICOCHET_LINUX_GPG_KEY</code></pre>
+          <p>macOS release tarballs are built on macOS with:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>bash scripts/package-release-macos.sh --target macos-arm64
+bash scripts/package-release-macos.sh --target macos-x64</code></pre>
+          <p>The script builds <code>rco</code>, <code>rco-gui</code>, <code>rco-app</code>, and <code>ricochet</code>, creates a portable tarball with an <code>install.sh</code> helper, writes a target-specific checksum file, and writes <code>ARTIFACTS-&lt;target&gt;.json</code> for the tarball, checksum file, and signing-status report. GitHub Actions builds Apple Silicon and Intel tarballs on separate macOS runners.</p>
+          <p>macOS signing and notarization are controlled with <code>--signing-mode</code> and <code>--notarization-mode</code>, each accepting <code>auto</code>, <code>require</code>, <code>skip</code>, or <code>dry-run</code>. Dry-run mode writes a <code>SIGNING-&lt;target&gt;.txt</code> report. Production tag releases use <code>require</code> in CI; scheduled nightlies use <code>auto</code> so unsigned beta artifacts are allowed only with an explicit report. Configure <code>RICOCHET_MACOS_SIGN_IDENTITY</code> and <code>RICOCHET_MACOS_NOTARY_PROFILE</code> when signing and notarization credentials are available on the runner.</p>
+          <p>For production tag builds, GitHub Actions creates an ephemeral keychain, imports the P12 signing certificate, configures codesign access, and stores a notarytool profile before packaging with <code>scripts/setup-macos-signing-keychain.sh</code>. The package script submits a temporary ZIP copy to Apple notarization and keeps the tarball as the published artifact. It preserves Apple notarytool's accepted submission response as <code>NOTARY-&lt;target&gt;.json</code>, includes that report in the checksum file and artifact manifest, and records the relationship in <code>SIGNING-&lt;target&gt;.txt</code>. An <code>always()</code> cleanup step runs <code>scripts/cleanup-macos-signing-keychain.sh</code> after packaging to restore the previous keychain state and remove the generated keychain. Configure <code>RICOCHET_MACOS_CERT_P12_BASE64</code>, <code>RICOCHET_MACOS_CERT_PASSWORD</code>, optional <code>RICOCHET_MACOS_KEYCHAIN_PASSWORD</code>, optional <code>RICOCHET_MACOS_SIGN_IDENTITY</code>, and required <code>RICOCHET_MACOS_NOTARY_PROFILE</code>. For notarization, provide either <code>RICOCHET_MACOS_NOTARY_APPLE_ID</code>, <code>RICOCHET_MACOS_NOTARY_TEAM_ID</code>, and <code>RICOCHET_MACOS_NOTARY_PASSWORD</code>, or <code>RICOCHET_MACOS_NOTARY_API_KEY_BASE64</code>, <code>RICOCHET_MACOS_NOTARY_KEY_ID</code>, and <code>RICOCHET_MACOS_NOTARY_ISSUER_ID</code>.</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>export RICOCHET_MACOS_CERT_P12_BASE64="$(base64 -i /path/ricochet-signing.p12 | tr -d '\n')"
+export RICOCHET_MACOS_CERT_PASSWORD="&lt;p12 password&gt;"
+export RICOCHET_MACOS_NOTARY_PROFILE="ricochet-release"
+export RICOCHET_MACOS_NOTARY_APPLE_ID="release@example.com"
+export RICOCHET_MACOS_NOTARY_TEAM_ID="TEAMID1234"
+export RICOCHET_MACOS_NOTARY_PASSWORD="&lt;app-specific password&gt;"
+env_file="$(mktemp)"
+bash scripts/setup-macos-signing-keychain.sh --env-file "$env_file"
+set -a
+. "$env_file"
+set +a
+trap 'bash scripts/cleanup-macos-signing-keychain.sh' EXIT</code></pre>
+          <p>For App Store Connect API key notarization, use <code>RICOCHET_MACOS_NOTARY_API_KEY_BASE64</code>, <code>RICOCHET_MACOS_NOTARY_KEY_ID</code>, and <code>RICOCHET_MACOS_NOTARY_ISSUER_ID</code> instead of the Apple ID variables.</p>
+          <p>Validate a macOS output directory with:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>pwsh -NoProfile -File ./scripts/validate-release-artifacts.ps1 -Target macos-arm64
+pwsh -NoProfile -File ./scripts/validate-store-packaging.ps1 -Target macos-arm64
+pwsh -NoProfile -File ./scripts/validate-release-artifacts.ps1 -Target macos-x64
+pwsh -NoProfile -File ./scripts/validate-store-packaging.ps1 -Target macos-x64</code></pre>
+          <p>For production tag outputs, verify the extracted binaries' codesign signatures and the <code>NOTARY-&lt;target&gt;.json</code> accepted notarization report before upload:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>pwsh -NoProfile -File ./scripts/verify-release-signatures.ps1 -Target macos-arm64 -RequireProduction -ExpectedMacosIdentity "$RICOCHET_MACOS_SIGN_IDENTITY"
+pwsh -NoProfile -File ./scripts/verify-release-signatures.ps1 -Target macos-x64 -RequireProduction -ExpectedMacosIdentity "$RICOCHET_MACOS_SIGN_IDENTITY"</code></pre>
+          <h2 id="production-release-commands">Production Release Commands</h2>
+          <p>Production releases are tag-driven. With the GitHub repository secrets from this guide configured, the normal release path is:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>$version = "0.1.19-rc.3"
+$tag = "v$version"
+
+git fetch origin
+git checkout main
+git pull --ff-only origin main
+git status --short
+
+cargo fmt --all -- --check
+cargo clippy --workspace --all-targets -- -D warnings
+cargo test --workspace
+cargo audit --deny warnings
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\acceptance.ps1
+
+git tag -a $tag -m "Ricochet $tag"
+git push origin $tag
+gh run list --workflow Release --limit 5
+gh run watch &lt;run-id&gt; --exit-status
+gh release view $tag --json tagName,name,isDraft,isPrerelease,url</code></pre>
+          <p>The release workflow imports production signing credentials on stable tag jobs, builds Windows, Linux, and macOS packages, validates artifact manifests, validates store-ready packaging, verifies production signatures, writes the update channel metadata, writes the combined checksum file, and creates the GitHub release. Semver prerelease tags such as <code>v0.1.19-rc.3</code> are published as GitHub prereleases, are not marked latest, use the dry-run signing/notarization path, and write <code>UPDATE-CHANNEL-candidate.json</code> with SHA-256 verification metadata instead of the stable channel file. Stable tag releases continue to require the production signing and notarization secrets before publishing.</p>
+          <p>For a manual production package dry run before tagging, run the platform packaging commands on their native operating systems with production modes:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code># Windows, with NSIS and the Authenticode certificate already available.
+$version = "0.1.19-rc.3"
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\package-release.ps1 -Version $version -Target windows-x64 -RequireInstaller -SigningMode require
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-release-artifacts.ps1 -Target windows-x64 -PackageVersion $version -RequireInstaller
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\validate-store-packaging.ps1 -Target windows-x64 -PackageVersion $version -RequireProduction
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\scripts\verify-release-signatures.ps1 -Target windows-x64 -RequireProduction -ExpectedWindowsThumbprint $env:RICOCHET_WINDOWS_CERT_SHA1</code></pre>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code># Linux, with GPG credentials imported.
+version="0.1.19-rc.3"
+bash scripts/package-release-linux.sh --target linux-x64 --version "$version" --signature-mode require
+pwsh -NoProfile -File ./scripts/validate-release-artifacts.ps1 -Target linux-x64 -PackageVersion "$version" -RequireDeb
+pwsh -NoProfile -File ./scripts/validate-store-packaging.ps1 -Target linux-x64 -PackageVersion "$version" -RequireProduction
+pwsh -NoProfile -File ./scripts/verify-release-signatures.ps1 -Target linux-x64 -RequireProduction -GpgKey "$RICOCHET_LINUX_GPG_KEY"</code></pre>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code># macOS, once for each native target with the signing keychain prepared.
+version="0.1.19-rc.3"
+bash scripts/package-release-macos.sh --target macos-arm64 --version "$version" --signing-mode require --notarization-mode require
+pwsh -NoProfile -File ./scripts/validate-release-artifacts.ps1 -Target macos-arm64 -PackageVersion "$version"
+pwsh -NoProfile -File ./scripts/validate-store-packaging.ps1 -Target macos-arm64 -PackageVersion "$version" -RequireProduction
+pwsh -NoProfile -File ./scripts/verify-release-signatures.ps1 -Target macos-arm64 -RequireProduction -ExpectedMacosIdentity "$RICOCHET_MACOS_SIGN_IDENTITY"</code></pre>
+          <p>After all platform artifacts are collected in one <code>dist</code> directory, validate the release channel and combined artifact set:</p>
+          <pre class="code-block"><button class="copy-button" type="button" aria-label="Copy code" title="Copy">copy</button><code>pwsh -NoProfile -File ./scripts/write-update-channel.ps1 -DistDir dist -Channel candidate -Version 0.1.19-rc.3 -ReleaseTag v0.1.19-rc.3 -ReleaseUrl https://github.com/BARKx4/Ricochet/releases/tag/v0.1.19-rc.3
+pwsh -NoProfile -File ./scripts/validate-update-channel.ps1 -DistDir dist -Channel candidate -Version 0.1.19-rc.3 -RequireProduction</code></pre>
+          <p>The release workflow packages the Windows, Linux, and macOS artifacts, writes a validated update-channel JSON file for the selected release channel, writes a combined <code>SHA256SUMS.txt</code>, and attaches the ZIP, Windows installer, Linux tarball, Debian package, macOS tarballs, checksums, signing-status reports, per-target JSON manifests, notary reports, and update-channel metadata to the GitHub release. The combined checksum file includes the uploaded JSON manifests, macOS notary reports, and update-channel metadata. Each package job validates its <code>ARTIFACTS-&lt;target&gt;.json</code> manifest after the package smoke test and before uploading artifacts, validates store-ready package contents and metadata, including installer/deb requirements in CI and detached Linux <code>.asc</code> signature relationships when signatures are present. Production tag package jobs also verify signatures before upload: Windows checks the portable ZIP executables and installer Authenticode signatures, Linux verifies detached GPG signatures, and macOS verifies codesign plus the accepted notarytool response. See <a href="store-packaging_glass.html">Store Packaging</a> for marketplace handoff rules and <a href="updater-workflow_glass.html">Updater Workflow</a> for channel metadata, version-check, verification, and rollback rules.</p>
+          <p>The same workflow also runs nightly from <code>main</code>. Nightly builds use a version like <code>X.Y.Z-nightly.N</code>, build the same Windows, Linux, and macOS packages, and upload them as GitHub Actions artifacts for 30 days. Nightlies do not create public GitHub releases.</p>
+          <h2 id="reference-docs">Reference Docs</h2>
+          <p>The documentation website is static and lives at <code>docs/reference/index.html</code>. Open it directly in a browser; there is no build step.</p>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="../assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="../index_glass.html#features" class="footer-link">Features</a></li>
+                <li><a href="../index_glass.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="../reference_glass.html" class="footer-link">Docs</a></li>
+                <li><a href="../index_glass.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="../guide.js"></script>
+</body>
+</html>
