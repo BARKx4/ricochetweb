@@ -331,15 +331,7 @@ $user .displayName println
                         <div class="terminal-body">
                             <div class="terminal-line">
                                 <span class="prompt">$</span>
-                                <span class="command" id="install-cmd-text">cargo install --git https://github.com/BARKx4/Ricochet --bin rco</span>
-                            </div>
-                            <div class="terminal-line output-line">
-                                <span class="prompt">></span>
-                                <span>Installing ricochet (rco) v0.1.19-rc.3...</span>
-                            </div>
-                            <div class="terminal-line">
-                                <span class="prompt">$</span>
-                                <span class="command">rco new web blog</span>
+                                <span class="command" id="install-cmd-text">rco new web blog</span>
                             </div>
                             <div class="terminal-line output-line">
                                 <span class="prompt">></span>
@@ -361,7 +353,10 @@ $user .displayName println
                             <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco repl</code>: Ephemeral live metaprogramming workspace</li>
                             <li style="margin-bottom: 12px; display: flex; gap: 8px;"><span style="color: var(--primary-light);">✓</span> <code>rco test --debug</code>: Runs test classes under VM debugger</li>
                         </ul>
-                        <button class="btn btn-secondary" onclick="window.open('https://github.com/BARKx4/Ricochet', '_blank')">View GitHub Repository</button>
+                        <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="window.open('https://github.com/BARKx4/Ricochet/releases', '_blank')">Download Executables</button>
+                            <button class="btn btn-secondary" onclick="window.open('https://github.com/BARKx4/Ricochet', '_blank')">View GitHub</button>
+                        </div>
                     </div>
                 </div>
             </div>
