@@ -376,6 +376,14 @@ const WORDS = [
     "example": "( left right -> Number ) sum function\n  $left $right +\nend"
   },
   {
+    "word": "Macro",
+    "aliases": [],
+    "group": "control",
+    "stack": "declaration",
+    "body": "Declares a beta compile-time macro. Macro names are string literals, macro bodies run in a restricted evaluator, static imports can expose public macros, `quote_ast` emits expression AST, and `quote_items` emits whole item rows including expression rows, class-body rows, and top-level declaration rows such as `[ body ] \"name\" function` or `[ body-items ] Name Superclass Subclass`.",
+    "example": "\"accessors\" Macro\n  [\n    [\n      \"email\" Accessor\n      \"name\" Accessor\n    ] quote_items\n  ]\nend\n\nUser Model Subclass\n  \"accessors\" macro_call\nend\n\n\"make_greet\" Macro\n  [\n    [\n      [ \"hi\" println ] \"greet\" function\n    ] quote_items\n  ]\nend"
+  },
+  {
     "word": "return",
     "aliases": [],
     "group": "control",
@@ -1236,7 +1244,7 @@ const WORDS = [
     "aliases": [],
     "group": "math",
     "stack": "value -> result(number)",
-    "body": "Checked non-negative Number conversion using Ricochet's signed i64 storage (0..9223372036854775807). Full u64 storage is future work.",
+    "body": "Checked non-negative Number conversion using Ricochet's signed i64 storage (0..9223372036854775807). Full u64 storage is outside the v1 beta storage model.",
     "example": "42 to_unsigned_bigint value"
   },
   {
@@ -1472,6 +1480,22 @@ const WORDS = [
     "example": "\"OPENAI_API_KEY\" secret_env secret_resolve value"
   },
   {
+    "word": "password_hash",
+    "aliases": ["auth", "security"],
+    "group": "system",
+    "stack": "password:string -> result(string)",
+    "body": "Hashes a password with Argon2id and a fresh random salt, returning a PHC-format hash string suitable for credential storage. Pair it with package-level password policy checks before accepting user passwords.",
+    "example": "\"Long unique passphrase 2026\" password_hash value"
+  },
+  {
+    "word": "password_verify",
+    "aliases": ["auth", "security"],
+    "group": "system",
+    "stack": "password:string storedHash:string -> result(bool)",
+    "body": "Verifies a password against an Argon2id PHC-format stored hash. A mismatch returns `ok(false)`; malformed or unsupported stored hashes return `PasswordHashError`.",
+    "example": "$password $storedHash password_verify value"
+  },
+  {
     "word": "config_get",
     "aliases": ["config"],
     "group": "system",
@@ -1516,7 +1540,7 @@ const WORDS = [
     "aliases": [],
     "group": "system",
     "stack": "command:string args:array options:map -> result(map)",
-    "body": "Starts a direct child process as a long-running job when the process capability is enabled. The returned snapshot includes `id`, `status`, `running`, `success`, output lengths, truncation flags, timeout state, and cancellation state. Retained jobs are capped; release completed jobs with `process_release`.",
+    "body": "Starts a direct child process as a long-running job when the process capability is enabled. Options include `stdin_open`; when true, the returned snapshot reports `stdin_open` and the job can receive input through `process_write`. The returned snapshot also includes `id`, `status`, `running`, `success`, output lengths, truncation flags, timeout state, and cancellation state. Retained jobs are capped; release completed jobs with `process_release`.",
     "example": "args array\noptions map\n\"git\" $args $options process_start value"
   },
   {
@@ -1550,6 +1574,14 @@ const WORDS = [
     "stack": "id:number -> result(bool)",
     "body": "Removes a completed retained process job from the host registry. Running jobs return `ProcessRunning`; cancel or wait for completion first.",
     "example": "$job \"id\" at process_release value"
+  },
+  {
+    "word": "process_write",
+    "aliases": [],
+    "group": "system",
+    "stack": "id:number input:string -> result(map)",
+    "body": "Writes UTF-8 stdin text to a running retained process job that was started with `stdin_open` set to true. The result is the latest process snapshot. Closed, completed, cancelled, or unknown jobs return a result error.",
+    "example": "$job \"id\" at \"command input\\n\" process_write value"
   },
   {
     "word": "process_read",
@@ -1670,6 +1702,14 @@ const WORDS = [
     "stack": "id:string -> result(map)",
     "body": "Returns a retained approval record without re-exposing the one-time token after creation.",
     "example": "$approval \"id\" at approval_detail value"
+  },
+  {
+    "word": "approval_release",
+    "aliases": [],
+    "group": "system",
+    "stack": "id:string -> result(bool)",
+    "body": "Releases a retained approval record when an app no longer needs to inspect it. Approval registries are capped and also prune expired or final records under pressure.",
+    "example": "$approval \"id\" at approval_release value drop"
   },
   {
     "word": "now",
@@ -2116,8 +2156,8 @@ const WORDS = [
     "aliases": ["HTTP", "stream"],
     "group": "system",
     "stack": "id:number options:map -> result(map)",
-    "body": "Reads retained HTTP stream body text from `offset` and returns the same snapshot fields plus `body` and the next `offset`. Options may include `offset`; omitted offset defaults to 0.",
-    "example": "options map\n$stream \"id\" at $options http_stream_read value"
+    "body": "Reads retained HTTP stream body text from `offset`, optionally bounded by `max_bytes`, and returns the same snapshot fields plus `body`, `from_offset`, `next_offset`, backward-compatible `offset` as the next offset, `bytes_len`, and `done`. Missing or nil `offset` starts at 0; missing or nil `max_bytes` reads all currently retained bytes from that offset. `done` is true only when the stream is no longer running and the read consumed all retained bytes.",
+    "example": "options map\n$options \"max_bytes\" 4096 put! drop\n$stream \"id\" at $options http_stream_read value"
   },
   {
     "word": "http_stream_cancel",
@@ -2134,6 +2174,38 @@ const WORDS = [
     "stack": "id:number -> result(bool)",
     "body": "Removes a completed retained HTTP stream job from the host registry. Running streams return `HttpStreamRunning`; cancel or wait for completion first.",
     "example": "$stream \"id\" at http_stream_release value"
+  },
+  {
+    "word": "upload_streams",
+    "aliases": ["MVC", "upload", "stream"],
+    "group": "system",
+    "stack": "-> array",
+    "body": "Returns retained MVC upload stream snapshots for the current request VM. Each snapshot includes `id`, `field`, `filename`, `content_type`, `size_known`, and `size`. Release streams when finished with `upload_release`.",
+    "example": "upload_streams count"
+  },
+  {
+    "word": "upload_stream",
+    "aliases": ["MVC", "upload", "stream"],
+    "group": "system",
+    "stack": "id:number -> result(map)",
+    "body": "Returns metadata for a retained MVC upload stream by id. Unknown ids return `UnknownUploadStream` as a Result error.",
+    "example": "$file \"stream_id\" at upload_stream value"
+  },
+  {
+    "word": "upload_read",
+    "aliases": ["MVC", "upload", "stream"],
+    "group": "system",
+    "stack": "id:number options:map -> result(map)",
+    "body": "Reads a bounded chunk from a retained MVC upload stream. Options may include `offset` and `max_bytes`; the result includes upload metadata plus `offset`, `next_offset`, `eof`, `bytes_len`, `data_base64`, and UTF-8 `text` when available.",
+    "example": "options map\noptions \"max_bytes\" 4096 put! drop\n$file \"stream_id\" at $options upload_read value"
+  },
+  {
+    "word": "upload_release",
+    "aliases": ["MVC", "upload", "stream"],
+    "group": "system",
+    "stack": "id:number -> result(bool)",
+    "body": "Releases a retained MVC upload stream and removes its temporary file. Returns `ok(true)` when a stream was released and `ok(false)` for an already-missing id.",
+    "example": "$file \"stream_id\" at upload_release value"
   },
   {
     "word": "tcp_listen",

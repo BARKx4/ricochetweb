@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ricochet Guides — Technical Reference Manuals</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Official technical reference documentation for Ricochet: bytecode VM stack words, postfix syntax rules, class-based OOP, web MVC structures, and CLI toolchain.">
+    <meta name="keywords" content="Ricochet reference, postfix syntax, VM words, concatenative programming, stack machine, CLI reference, OOP postfix">
+    <meta name="author" content="Ricochet Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ricochet Reference — Postfix Stack Words &amp; CLI Docs">
+    <meta property="og:description" content="Technical reference for the Ricochet concatenative language, stack machine behavior, OOP examples, and Active Record database APIs.">
+    <meta property="og:image" content="assets/logo.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="Ricochet Reference — Postfix Stack Words &amp; CLI Docs">
+    <meta property="twitter:description" content="Technical reference for the Ricochet concatenative language, stack machine behavior, OOP examples, and Active Record database APIs.">
+    <meta property="twitter:image" content="assets/logo.png">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="index.css">
+</head>
+<body class="reference-page">
+
+    <!-- Header Navigation -->
+    <header class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="brand" id="nav-brand">
+                <img src="assets/logo.png" alt="Ricochet Logo" class="brand-logo">
+                <span class="brand-name">RICOCHET</span>
+            </a>
+            <nav aria-label="Reference navigation">
+                <ul class="nav-links">
+                    <li><a href="index.html#features" class="nav-link" id="link-features">Features</a></li>
+                    <li><a href="index.html#playground" class="nav-link" id="link-playground">Playground</a></li>
+                    <li><a href="reference.html" class="nav-link" id="link-docs">Docs</a></li>
+                    <li><a href="guides.html" class="nav-link nav-active" id="link-guides">Guides</a></li>
+                    <li><a href="solace.html" class="nav-link highlight-solace" id="link-solace">Solace AI</a></li>
+                    <li><a href="index.html#install" class="nav-link" id="link-install">Install</a></li>
+                </ul>
+            </nav>
+            <button class="nav-cta" id="nav-cta-btn" onclick="window.location.href='index.html#playground'">LAUNCH PLAYGROUND</button>
+        </div>
+    </header>
+
+                <main id="top">
+        <!-- Reference Hero Section -->
+        <section class="ref-hero" id="ref-hero-section">
+            <div class="container ref-hero-grid">
+                <div class="ref-hero-copy">
+                    <span class="section-label">Reference companion</span>
+                    <h1 class="ref-hero-title">Ricochet Guides</h1>
+                    <p class="ref-hero-tagline">
+                        Production-facing guides for the current Ricochet toolchain, styled and served alongside the official static reference.
+                    </p>
+                    <div class="command-strip" aria-label="Quick commands" id="ref-command-strip">
+                        <div class="cmd-item"><code>rco run examples/basic-oop.rco</code></div>
+                        <div class="cmd-item"><code>rco new --with-sqlite my_app</code></div>
+                        <div class="cmd-item"><code>rco serve --watch</code></div>
+                    </div>
+                </div>
+
+                <div class="ref-hero-visual" aria-label="Ricochet stack machine diagram">
+                    <svg viewBox="0 0 760 520" role="img" class="ref-stack-diagram" id="ref-svg-diagram">
+                        <title>Ricochet stack and MVC flow</title>
+                        <defs>
+                            <linearGradient id="trace" x1="0" x2="1" y1="0" y2="1">
+                                <stop offset="0%" stop-color="#9d4edd"></stop>
+                                <stop offset="100%" stop-color="#c77dff"></stop>
+                            </linearGradient>
+                            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                        </defs>
+                        <rect x="26" y="28" width="708" height="464" rx="18" class="panel-shell"></rect>
+                        <path d="M102 122 C214 70 318 70 430 122 S632 174 666 112" class="trace-line"></path>
+                        
+                        <g class="stack-cards">
+                            <g class="stack-card-group">
+                                <rect x="78" y="300" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="328">Value::String</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="248" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="276">Value::Map</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="196" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="224">Value::Class</text>
+                            </g>
+                            <g class="stack-card-group">
+                                <rect x="78" y="144" width="190" height="44" rx="8"></rect>
+                                <text x="104" y="172">Value::Block</text>
+                            </g>
+                        </g>
+                        
+                        <g class="node node-vm">
+                            <rect x="322" y="178" width="150" height="98" rx="12"></rect>
+                            <text x="397" y="220" text-anchor="middle" class="node-title">bytecode</text>
+                            <text x="397" y="250" text-anchor="middle" class="node-title bold">VM</text>
+                        </g>
+                        
+                        <g class="node small node-ctrl">
+                            <rect x="528" y="122" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="155" text-anchor="middle">Controller</text>
+                        </g>
+                        <g class="node small node-view">
+                            <rect x="528" y="210" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="243" text-anchor="middle">View</text>
+                        </g>
+                        <g class="node small node-db">
+                            <rect x="528" y="298" width="132" height="54" rx="10"></rect>
+                            <text x="594" y="331" text-anchor="middle">Postgres</text>
+                        </g>
+                        
+                        <path d="M472 227 L528 150" class="connector"></path>
+                        <path d="M472 227 L528 238" class="connector"></path>
+                        <path d="M472 227 L528 326" class="connector"></path>
+                        
+                        <text x="78" y="404" class="caption">$name "home/index" swap view</text>
+                        <text x="78" y="438" class="caption">[ ... ] "methodName" Method</text>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Guides Browse Section -->
+        <section class="ref-section" id="guides-section">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-label">Browse</span>
+                    <h2 class="section-title" id="guides-title">Guide Categories</h2>
+                    <p class="section-desc">These pages are the production guide set for Ricochet developers, served as static HTML alongside the official reference.</p>
+                </div>
+                <div class="guide-card-grid">
+                    <a class="guide-card" href="guides/features.html"><strong>Feature Overview</strong><span>A guided snapshot of the current Ricochet beta surface: language runtime, web apps, packages, tools, and safety posture.</span></a>
+                    <a class="guide-card" href="guides/getting-started.html"><strong>Getting Started</strong><span>Common rco commands for scripts, scaffolded apps, desktop GUI builds, terminal UI apps, and showcase projects.</span></a>
+                    <a class="guide-card" href="guides/language-runtime.html"><strong>Language And Runtime</strong><span>Syntax patterns and runtime examples for bindings, numbers, tasks, HTTP helpers, date/time, secrets, and webview documents.</span></a>
+                    <a class="guide-card" href="guides/images-source.html"><strong>Images And Source Emission</strong><span>Resume REPL state, save and inspect VM images, and emit readable Ricochet-like views from source or bytecode.</span></a>
+                    <a class="guide-card" href="guides/macros.html"><strong>Compile-Time Macros</strong><span>Beta expression macros, item-row macros, local and package examples, static imports, and expansion inspection.</span></a>
+                    <a class="guide-card" href="guides/web-and-data.html"><strong>Web And Data</strong><span>Serve Ricochet MVC projects, use hot reload, configure databases, parse requests, and work with Active Record.</span></a>
+                    <a class="guide-card" href="guides/host-capabilities.html"><strong>Host Capabilities And Safety</strong><span>Filesystem, HTTP, process, PTY, sockets, approvals, and sandboxing behavior for local scripts and MVC apps.</span></a>
+                    <a class="guide-card" href="guides/packages.html"><strong>Packages And Registries</strong><span>Local packages, registry publishing, lockfile integrity, static indexes, hosted registry protocol links, audits, static imports, and dynamic runtime imports.</span></a>
+                    <a class="guide-card" href="guides/hosted-registry-protocol.html"><strong>Hosted Registry Protocol</strong><span>Immutable hosted package metadata, publish and yank endpoints, secure bearer-token handling, mirrorable artifacts, and static fallback behavior.</span></a>
+                    <a class="guide-card" href="guides/editor-debugging.html"><strong>Editor And Debugging</strong><span>VS Code integration, LSP diagnostics, linting, formatting, tracing, DAP sessions, and word inventory checks.</span></a>
+                    <a class="guide-card" href="guides/development-release.html"><strong>Development And Release</strong><span>Benchmarks, local verification, reference validation, release packaging, tags, and nightly artifacts.</span></a>
+                    <a class="guide-card" href="guides/store-packaging.html"><strong>Store Packaging</strong><span>Store-ready release inputs, metadata validation, and marketplace handoff rules for production packages.</span></a>
+                    <a class="guide-card" href="guides/updater-workflow.html"><strong>Updater Workflow</strong><span>Signed-artifact channel metadata, version checks, platform verification, and rollback policy for production updates.</span></a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" id="main-footer">
+        <div class="container">
+            <div class="footer-logo">
+                <img src="assets/logo.png" alt="Ricochet Logo" class="footer-logo-img">
+                <span class="footer-brand-name">RICOCHET</span>
+            </div>
+            <div class="footer-slogan">THE STACK IS BACK</div>
+            <ul class="footer-links">
+                <li><a href="index.html#features" class="footer-link">Features</a></li>
+                <li><a href="index.html#playground" class="footer-link">Playground</a></li>
+                <li><a href="reference.html" class="footer-link">Docs</a></li>
+                <li><a href="guides.html" class="footer-link">Guides</a></li>
+                <li><a href="index.html#install" class="footer-link">Install</a></li>
+            </ul>
+            <p class="copyright" id="copyright-text">&copy; 2026 Ricochet Language Project. Released under the MIT License.</p>
+        </div>
+    </footer>
+
+    <!-- Reference page logic script -->
+    <script src="reference.js"></script>
+</body>
+</html>
