@@ -259,13 +259,46 @@ class RicochetVM {
             this.compilingClass.fields.add(fieldName);
         };
 
+        this.dictionary['accessor'] = () => {
+            const fieldName = this.pop();
+            if (!this.compilingClass) throw new Error("Accessor declaration used outside class declaration");
+            this.compilingClass.fields.add(fieldName);
+            
+            // Generate getter method: fieldName.get
+            const getterName = `${fieldName}.get`;
+            this.compilingClass.methods[getterName] = {
+                name: getterName,
+                body: ['self', `"${fieldName}"`, 'get'],
+                jumps: {}
+            };
+            
+            // Generate setter method: fieldName.set
+            const setterName = `${fieldName}.set`;
+            this.compilingClass.methods[setterName] = {
+                name: setterName,
+                body: ['self', `"${fieldName}"`, 'set', 'self'],
+                jumps: {}
+            };
+        };
+
         this.dictionary['method'] = () => {
             const methodName = this.pop();
-            if (!this.compilingClass) throw new Error("method declaration used outside class declaration");
+            if (!this.compilingClass) throw new Error("Method declaration used outside class declaration");
             
-            this.compilingMethodName = methodName;
-            this.compilingMethodBody = [];
-            this.compilingMethodNest = 0;
+            // Check if top of stack is a block (array of tokens)
+            if (this.dataStack.length >= 1 && Array.isArray(this.dataStack[this.dataStack.length - 1])) {
+                const block = this.pop();
+                this.compilingClass.methods[methodName] = {
+                    name: methodName,
+                    body: block,
+                    jumps: this.compileBlock(block)
+                };
+            } else {
+                // Fallback to old compilation block mode
+                this.compilingMethodName = methodName;
+                this.compilingMethodBody = [];
+                this.compilingMethodNest = 0;
+            }
         };
 
         this.dictionary['new'] = () => {
@@ -455,6 +488,28 @@ class RicochetVM {
         const lowerToken = token.toLowerCase();
 
         try {
+            // Quotation block parse: [ ... ]
+            if (token === '[') {
+                let nest = 1;
+                let start = this.ip + 1;
+                let end = start;
+                while (end < this.currentTokens.length) {
+                    const t = this.currentTokens[end];
+                    if (t === '[') nest++;
+                    if (t === ']') {
+                        nest--;
+                        if (nest === 0) break;
+                    }
+                    end++;
+                }
+                if (nest > 0) {
+                    throw new Error("Mismatched '[' in code");
+                }
+                const blockTokens = this.currentTokens.slice(start, end);
+                this.push(blockTokens);
+                this.ip = end + 1; // skip past ']'
+                return;
+            }
             // A. If compiling a method body inside class subclass ... end
             if (this.compilingMethodName) {
                 if (lowerToken === 'if' || lowerToken === 'while') {
@@ -665,6 +720,46 @@ class RicochetVM {
                 return;
             }
 
+            // 6b. Unknown token - check if it is a method call on the top object
+            if (this.dataStack.length >= 1) {
+                const receiver = this.dataStack[this.dataStack.length - 1];
+                if (receiver instanceof RicochetObject) {
+                    const memberName = token;
+                    let method = null;
+                    let k = receiver.klass;
+                    while (k) {
+                        if (k.methods[memberName]) {
+                            method = k.methods[memberName];
+                            break;
+                        }
+                        k = k.parentName ? this.classes[k.parentName] : null;
+                    }
+                    if (method) {
+                        // Pop receiver
+                        this.pop();
+                        // Save stack frame and execute method
+                        const savedVars = {...this.variables};
+                        this.callStack.push({
+                            tokens: this.currentTokens,
+                            jumps: this.jumps,
+                            ip: this.ip + 1,
+                            variables: savedVars
+                        });
+
+                        // Set up local scope
+                        this.variables = {
+                            'self': receiver
+                        };
+                        
+                        // Bind method execution
+                        this.currentTokens = method.body;
+                        this.jumps = method.jumps;
+                        this.ip = 0;
+                        return;
+                    }
+                }
+            }
+
             // 7. Unknown token - treat as bare static symbol by pushing it
             this.push(token);
             this.ip++;
@@ -688,38 +783,35 @@ class RicochetVM {
 
 const EXAMPLES = {
     subclass: `(( Define User subclass mapping schema ))
-User Model subclass
-  "users" table
-  id field
-  email field
-  name field
+User Model Subclass
+  "email" Accessor
+  "name" Accessor
 
-  displayName method
-    $self .name empty? if
-      $self .email
+  [
+    self name.get empty? if
+      self email.get
     else
-      $self .name
+      self name.get
     end
-  end
+  ] "displayName" Method
 end
 
 (( Instantiate new User ))
-user var
-User new $user set
-"Alice" $user .name set
-"alice@example.com" $user .email set
+User new user var
+"Alice" $user name.set user set
+"alice@example.com" $user email.set user set
 
 (( Call displayName method ))
 "User Account Display Name:" println
-$user .displayName println
+$user displayName println
 `,
 
     variables: `(( Variables setup and mutation ))
 amount var
-100 $amount set
+100 amount set
 
 (( Add 50 and update ))
-$amount 50 + $amount set
+$amount 50 + amount set
 
 "Variable value: " print
 $amount println
@@ -731,19 +823,19 @@ a var
 b var
 temp var
 
-10 $limit set
-0 $a set
-1 $b set
+10 limit set
+0 a set
+1 b set
 
 "Fibonacci Sequence:" println
 $limit 0 > while
   $a print " " print
   
-  $a $b + $temp set
-  $b $a set
-  $temp $b set
+  $a $b + temp set
+  $b a set
+  $temp b set
   
-  $limit 1 - $limit set
+  $limit 1 - limit set
 end
 "" println
 `,
@@ -752,12 +844,12 @@ end
 n var
 result var
 
-6 $n set
-1 $result set
+6 n set
+1 result set
 
 $n 1 > while
-  $result $n * $result set
-  $n 1 - $n set
+  $result $n * result set
+  $n 1 - n set
 end
 
 "Factorial of 6 is: " print
@@ -765,32 +857,30 @@ $result println
 `,
 
     result: `(( Define User class first ))
-User Model subclass
+User Model Subclass
 end
 
 (( expected login failure Result testing ))
 User open-class
-  login method
+  [
     email var
-    $email set
+    email set
     
     $email "admin@ricochet.org" equals if
       "Welcome Admin!" 1 nil new-result
     else
       nil 0 "Invalid credentials" new-result
     end
-  end
+  ] "login" Method
 end
 
-user var
-result var
-User new $user set
-"admin@ricochet.org" $user .login $result set
+User new user var
+"admin@ricochet.org" $user login result set
 
 $result ok? if
   "Success: " print $result value println
 else
-  "Failed: " print $result .message println
+  "Failed: " print $result message println
 end
 `
 };

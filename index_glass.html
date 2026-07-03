@@ -282,25 +282,22 @@
                         </div>
                         <div class="static-code-body">
                             <pre><code style="color: #c77dff;"><span style="color: #71717a;">(( Represents a user account ))</span>
-User Model subclass
-  users table
-  id field
-  email field
-  name field
+User Model Subclass
+  "email" Accessor
+  "name" Accessor
 
-  displayName method
-    $self .name empty? if
-      $self .email
+  [
+    self name.get empty? if
+      self email.get
     else
-      $self .name
+      self name.get
     end
-  end
+  ] "displayName" Method
 end
 
-user var
-User new $user set
-"Alice" $user .$name set
-$user .displayName println
+User new user var
+"Alice" $user name.set user set
+$user displayName println
 
 <span style="color: #71717a;">(( Output terminal: Alice ))</span></code></pre>
                         </div>
